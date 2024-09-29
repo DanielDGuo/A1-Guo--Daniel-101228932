@@ -41,4 +41,20 @@ class MainTest {
             deckList.remove(c);
         }
     }
+
+    @Test
+    @DisplayName("Check each player's hand for 12 cards at the start of the game")
+    void RESP_02_test_01() {
+        Main game = new Main();
+        game.initializeAdventureDeck();
+        game.initializePlayers();
+        //make sure there are 4 players
+        assertEquals(4, game.PlayerList.size());
+
+        for (Main.Player p : game.PlayerList){
+            assertEquals(12, p.getHand().size());
+        }
+        //also check for the correct number of removed cards
+        assertEquals(52, game.getAdventureDeckSize());
+    }
 }

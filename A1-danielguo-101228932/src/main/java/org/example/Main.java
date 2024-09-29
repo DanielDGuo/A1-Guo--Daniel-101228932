@@ -7,6 +7,7 @@ import java.util.Collections;
 public class Main {
     public ArrayList<Card> AdDeck;
     public ArrayList<Card> EvDeck;
+    public ArrayList<Player> PlayerList= new ArrayList<Player>();
     //list of all 100 cards included in the deck
     public final ArrayList<Card> AdventureDeckList = new ArrayList<Card>(
             Arrays.asList(
@@ -172,6 +173,15 @@ public class Main {
         public String toString() {
             return id;
         }
+    }
+
+    class Player {
+        public ArrayList<Card> getHand(){
+            return new ArrayList<>();
+        }
+    }
+
+    public void initializePlayers() {
     }
 
     public void initializeAdventureDeck() {
