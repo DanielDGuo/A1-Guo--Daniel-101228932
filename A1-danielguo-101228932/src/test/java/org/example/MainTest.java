@@ -47,7 +47,7 @@ class MainTest {
     void RESP_02_test_01() {
         Main game = new Main();
         game.initializeAdventureDeck();
-        game.initializePlayers();
+        game.initializePlayerHands();
         //make sure there are 4 players
         assertEquals(4, game.PlayerList.size());
 

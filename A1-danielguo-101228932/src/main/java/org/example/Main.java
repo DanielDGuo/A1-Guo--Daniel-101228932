@@ -7,7 +7,14 @@ import java.util.Collections;
 public class Main {
     public ArrayList<Card> AdDeck;
     public ArrayList<Card> EvDeck;
-    public ArrayList<Player> PlayerList= new ArrayList<Player>();
+    public ArrayList<Player> PlayerList = new ArrayList<Player>(
+            Arrays.asList(
+                    new Player(1),
+                    new Player(2),
+                    new Player(3),
+                    new Player(4)
+            )
+    );
     //list of all 100 cards included in the deck
     public final ArrayList<Card> AdventureDeckList = new ArrayList<Card>(
             Arrays.asList(
@@ -140,6 +147,7 @@ public class Main {
         Main game = new Main();
         game.initializeAdventureDeck();
         game.initializeEventDeck();
+        game.initializePlayerHands();
     }
 
     class Card {
@@ -176,12 +184,35 @@ public class Main {
     }
 
     class Player {
-        public ArrayList<Card> getHand(){
-            return new ArrayList<>();
+        int id;
+        ArrayList<Card> hand;
+
+        public Player(int id) {
+            this.id = id;
+            hand = new ArrayList<Card>();
+        }
+
+        public ArrayList<Card> getHand() {
+            return hand;
+        }
+
+        public void addCard(Card c) {
+            hand.add(c);
+        }
+
+        @Override
+        public String toString() {
+            return "P" + id;
         }
     }
 
-    public void initializePlayers() {
+    public void initializePlayerHands() {
+        for (Player p : PlayerList) {
+            for (int i = 0; i < 12; i++) {
+                p.addCard(AdDeck.getFirst());
+                AdDeck.removeFirst();
+            }
+        }
     }
 
     public void initializeAdventureDeck() {
