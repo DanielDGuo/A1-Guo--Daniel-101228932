@@ -185,6 +185,7 @@ public class Main {
 
     class Player {
         int id;
+        int shields;
         ArrayList<Card> hand;
 
         public Player(int id) {
@@ -195,6 +196,12 @@ public class Main {
         public ArrayList<Card> getHand() {
             return hand;
         }
+
+        public int getShields() {
+            return shields;
+        }
+
+        public void addShields(int i) {}
 
         public void addCard(Card c) {
             hand.add(c);
@@ -240,4 +247,5 @@ public class Main {
     public int getEventDeckSize() {
         return EvDeck.size();
     }
-}
+
+    public boolean findWinners(){return false;}

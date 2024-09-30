@@ -57,4 +57,15 @@ class MainTest {
         //also check for the correct number of removed cards
         assertEquals(52, game.getAdventureDeckSize());
     }
+
+    @Test
+    @DisplayName("Test winner detection")
+    void RESP_03_test_01() {
+        Main game = new Main();
+        assertFalse(game.findWinners());
+
+        //make a winner
+        game.PlayerList.get(0).addShields(7);
+        assertTrue(game.findWinners());
+    }
 }
