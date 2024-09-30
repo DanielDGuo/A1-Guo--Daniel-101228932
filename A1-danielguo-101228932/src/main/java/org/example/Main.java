@@ -148,6 +148,11 @@ public class Main {
         game.initializeAdventureDeck();
         game.initializeEventDeck();
         game.initializePlayerHands();
+
+        while(!game.findWinners()){
+
+        }
+
     }
 
     class Card {
@@ -201,7 +206,9 @@ public class Main {
             return shields;
         }
 
-        public void addShields(int i) {}
+        public void addShields(int i) {
+            shields += i;
+        }
 
         public void addCard(Card c) {
             hand.add(c);
@@ -248,4 +255,12 @@ public class Main {
         return EvDeck.size();
     }
 
-    public boolean findWinners(){return false;}
+    public boolean findWinners(){
+        for (Player p : PlayerList) {
+            if (p.getShields() >= 7) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
