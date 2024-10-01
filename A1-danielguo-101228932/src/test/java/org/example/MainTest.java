@@ -68,4 +68,20 @@ class MainTest {
         game.PlayerList.get(0).addShields(7);
         assertTrue(game.findWinners());
     }
+
+    @Test
+    @DisplayName("Test winner output")
+    void RESP_04_test_01() {
+        Main game = new Main();
+        //test one winner
+        game.PlayerList.get(0).addShields(7);
+        assertEquals(game.printWinners(), "Player(s) P1 Won.");
+        //test two winners
+        game.PlayerList.get(1).addShields(7);
+        assertEquals(game.printWinners(), "Player(s) P1, P2 Won.");
+        //test four winners
+        game.PlayerList.get(2).addShields(7);
+        game.PlayerList.get(3).addShields(7);
+        assertEquals(game.printWinners(), "Player(s) P1, P2, P3, P4 Won.");
+    }
 }
