@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class Main {
+    public Player curPlayer;
     public ArrayList<Card> AdDeck;
     public ArrayList<Card> EvDeck;
     public ArrayList<Player> PlayerList = new ArrayList<Player>(
@@ -152,7 +153,7 @@ public class Main {
         while(!game.findWinners()){
 
         }
-        game.printWinners();
+        System.out.print(game.printWinners());
 
     }
 
@@ -213,6 +214,10 @@ public class Main {
 
         public void addCard(Card c) {
             hand.add(c);
+        }
+
+        public String printHand(){
+            return "";
         }
 
         @Override

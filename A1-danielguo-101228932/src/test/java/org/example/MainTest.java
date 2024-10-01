@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,13 +74,32 @@ class MainTest {
         Main game = new Main();
         //test one winner
         game.PlayerList.get(0).addShields(7);
-        assertEquals(game.printWinners(), "Player(s) P1 Won.");
+        assertEquals("Player(s) P1 Won.", game.printWinners());
         //test two winners
         game.PlayerList.get(1).addShields(7);
-        assertEquals(game.printWinners(), "Player(s) P1, P2 Won.");
+        assertEquals("Player(s) P1, P2 Won.", game.printWinners());
         //test four winners
         game.PlayerList.get(2).addShields(7);
         game.PlayerList.get(3).addShields(7);
-        assertEquals(game.printWinners(), "Player(s) P1, P2, P3, P4 Won.");
+        assertEquals("Player(s) P1, P2, P3, P4 Won.", game.printWinners());
+    }
+
+    @Test
+    @DisplayName("Test hand output")
+    void RESP_05_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+        //test hand
+        game.curPlayer.addCard(game.new Card("F15", "Foe", 15));
+        game.curPlayer.addCard(game.new Card("F5", "Foe", 5));
+        game.curPlayer.addCard(game.new Card("F40", "Foe", 40));
+        game.curPlayer.addCard(game.new Card("H10", "Weapon", 10));
+        game.curPlayer.addCard(game.new Card("S10", "Weapon", 10));
+        game.curPlayer.addCard(game.new Card("S10", "Weapon", 10));
+        game.curPlayer.addCard(game.new Card("L20", "Weapon", 20));
+
+        //check hand is sorted
+        assertEquals("P1 Hand: F5, F15, F40, S10, S10, H10, L20", game.PlayerList.get(0).printHand());
+
     }
 }
