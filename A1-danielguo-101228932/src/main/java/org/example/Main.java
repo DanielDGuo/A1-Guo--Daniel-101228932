@@ -150,14 +150,18 @@ public class Main {
         game.initializeEventDeck();
         game.initializePlayerHands();
 
+        game.curPlayer = game.PlayerList.get(3);
         while(!game.findWinners()){
-
+            //get the next player
+            game.curPlayer = game.PlayerList.get((game.PlayerList.indexOf(game.curPlayer) + 1) % 4);
+            System.out.print("Player " + game.curPlayer + ", this is your hand:\n");
+            System.out.print(game.curPlayer.printHand() + "\n");
         }
         System.out.print(game.printWinners());
 
     }
 
-    class Card {
+    class Card implements Comparable<Card>{
         //valid ID include but aren't limited to: F5, F10, D, H, S, Q2, Q3, Plague, Queen's favor
         String id;
         //Types include Foe, Weapon, Quest, and Event
@@ -188,6 +192,25 @@ public class Main {
         public String toString() {
             return id;
         }
+
+        @Override
+        public int compareTo(Card c) {
+            //check if this is a foe and if that is a weapon; foes are displayed first
+            if(this.type.equals("Foe") && c.type.equals("Weapon")){
+                return -1;
+            }else if(this.type.equals(c.type)){
+                //special case for horses and swords
+                if(this.id.equals("H10") && c.id.equals("S10")){
+                    return 1;
+                }else if(this.id.equals("S10") && c.id.equals("H10")){
+                    return -1;
+                }
+                //compare values if they're both foe or weapons
+                return this.value - c.value;
+            }
+            //otherwise return a 1
+            return 1;
+        }
     }
 
     class Player {
@@ -217,7 +240,12 @@ public class Main {
         }
 
         public String printHand(){
-            return "";
+            String outString = "P" + id + " Hand: ";
+            Collections.sort(hand);
+            for(Card c : hand){
+                outString += c + ", ";
+            }
+            return outString.substring(0, outString.length()-2);
         }
 
         @Override
