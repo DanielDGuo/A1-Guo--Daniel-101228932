@@ -152,7 +152,7 @@ public class Main {
         while(!game.findWinners()){
 
         }
-
+        game.printWinners();
 
     }
 
@@ -266,6 +266,12 @@ public class Main {
     }
 
     public String printWinners(){
-        return "";
+        String outString = "Player(s) ";
+        for(Player p : PlayerList) {
+            if (p.getShields() >= 7) {
+                outString += p.toString() + ", ";
+            }
+        }
+        return outString.substring(0, outString.length()-2) + " Won.";
     }
 }
