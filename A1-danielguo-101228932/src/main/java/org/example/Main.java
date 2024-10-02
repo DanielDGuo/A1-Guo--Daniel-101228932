@@ -8,7 +8,7 @@ public class Main {
     public Player curPlayer;
     public ArrayList<Card> AdDeck;
     public ArrayList<Card> EvDeck;
-    public ArrayList<Card> EvDiscard;
+    public ArrayList<Card> EvDiscard = new ArrayList<Card>();
     public ArrayList<Player> PlayerList = new ArrayList<Player>(
             Arrays.asList(
                     new Player(1),
@@ -152,17 +152,21 @@ public class Main {
         game.initializePlayerHands();
 
         game.curPlayer = game.PlayerList.get(3);
-        while(!game.findWinners()){
+        while (!game.findWinners()) {
             //get the next player
             game.curPlayer = game.PlayerList.get((game.PlayerList.indexOf(game.curPlayer) + 1) % 4);
             System.out.print("Player " + game.curPlayer + ", this is your hand:\n");
             System.out.print(game.curPlayer.printHand() + "\n");
+            System.out.print("The current event is: \n");
+            System.out.print(game.drawEventCard() + "\n");
+
+
         }
         System.out.print(game.printWinners());
 
     }
 
-    class Card implements Comparable<Card>{
+    class Card implements Comparable<Card> {
         //valid ID include but aren't limited to: F5, F10, D, H, S, Q2, Q3, Plague, Queen's favor
         String id;
         //Types include Foe, Weapon, Quest, and Event
@@ -197,17 +201,23 @@ public class Main {
         @Override
         public int compareTo(Card c) {
             //check if this is a foe and if that is a weapon; foes are displayed first
-            if(this.type.equals("Foe") && c.type.equals("Weapon")){
+            if (this.type.equals("Foe") && c.type.equals("Weapon")) {
                 return -1;
-            }else if(this.type.equals(c.type)){
+            } else if ((this.type.equals("Foe") && c.type.equals("Foe")) || (this.type.equals("Weapon") && c.type.equals("Weapon"))) {
                 //special case for horses and swords
-                if(this.id.equals("H10") && c.id.equals("S10")){
+                if (this.id.equals("H10") && c.id.equals("S10")) {
                     return 1;
-                }else if(this.id.equals("S10") && c.id.equals("H10")){
+                } else if (this.id.equals("S10") && c.id.equals("H10")) {
                     return -1;
                 }
                 //compare values if they're both foe or weapons
                 return this.value - c.value;
+            } else if (this.type.equals("Quest") && c.type.equals("Quest")) {
+                return this.value - c.value;
+            } else if (this.type.equals("Event") && c.type.equals("Event")) {
+                return this.id.compareTo(c.id);
+            } else if (((this.type.equals("Event") && c.type.equals("Quest")))||(this.type.equals("Quest") && c.type.equals("Event"))) {
+                return this.type.compareTo(c.type);
             }
             //otherwise return a 1
             return 1;
@@ -240,13 +250,13 @@ public class Main {
             hand.add(c);
         }
 
-        public String printHand(){
+        public String printHand() {
             String outString = "P" + id + " Hand: ";
             Collections.sort(hand);
-            for(Card c : hand){
+            for (Card c : hand) {
                 outString += c + ", ";
             }
-            return outString.substring(0, outString.length()-2);
+            return outString.substring(0, outString.length() - 2);
         }
 
         @Override
@@ -290,7 +300,7 @@ public class Main {
         return EvDeck.size();
     }
 
-    public boolean findWinners(){
+    public boolean findWinners() {
         for (Player p : PlayerList) {
             if (p.getShields() >= 7) {
                 return true;
@@ -299,17 +309,20 @@ public class Main {
         return false;
     }
 
-    public String printWinners(){
+    public String printWinners() {
         String outString = "Player(s) ";
-        for(Player p : PlayerList) {
+        for (Player p : PlayerList) {
             if (p.getShields() >= 7) {
                 outString += p.toString() + ", ";
             }
         }
-        return outString.substring(0, outString.length()-2) + " Won.";
+        return outString.substring(0, outString.length() - 2) + " Won.";
     }
 
-    public String drawEventCard(){
-        return "";
+    public String drawEventCard() {
+        Card curEvent = EvDeck.removeFirst();
+        EvDiscard.add(curEvent);
+        return curEvent.id;
+
     }
 }
