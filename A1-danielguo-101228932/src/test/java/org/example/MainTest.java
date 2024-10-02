@@ -120,4 +120,31 @@ class MainTest {
         //check drawn card is in the discard
         assertTrue(game.EvDiscard.contains(a));
     }
+
+    @Test
+    @DisplayName("Test Plague Card Effects")
+    void RESP_07_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+        //init a dummy event deck
+        game.EvDeck = new ArrayList<>();
+        //make an EvDeck of plagues for testing
+        game.EvDeck.add(game.new Card("Plague", "Event", 0));
+        game.EvDeck.add(game.new Card("Plague", "Event", 0));
+        game.EvDeck.add(game.new Card("Plague", "Event", 0));
+
+        game.drawEventCard();
+        //check Plague works on a player with no shields
+        assertEquals(0, game.curPlayer.shields);
+
+        game.curPlayer.addShields(1);
+        game.drawEventCard();
+        //check Plague works on a player with 1 shield
+        assertEquals(0, game.curPlayer.shields);
+
+        game.curPlayer.addShields(3);
+        game.drawEventCard();
+        //check Plague works on a player with 3 shields
+        assertEquals(1, game.curPlayer.shields);
+    }
 }
