@@ -3,6 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 public class Main {
     public Player curPlayer;
@@ -322,7 +323,13 @@ public class Main {
     public String drawEventCard() {
         Card curEvent = EvDeck.removeFirst();
         EvDiscard.add(curEvent);
+        if(curEvent.id.equals("Plague")){
+            curPlayer.addShields(-2);
+            //if it's less than 0, set it to 0
+            if (curPlayer.getShields() < 0){
+                curPlayer.addShields(-curPlayer.getShields());
+            }
+        }
         return curEvent.id;
-
     }
 }
