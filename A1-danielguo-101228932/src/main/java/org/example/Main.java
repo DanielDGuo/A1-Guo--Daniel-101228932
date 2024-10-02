@@ -159,9 +159,13 @@ public class Main {
             System.out.print("Player " + game.curPlayer + ", this is your hand:\n");
             System.out.print(game.curPlayer.printHand() + "\n");
             System.out.print("The current event is: \n");
-            System.out.print(game.drawEventCard() + "\n");
-
-
+            Card curEventCard = game.drawEventCard();
+            System.out.print(curEventCard + "\n");
+            if(curEventCard.id.equals("Plague")){
+                System.out.print("Plague Drawn. Current player's shields decreased from " + game.curPlayer.getShields());
+                game.plagueEffect();
+                System.out.print(" to " + game.curPlayer.getShields() + "\n");
+            }
         }
         System.out.print(game.printWinners());
 
@@ -217,7 +221,7 @@ public class Main {
                 return this.value - c.value;
             } else if (this.type.equals("Event") && c.type.equals("Event")) {
                 return this.id.compareTo(c.id);
-            } else if (((this.type.equals("Event") && c.type.equals("Quest")))||(this.type.equals("Quest") && c.type.equals("Event"))) {
+            } else if (((this.type.equals("Event") && c.type.equals("Quest"))) || (this.type.equals("Quest") && c.type.equals("Event"))) {
                 return this.type.compareTo(c.type);
             }
             //otherwise return a 1
@@ -320,16 +324,17 @@ public class Main {
         return outString.substring(0, outString.length() - 2) + " Won.";
     }
 
-    public String drawEventCard() {
+    public Card drawEventCard() {
         Card curEvent = EvDeck.removeFirst();
         EvDiscard.add(curEvent);
-        if(curEvent.id.equals("Plague")){
-            curPlayer.addShields(-2);
-            //if it's less than 0, set it to 0
-            if (curPlayer.getShields() < 0){
-                curPlayer.addShields(-curPlayer.getShields());
-            }
+        return curEvent;
+    }
+
+    public void plagueEffect() {
+        curPlayer.addShields(-2);
+        //if it's less than 0, set it to 0
+        if (curPlayer.getShields() < 0) {
+            curPlayer.addShields(-curPlayer.getShields());
         }
-        return curEvent.id;
     }
 }

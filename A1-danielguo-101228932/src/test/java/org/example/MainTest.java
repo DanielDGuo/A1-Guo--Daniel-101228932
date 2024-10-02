@@ -50,7 +50,7 @@ class MainTest {
         //make sure there are 4 players
         assertEquals(4, game.PlayerList.size());
 
-        for (Main.Player p : game.PlayerList){
+        for (Main.Player p : game.PlayerList) {
             assertEquals(12, p.getHand().size());
         }
         //also check for the correct number of removed cards
@@ -116,7 +116,7 @@ class MainTest {
         game.EvDeck.add(c);
 
         //check drawn card is correct
-        assertEquals("Plague", game.drawEventCard());
+        assertEquals(a, game.drawEventCard());
         //check drawn card is in the discard
         assertTrue(game.EvDiscard.contains(a));
     }
@@ -128,22 +128,25 @@ class MainTest {
         game.curPlayer = game.PlayerList.get(0);
         //init a dummy event deck
         game.EvDeck = new ArrayList<>();
-        //make an EvDeck of plagues for testing
+        //make an EvDeck of plagues for testing. Since only plagues are in the deck, no need to check event type
         game.EvDeck.add(game.new Card("Plague", "Event", 0));
         game.EvDeck.add(game.new Card("Plague", "Event", 0));
         game.EvDeck.add(game.new Card("Plague", "Event", 0));
 
         game.drawEventCard();
+        game.plagueEffect();
         //check Plague works on a player with no shields
         assertEquals(0, game.curPlayer.shields);
 
         game.curPlayer.addShields(1);
         game.drawEventCard();
+        game.plagueEffect();
         //check Plague works on a player with 1 shield
         assertEquals(0, game.curPlayer.shields);
 
         game.curPlayer.addShields(3);
         game.drawEventCard();
+        game.plagueEffect();
         //check Plague works on a player with 3 shields
         assertEquals(1, game.curPlayer.shields);
     }
