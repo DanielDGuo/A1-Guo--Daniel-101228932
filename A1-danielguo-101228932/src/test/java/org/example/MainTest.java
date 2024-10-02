@@ -100,6 +100,24 @@ class MainTest {
 
         //check hand is sorted
         assertEquals("P1 Hand: F5, F15, F40, S10, S10, H10, L20", game.PlayerList.get(0).printHand());
+    }
 
+    @Test
+    @DisplayName("Test Event Card Draw")
+    void RESP_06_test_01() {
+        Main game = new Main();
+        //init a dummy event deck
+        game.EvDeck = new ArrayList<>();
+        Main.Card a = game.new Card("Plague", "Event", 0);
+        game.EvDeck.add(a);
+        Main.Card b = game.new Card("Q5", "Quest", 5);
+        game.EvDeck.add(b);
+        Main.Card c = game.new Card("Queen's Favour", "Event", 0);
+        game.EvDeck.add(c);
+
+        //check drawn card is correct
+        assertEquals("Plague", game.drawEventCard());
+        //check drawn card is in the discard
+        assertTrue(game.EvDiscard.contains(a));
     }
 }

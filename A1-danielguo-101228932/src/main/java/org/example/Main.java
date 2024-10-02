@@ -8,6 +8,7 @@ public class Main {
     public Player curPlayer;
     public ArrayList<Card> AdDeck;
     public ArrayList<Card> EvDeck;
+    public ArrayList<Card> EvDiscard;
     public ArrayList<Player> PlayerList = new ArrayList<Player>(
             Arrays.asList(
                     new Player(1),
@@ -306,5 +307,9 @@ public class Main {
             }
         }
         return outString.substring(0, outString.length()-2) + " Won.";
+    }
+
+    public String drawEventCard(){
+        return "";
     }
 }
