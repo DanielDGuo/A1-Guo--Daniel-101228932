@@ -161,9 +161,15 @@ public class Main {
             System.out.print("The current event is: \n");
             Card curEventCard = game.drawEventCard();
             System.out.print(curEventCard + "\n");
+
+            
             if(curEventCard.id.equals("Plague")){
                 System.out.print("Plague Drawn. Current player's shields decreased from " + game.curPlayer.getShields());
                 game.plagueEffect();
+                System.out.print(" to " + game.curPlayer.getShields() + "\n");
+            }else if(curEventCard.id.equals("Queen's Favour")){
+                System.out.print("Queen's Favour Drawn. Current player's shields increased from " + game.curPlayer.getShields());
+                game.queenEffect();
                 System.out.print(" to " + game.curPlayer.getShields() + "\n");
             }
         }
@@ -339,5 +345,6 @@ public class Main {
     }
 
     public void queenEffect() {
+        curPlayer.addShields(2);
     }
 }
