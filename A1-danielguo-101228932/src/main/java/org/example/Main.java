@@ -337,4 +337,7 @@ public class Main {
             curPlayer.addShields(-curPlayer.getShields());
         }
     }
+
+    public void queenEffect() {
+    }
 }

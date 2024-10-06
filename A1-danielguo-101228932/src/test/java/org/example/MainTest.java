@@ -150,4 +150,30 @@ class MainTest {
         //check Plague works on a player with 3 shields
         assertEquals(1, game.curPlayer.shields);
     }
+
+    @Test
+    @DisplayName("Test Queen's Favour Card Effects")
+    void RESP_08_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+        //init a dummy event deck
+        game.EvDeck = new ArrayList<>();
+        //make an EvDeck of plagues for testing. Since only plagues are in the deck, no need to check event type
+        game.EvDeck.add(game.new Card("Queen's Favour", "Event", 0));
+        game.EvDeck.add(game.new Card("Queen's Favour", "Event", 0));
+        game.EvDeck.add(game.new Card("Queen's Favour", "Event", 0));
+
+        game.drawEventCard();
+        //logic will then check what event card it is
+        game.queenEffect();
+        //check Queen's Favour works on a player with no shields
+        assertEquals(2, game.curPlayer.shields);
+
+        game.curPlayer.addShields(1);
+        //3 shields now
+        game.drawEventCard();
+        game.queenEffect();
+        //check Queen's Favour works on a player with 3 shield
+        assertEquals(5, game.curPlayer.shields);
+    }
 }
