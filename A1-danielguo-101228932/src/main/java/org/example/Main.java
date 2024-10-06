@@ -171,6 +171,9 @@ public class Main {
                 System.out.print("Queen's Favour Drawn. Current player's shields increased from " + game.curPlayer.getShields());
                 game.queenEffect();
                 System.out.print(" to " + game.curPlayer.getShields() + "\n");
+            }else if(curEventCard.id.equals("Prosperity")){
+                System.out.print("Prosperity Drawn. Each player draws 2 cards.");
+                game.prosperityEffect();
             }
         }
         System.out.print(game.printWinners());
@@ -349,5 +352,11 @@ public class Main {
     }
 
     public void prosperityEffect() {
+        for(Player p : PlayerList){
+            p.addCard(AdDeck.getFirst());
+            AdDeck.removeFirst();
+            p.addCard(AdDeck.getFirst());
+            AdDeck.removeFirst();
+        }
     }
 }
