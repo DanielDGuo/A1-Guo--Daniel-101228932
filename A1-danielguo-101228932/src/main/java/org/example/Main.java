@@ -361,4 +361,8 @@ public class Main {
             AdDeck.removeFirst();
         }
     }
+
+    public String questEffect(Card curCard){
+        return "";
+    }
 }

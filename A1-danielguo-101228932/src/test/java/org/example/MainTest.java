@@ -241,4 +241,38 @@ class MainTest {
         assertEquals(13, game.PlayerList.get(3).getHand().size());
         assertEquals(36, game.AdDeck.size());
     }
+
+    @Test
+    @DisplayName("Test Quest Card Effects")
+    void RESP_10_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+        //init a dummy event deck
+        game.EvDeck = new ArrayList<>();
+        //make an EvDeck of quests for testing.
+        game.EvDeck.add(game.new Card("Q2", "Quest", 2));
+        game.EvDeck.add(game.new Card("Q3", "Quest", 3));
+        game.EvDeck.add(game.new Card("Q5", "Quest", 5));
+        String outString = "";
+
+        //quest should just output a declaration string for now; no logic for this responsibility
+
+        Main.Card curCard = game.drawEventCard();
+        if (curCard.type.equals("Quest")){
+            outString = game.questEffect(curCard);
+        }
+        assertEquals("Beginning the effects of a Quest card with " + 2 + " stages.", outString);
+
+        curCard = game.drawEventCard();
+        if (curCard.type.equals("Quest")){
+            outString = game.questEffect(curCard);
+        }
+        assertEquals("Beginning the effects of a Quest card with " + 3 + " stages.", outString);
+
+        curCard = game.drawEventCard();
+        if (curCard.type.equals("Quest")){
+            outString = game.questEffect(curCard);
+        }
+        assertEquals("Beginning the effects of a Quest card with " + 5 + " stages.", outString);
+    }
 }
