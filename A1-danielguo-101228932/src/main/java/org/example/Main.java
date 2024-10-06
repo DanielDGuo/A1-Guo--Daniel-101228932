@@ -168,9 +168,8 @@ public class Main {
                 game.plagueEffect();
                 System.out.print(" to " + game.curPlayer.getShields() + "\n");
             }else if(curEventCard.id.equals("Queen's Favour")){
-                System.out.print("Queen's Favour Drawn. Current player's shields increased from " + game.curPlayer.getShields());
+                System.out.print("Queen's Favour Drawn. Current player draws 2 cards.");
                 game.queenEffect();
-                System.out.print(" to " + game.curPlayer.getShields() + "\n");
             }else if(curEventCard.id.equals("Prosperity")){
                 System.out.print("Prosperity Drawn. Each player draws 2 cards.");
                 game.prosperityEffect();
@@ -348,7 +347,10 @@ public class Main {
     }
 
     public void queenEffect() {
-        curPlayer.addShields(2);
+        curPlayer.addCard(AdDeck.getFirst());
+        AdDeck.removeFirst();
+        curPlayer.addCard(AdDeck.getFirst());
+        AdDeck.removeFirst();
     }
 
     public void prosperityEffect() {
