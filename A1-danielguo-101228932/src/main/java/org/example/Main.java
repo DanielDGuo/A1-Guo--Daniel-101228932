@@ -363,6 +363,6 @@ public class Main {
     }
 
     public String questEffect(Card curCard){
-        return "";
+        return "Beginning the effects of a Quest card with " + curCard.getValue() + " stages.";
     }
 }
