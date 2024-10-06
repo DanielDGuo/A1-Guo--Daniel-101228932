@@ -15,11 +15,11 @@ class MainTest {
         Main game = new Main();
         game.initializeAdventureDeck();
         //assert the size
-        assertEquals(100, game.getAdventureDeckSize());
+        assertEquals(100, game.AdDeck.size());
 
         //assert that for every card in the adventure deck, it corresponds to one in the deck list
         ArrayList<Main.Card> deckList = game.AdventureDeckList;
-        for (Main.Card c : game.getAdventureDeckCards()) {
+        for (Main.Card c : game.AdDeck) {
             assertTrue(deckList.contains(c));
             deckList.remove(c);
         }
@@ -31,11 +31,11 @@ class MainTest {
         Main game = new Main();
         game.initializeEventDeck();
         //assert the size
-        assertEquals(17, game.getEventDeckSize());
+        assertEquals(17, game.EvDeck.size());
 
         //assert that for every card in the event deck, it corresponds to one in the deck list
         ArrayList<Main.Card> deckList = game.EventDeckList;
-        for (Main.Card c : game.getEventDeckCards()) {
+        for (Main.Card c : game.EvDeck) {
             assertTrue(deckList.contains(c));
             deckList.remove(c);
         }
@@ -51,10 +51,10 @@ class MainTest {
         assertEquals(4, game.PlayerList.size());
 
         for (Main.Player p : game.PlayerList) {
-            assertEquals(12, p.getHand().size());
+            assertEquals(12, p.hand.size());
         }
         //also check for the correct number of removed cards
-        assertEquals(52, game.getAdventureDeckSize());
+        assertEquals(52, game.AdDeck.size());
     }
 
     @Test
@@ -178,19 +178,19 @@ class MainTest {
             game.queenEffect();
         }
         //check Queen's Favour works on hand with 12 cards
-        assertEquals(14, game.curPlayer.getHand().size());
+        assertEquals(14, game.curPlayer.hand.size());
         assertEquals(50, game.AdDeck.size());
 
         //remove some cards and test again
-        game.curPlayer.getHand().removeFirst();
-        game.curPlayer.getHand().removeFirst();
-        game.curPlayer.getHand().removeFirst();
-        assertEquals(11, game.curPlayer.getHand().size());
+        game.curPlayer.hand.removeFirst();
+        game.curPlayer.hand.removeFirst();
+        game.curPlayer.hand.removeFirst();
+        assertEquals(11, game.curPlayer.hand.size());
         curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")){
             game.queenEffect();
         }
-        assertEquals(13, game.curPlayer.getHand().size());
+        assertEquals(13, game.curPlayer.hand.size());
         assertEquals(48, game.AdDeck.size());
     }
 
@@ -216,29 +216,29 @@ class MainTest {
             game.prosperityEffect();
         }
         //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
-        assertEquals(14, game.PlayerList.get(0).getHand().size());
-        assertEquals(14, game.PlayerList.get(1).getHand().size());
-        assertEquals(14, game.PlayerList.get(2).getHand().size());
-        assertEquals(14, game.PlayerList.get(3).getHand().size());
+        assertEquals(14, game.PlayerList.get(0).hand.size());
+        assertEquals(14, game.PlayerList.get(1).hand.size());
+        assertEquals(14, game.PlayerList.get(2).hand.size());
+        assertEquals(14, game.PlayerList.get(3).hand.size());
         assertEquals(44, game.AdDeck.size());
 
         //remove some cards
-        game.PlayerList.get(3).getHand().removeFirst();
-        game.PlayerList.get(3).getHand().removeFirst();
-        game.PlayerList.get(3).getHand().removeFirst();
-        game.PlayerList.get(2).getHand().removeFirst();
-        game.PlayerList.get(2).getHand().removeFirst();
-        game.PlayerList.get(1).getHand().removeFirst();
+        game.PlayerList.get(3).hand.removeFirst();
+        game.PlayerList.get(3).hand.removeFirst();
+        game.PlayerList.get(3).hand.removeFirst();
+        game.PlayerList.get(2).hand.removeFirst();
+        game.PlayerList.get(2).hand.removeFirst();
+        game.PlayerList.get(1).hand.removeFirst();
 
         curCard = game.drawEventCard();
         if (curCard.id.equals("Prosperity")){
             game.prosperityEffect();
         }
         //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
-        assertEquals(16, game.PlayerList.get(0).getHand().size());
-        assertEquals(15, game.PlayerList.get(1).getHand().size());
-        assertEquals(14, game.PlayerList.get(2).getHand().size());
-        assertEquals(13, game.PlayerList.get(3).getHand().size());
+        assertEquals(16, game.PlayerList.get(0).hand.size());
+        assertEquals(15, game.PlayerList.get(1).hand.size());
+        assertEquals(14, game.PlayerList.get(2).hand.size());
+        assertEquals(13, game.PlayerList.get(3).hand.size());
         assertEquals(36, game.AdDeck.size());
     }
 

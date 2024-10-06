@@ -1,9 +1,7 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class Main {
     public Player curPlayer;
@@ -164,9 +162,9 @@ public class Main {
 
             
             if(curEventCard.id.equals("Plague")){
-                System.out.print("Plague Drawn. Current player's shields decreased from " + game.curPlayer.getShields());
+                System.out.print("Plague Drawn. Current player's shields decreased from " + game.curPlayer.shields);
                 game.plagueEffect();
-                System.out.print(" to " + game.curPlayer.getShields() + "\n");
+                System.out.print(" to " + game.curPlayer.shields + "\n");
             }else if(curEventCard.id.equals("Queen's Favour")){
                 System.out.print("Queen's Favour Drawn. Current player draws 2 cards.");
                 game.queenEffect();
@@ -193,19 +191,6 @@ public class Main {
             this.type = type;
             this.value = value;
         }
-
-        public String getId() {
-            return id;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public String getType() {
-            return type;
-        }
-
         @Override
         public String toString() {
             return id;
@@ -247,14 +232,6 @@ public class Main {
             hand = new ArrayList<Card>();
         }
 
-        public ArrayList<Card> getHand() {
-            return hand;
-        }
-
-        public int getShields() {
-            return shields;
-        }
-
         public void addShields(int i) {
             shields += i;
         }
@@ -292,30 +269,14 @@ public class Main {
         Collections.shuffle(AdDeck);
     }
 
-    public int getAdventureDeckSize() {
-        return AdDeck.size();
-    }
-
-    public ArrayList<Card> getAdventureDeckCards() {
-        return AdDeck;
-    }
-
     public void initializeEventDeck() {
         EvDeck = new ArrayList<>(EventDeckList);
         Collections.shuffle(EvDeck);
     }
 
-    public ArrayList<Card> getEventDeckCards() {
-        return EvDeck;
-    }
-
-    public int getEventDeckSize() {
-        return EvDeck.size();
-    }
-
     public boolean findWinners() {
         for (Player p : PlayerList) {
-            if (p.getShields() >= 7) {
+            if (p.shields >= 7) {
                 return true;
             }
         }
@@ -325,7 +286,7 @@ public class Main {
     public String printWinners() {
         String outString = "Player(s) ";
         for (Player p : PlayerList) {
-            if (p.getShields() >= 7) {
+            if (p.shields >= 7) {
                 outString += p.toString() + ", ";
             }
         }
@@ -341,8 +302,8 @@ public class Main {
     public void plagueEffect() {
         curPlayer.addShields(-2);
         //if it's less than 0, set it to 0
-        if (curPlayer.getShields() < 0) {
-            curPlayer.addShields(-curPlayer.getShields());
+        if (curPlayer.shields< 0) {
+            curPlayer.addShields(-curPlayer.shields);
         }
     }
 
@@ -363,6 +324,6 @@ public class Main {
     }
 
     public String questEffect(Card curCard){
-        return "Beginning the effects of a Quest card with " + curCard.getValue() + " stages.";
+        return "Beginning the effects of a Quest card with " + curCard.value + " stages.";
     }
 }
