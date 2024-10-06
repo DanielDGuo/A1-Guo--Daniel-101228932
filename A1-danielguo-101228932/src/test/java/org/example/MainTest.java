@@ -169,21 +169,29 @@ class MainTest {
         game.EvDeck.add(game.new Card("Queen's Favour", "Event", 0));
         game.EvDeck.add(game.new Card("Queen's Favour", "Event", 0));
 
+        game.initializeAdventureDeck();
+        game.initializePlayerHands();
+        assertEquals(52, game.AdDeck.size());
+
         Main.Card curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")){
             game.queenEffect();
         }
-        //check Queen's Favour works on a player with no shields
-        assertEquals(2, game.curPlayer.shields);
+        //check Queen's Favour works on hand with 12 cards
+        assertEquals(14, game.curPlayer.getHand().size());
+        assertEquals(50, game.AdDeck.size());
 
-        game.curPlayer.addShields(1);
-        //3 shields now
+        //remove some cards and test again
+        game.curPlayer.getHand().removeFirst();
+        game.curPlayer.getHand().removeFirst();
+        game.curPlayer.getHand().removeFirst();
+        assertEquals(11, game.curPlayer.getHand().size());
         curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")){
             game.queenEffect();
         }
-        //check Queen's Favour works on a player with 3 shield
-        assertEquals(5, game.curPlayer.shields);
+        assertEquals(13, game.curPlayer.getHand().size());
+        assertEquals(48, game.AdDeck.size());
     }
 
     @Test
