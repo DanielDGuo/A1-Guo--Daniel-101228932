@@ -185,4 +185,52 @@ class MainTest {
         //check Queen's Favour works on a player with 3 shield
         assertEquals(5, game.curPlayer.shields);
     }
+
+    @Test
+    @DisplayName("Test Prosperity Card Effects")
+    void RESP_09_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+        //init a dummy event deck
+        game.EvDeck = new ArrayList<>();
+        //make an EvDeck of prosperity for testing.
+        game.EvDeck.add(game.new Card("Prosperity", "Event", 0));
+        game.EvDeck.add(game.new Card("Prosperity", "Event", 0));
+        game.EvDeck.add(game.new Card("Prosperity", "Event", 0));
+
+        //each hand now has 12 cards
+        game.initializeAdventureDeck();
+        game.initializePlayerHands();
+        assertEquals(52, game.AdDeck.size());
+
+        Main.Card curCard = game.drawEventCard();
+        if (curCard.id.equals("Prosperity")){
+            game.prosperityEffect();
+        }
+        //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
+        assertEquals(14, game.PlayerList.get(0).getHand().size());
+        assertEquals(14, game.PlayerList.get(1).getHand().size());
+        assertEquals(14, game.PlayerList.get(2).getHand().size());
+        assertEquals(14, game.PlayerList.get(3).getHand().size());
+        assertEquals(44, game.AdDeck.size());
+
+        //remove some cards
+        game.PlayerList.get(3).getHand().removeFirst();
+        game.PlayerList.get(3).getHand().removeFirst();
+        game.PlayerList.get(3).getHand().removeFirst();
+        game.PlayerList.get(2).getHand().removeFirst();
+        game.PlayerList.get(2).getHand().removeFirst();
+        game.PlayerList.get(1).getHand().removeFirst();
+
+        curCard = game.drawEventCard();
+        if (curCard.id.equals("Prosperity")){
+            game.prosperityEffect();
+        }
+        //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
+        assertEquals(16, game.PlayerList.get(0).getHand().size());
+        assertEquals(15, game.PlayerList.get(1).getHand().size());
+        assertEquals(14, game.PlayerList.get(2).getHand().size());
+        assertEquals(13, game.PlayerList.get(3).getHand().size());
+        assertEquals(36, game.AdDeck.size());
+    }
 }

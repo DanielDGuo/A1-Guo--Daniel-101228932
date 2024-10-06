@@ -347,4 +347,7 @@ public class Main {
     public void queenEffect() {
         curPlayer.addShields(2);
     }
+
+    public void prosperityEffect() {
+    }
 }
