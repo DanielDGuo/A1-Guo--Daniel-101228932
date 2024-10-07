@@ -148,6 +148,7 @@ public class Main {
         game.initializeAdventureDeck();
         game.initializeEventDeck();
         game.initializePlayerHands();
+        Scanner inContent = new Scanner(System.in);
 
         game.curPlayer = game.PlayerList.get(3);
         while (!game.findWinners()) {
@@ -324,5 +325,8 @@ public class Main {
 
     public void questEffect(Card c){
         System.out.print("Beginning the effects of a Quest card with " + c.value + " stages.\n");
+    }
+
+    public void endTurn(Scanner inContent){
     }
 }

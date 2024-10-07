@@ -5,16 +5,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-
+    private ByteArrayInputStream inContent;
+    private final PrintStream outContentOriginal = System.out;
+    private final InputStream inContentOriginal = System.in;
     @BeforeEach
     public void setUpStreams() {
         //any prints will be put into the outContent instead
@@ -23,8 +27,15 @@ class MainTest {
 
     @AfterEach
     public void restoreStreams() {
-        //reset the prints back to the original System.out
-        System.setOut(originalOut);
+        //reset the prints back to the original I/O
+        System.setOut(outContentOriginal);
+        System.setIn(inContentOriginal);
+    }
+
+    //helper that converts the data into ByteArrayInputStream readable format
+    void provideInput(String data) {
+        inContent = new ByteArrayInputStream(data.getBytes());
+        System.setIn(inContent);
     }
 
     @Test
@@ -309,6 +320,34 @@ class MainTest {
             game.questEffect(curCard);
         }
         assertEquals("Beginning the effects of a Quest card with " + 5 + " stages.\n", outContent.toString());
+        outContent.reset();
+    }
+
+    @Test
+    @DisplayName("Test End of Turn output")
+    void RESP_11_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+        //init a dummy event deck
+        game.EvDeck = new ArrayList<>();
+        game.initializeAdventureDeck();
+        game.initializePlayerHands();
+
+        //test for end of turn message
+        //test for one invalid input then one valid input
+        game.endTurn(new Scanner("foo\n"));
+        assertEquals("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nP1's turn has ended. Please give controls to P2, and press enter.\nInvalid input.\n", outContent.toString());
+        outContent.reset();
+
+        //test for three invalid input then one valid input
+        game.endTurn(new Scanner("foo\nfoo\nfoo\n"));
+        assertEquals("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nP1's turn has ended. Please give controls to P2, and press enter.\nInvalid input.\nInvalid input.\nInvalid input.\n", outContent.toString());
+        outContent.reset();
+
+        //test a single enter press; 1 valid input
+        game.endTurn(new Scanner("\n"));
+        assertEquals("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nP1's turn has ended. Please give controls to P2, and press enter.\n",
+                outContent.toString());
         outContent.reset();
     }
 }
