@@ -1,14 +1,13 @@
 package org.example;
 
-import java.io.PrintWriter;
 import java.util.*;
 
 public class Main {
     public Player curPlayer;
     public ArrayList<Card> AdDeck;
     public ArrayList<Card> EvDeck;
-    public ArrayList<Card> EvDiscard = new ArrayList<Card>();
-    public ArrayList<Player> PlayerList = new ArrayList<Player>(
+    public ArrayList<Card> EvDiscard = new ArrayList<>();
+    public final ArrayList<Player> PlayerList = new ArrayList<>(
             Arrays.asList(
                     new Player(1),
                     new Player(2),
@@ -17,7 +16,7 @@ public class Main {
             )
     );
     //list of all 100 cards included in the deck
-    public final ArrayList<Card> AdventureDeckList = new ArrayList<Card>(
+    public final ArrayList<Card> AdventureDeckList = new ArrayList<>(
             Arrays.asList(
                     new Card("F5", "Foe", 5),
                     new Card("F5", "Foe", 5),
@@ -122,7 +121,7 @@ public class Main {
             )
     );
     //list of all 17 cards included in the deck
-    public final ArrayList<Card> EventDeckList = new ArrayList<Card>(
+    public final ArrayList<Card> EventDeckList = new ArrayList<>(
             Arrays.asList(
                     new Card("Q2", "Quest", 2),
                     new Card("Q2", "Quest", 2),
@@ -152,29 +151,24 @@ public class Main {
 
         game.curPlayer = game.PlayerList.get(3);
         while (!game.findWinners()) {
+            //Start of Beginning Phase
             //get the next player
             game.curPlayer = game.PlayerList.get((game.PlayerList.indexOf(game.curPlayer) + 1) % 4);
+
             System.out.print("Player " + game.curPlayer + ", this is your hand:\n");
-            System.out.print(game.curPlayer.printHand() + "\n");
-            System.out.print("The current event is: \n");
+            game.curPlayer.printHand();
+
             Card curEventCard = game.drawEventCard();
-            System.out.print(curEventCard + "\n");
 
-            
-            if(curEventCard.id.equals("Plague")){
-                System.out.print("Plague Drawn. Current player's shields decreased from " + game.curPlayer.shields);
-                game.plagueEffect();
-                System.out.print(" to " + game.curPlayer.shields + "\n");
-            }else if(curEventCard.id.equals("Queen's Favour")){
-                System.out.print("Queen's Favour Drawn. Current player draws 2 cards.");
-                game.queenEffect();
-            }else if(curEventCard.id.equals("Prosperity")){
-                System.out.print("Prosperity Drawn. Each player draws 2 cards.");
-                game.prosperityEffect();
+            switch (curEventCard.id) {
+                case "Plague" -> game.plagueEffect();
+                case "Queen's Favour" -> game.queenEffect();
+                case "Prosperity" -> game.prosperityEffect();
+                case "Quest" -> game.questEffect(curEventCard);
             }
+            //end of Beginning Phase. Move on to Quest Building if needed
         }
-        System.out.print(game.printWinners());
-
+        game.printWinners();
     }
 
     class Card implements Comparable<Card> {
@@ -229,7 +223,7 @@ public class Main {
 
         public Player(int id) {
             this.id = id;
-            hand = new ArrayList<Card>();
+            hand = new ArrayList<>();
         }
 
         public void addShields(int i) {
@@ -240,13 +234,13 @@ public class Main {
             hand.add(c);
         }
 
-        public String printHand() {
+        public void printHand() {
             String outString = "P" + id + " Hand: ";
             Collections.sort(hand);
             for (Card c : hand) {
                 outString += c + ", ";
             }
-            return outString.substring(0, outString.length() - 2);
+            System.out.print(outString.substring(0, outString.length() - 2));
         }
 
         @Override
@@ -283,31 +277,35 @@ public class Main {
         return false;
     }
 
-    public String printWinners() {
+    public void printWinners() {
         String outString = "Player(s) ";
         for (Player p : PlayerList) {
             if (p.shields >= 7) {
-                outString += p.toString() + ", ";
+                outString += p + ", ";
             }
         }
-        return outString.substring(0, outString.length() - 2) + " Won.";
+        System.out.print(outString.substring(0, outString.length() - 2) + " Won.");
     }
 
     public Card drawEventCard() {
         Card curEvent = EvDeck.removeFirst();
         EvDiscard.add(curEvent);
+        System.out.print("\nThe current event is: " + curEvent + "\n");
         return curEvent;
     }
 
     public void plagueEffect() {
+        System.out.print("Plague Drawn. Current player's shields decreased from " + curPlayer.shields);
         curPlayer.addShields(-2);
         //if it's less than 0, set it to 0
         if (curPlayer.shields< 0) {
             curPlayer.addShields(-curPlayer.shields);
         }
+        System.out.print(" to " + curPlayer.shields + "\n");
     }
 
     public void queenEffect() {
+        System.out.print("Queen's Favour Drawn. Current player draws 2 cards.\n");
         curPlayer.addCard(AdDeck.getFirst());
         AdDeck.removeFirst();
         curPlayer.addCard(AdDeck.getFirst());
@@ -315,6 +313,7 @@ public class Main {
     }
 
     public void prosperityEffect() {
+        System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
         for(Player p : PlayerList){
             p.addCard(AdDeck.getFirst());
             AdDeck.removeFirst();
@@ -323,7 +322,7 @@ public class Main {
         }
     }
 
-    public String questEffect(Card curCard){
-        return "Beginning the effects of a Quest card with " + curCard.value + " stages.";
+    public void questEffect(Card c){
+        System.out.print("Beginning the effects of a Quest card with " + c.value + " stages.\n");
     }
 }

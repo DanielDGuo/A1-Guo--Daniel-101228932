@@ -1,13 +1,31 @@
 package org.example;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+
+    @BeforeEach
+    public void setUpStreams() {
+        //any prints will be put into the outContent instead
+        System.setOut(new PrintStream(outContent));
+    }
+
+    @AfterEach
+    public void restoreStreams() {
+        //reset the prints back to the original System.out
+        System.setOut(originalOut);
+    }
 
     @Test
     @DisplayName("Check that the adventure deck is a permutation of 100 specified cards")
@@ -74,14 +92,20 @@ class MainTest {
         Main game = new Main();
         //test one winner
         game.PlayerList.get(0).addShields(7);
-        assertEquals("Player(s) P1 Won.", game.printWinners());
+        game.printWinners();
+        assertEquals("Player(s) P1 Won.", outContent.toString());
+        outContent.reset();
         //test two winners
-        game.PlayerList.get(1).addShields(7);
-        assertEquals("Player(s) P1, P2 Won.", game.printWinners());
+        game.PlayerList.get(3).addShields(7);
+        game.printWinners();
+        assertEquals("Player(s) P1, P4 Won.", outContent.toString());
+        outContent.reset();
         //test four winners
         game.PlayerList.get(2).addShields(7);
-        game.PlayerList.get(3).addShields(7);
-        assertEquals("Player(s) P1, P2, P3, P4 Won.", game.printWinners());
+        game.PlayerList.get(1).addShields(7);
+        game.printWinners();
+        assertEquals("Player(s) P1, P2, P3, P4 Won.", outContent.toString());
+        outContent.reset();
     }
 
     @Test
@@ -99,7 +123,8 @@ class MainTest {
         game.curPlayer.addCard(game.new Card("L20", "Weapon", 20));
 
         //check hand is sorted
-        assertEquals("P1 Hand: F5, F15, F40, S10, S10, H10, L20", game.PlayerList.get(0).printHand());
+        game.PlayerList.get(0).printHand();
+        assertEquals("P1 Hand: F5, F15, F40, S10, S10, H10, L20", outContent.toString());
     }
 
     @Test
@@ -119,6 +144,15 @@ class MainTest {
         assertEquals(a, game.drawEventCard());
         //check drawn card is in the discard
         assertTrue(game.EvDiscard.contains(a));
+        assertEquals("\nThe current event is: Plague\n", outContent.toString());
+        outContent.reset();
+
+        //check drawn card is correct
+        assertEquals(b, game.drawEventCard());
+        //check drawn card is in the discard
+        assertTrue(game.EvDiscard.contains(b));
+        assertEquals("\nThe current event is: Q5\n", outContent.toString());
+        outContent.reset();
     }
 
     @Test
@@ -253,26 +287,28 @@ class MainTest {
         game.EvDeck.add(game.new Card("Q2", "Quest", 2));
         game.EvDeck.add(game.new Card("Q3", "Quest", 3));
         game.EvDeck.add(game.new Card("Q5", "Quest", 5));
-        String outString = "";
 
         //quest should just output a declaration string for now; no logic for this responsibility
 
         Main.Card curCard = game.drawEventCard();
         if (curCard.type.equals("Quest")){
-            outString = game.questEffect(curCard);
+            game.questEffect(curCard);
         }
-        assertEquals("Beginning the effects of a Quest card with " + 2 + " stages.", outString);
+        assertEquals("Beginning the effects of a Quest card with " + 2 + " stages.\n", outContent.toString());
+        outContent.reset();
 
         curCard = game.drawEventCard();
         if (curCard.type.equals("Quest")){
-            outString = game.questEffect(curCard);
+            game.questEffect(curCard);
         }
-        assertEquals("Beginning the effects of a Quest card with " + 3 + " stages.", outString);
+        assertEquals("Beginning the effects of a Quest card with " + 3 + " stages.\n", outContent.toString());
+        outContent.reset();
 
         curCard = game.drawEventCard();
         if (curCard.type.equals("Quest")){
-            outString = game.questEffect(curCard);
+            game.questEffect(curCard);
         }
-        assertEquals("Beginning the effects of a Quest card with " + 5 + " stages.", outString);
+        assertEquals("Beginning the effects of a Quest card with " + 5 + " stages.\n", outContent.toString());
+        outContent.reset();
     }
 }
