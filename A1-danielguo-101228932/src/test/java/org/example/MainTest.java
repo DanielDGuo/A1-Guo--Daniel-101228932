@@ -302,6 +302,7 @@ class MainTest {
         //quest should just output a declaration string for now; no logic for this responsibility
 
         Main.Card curCard = game.drawEventCard();
+        outContent.reset();
         if (curCard.type.equals("Quest")){
             game.questEffect(curCard);
         }
@@ -309,6 +310,7 @@ class MainTest {
         outContent.reset();
 
         curCard = game.drawEventCard();
+        outContent.reset();
         if (curCard.type.equals("Quest")){
             game.questEffect(curCard);
         }
@@ -316,6 +318,7 @@ class MainTest {
         outContent.reset();
 
         curCard = game.drawEventCard();
+        outContent.reset();
         if (curCard.type.equals("Quest")){
             game.questEffect(curCard);
         }

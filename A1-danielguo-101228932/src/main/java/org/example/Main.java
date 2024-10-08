@@ -253,10 +253,7 @@ public class Main {
 
     public void initializePlayerHands() {
         for (Player p : PlayerList) {
-            for (int i = 0; i < 12; i++) {
-                p.addCard(AdDeck.getFirst());
-                AdDeck.removeFirst();
-            }
+            drawAdCard(p, 12);
         }
     }
 
@@ -289,6 +286,13 @@ public class Main {
         System.out.print(outString.substring(0, outString.length() - 2) + " Won.");
     }
 
+    public void drawAdCard(Player p, int num){
+        for(int i = 0; i < num; i++){
+            p.addCard(AdDeck.getFirst());
+            AdDeck.removeFirst();
+        }
+    }
+
     public Card drawEventCard() {
         Card curEvent = EvDeck.removeFirst();
         EvDiscard.add(curEvent);
@@ -308,19 +312,13 @@ public class Main {
 
     public void queenEffect() {
         System.out.print("Queen's Favour Drawn. Current player draws 2 cards.\n");
-        curPlayer.addCard(AdDeck.getFirst());
-        AdDeck.removeFirst();
-        curPlayer.addCard(AdDeck.getFirst());
-        AdDeck.removeFirst();
+        drawAdCard(curPlayer, 2);
     }
 
     public void prosperityEffect() {
         System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
         for(Player p : PlayerList){
-            p.addCard(AdDeck.getFirst());
-            AdDeck.removeFirst();
-            p.addCard(AdDeck.getFirst());
-            AdDeck.removeFirst();
+            drawAdCard(p, 2);
         }
     }
 
