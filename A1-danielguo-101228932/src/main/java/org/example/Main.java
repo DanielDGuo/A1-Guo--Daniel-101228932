@@ -168,6 +168,7 @@ public class Main {
                 case "Quest" -> game.questEffect(curEventCard);
             }
             //end of Beginning Phase. Move on to Quest Building if needed
+            game.endTurn(inContent);
         }
         game.printWinners();
     }
@@ -328,5 +329,16 @@ public class Main {
     }
 
     public void endTurn(Scanner inContent){
+        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + curPlayer + "'s turn has ended. Please give controls to " + (PlayerList.get((PlayerList.indexOf(curPlayer)+1)%4)) + ", and press enter.\n");
+
+        String input = inContent.nextLine();
+        while(!input.isEmpty()){
+            System.out.print("Invalid input.\n");
+            try{
+                input = inContent.nextLine();
+            }catch (java.util.NoSuchElementException e){
+                input = "";
+            }
+        }
     }
 }
