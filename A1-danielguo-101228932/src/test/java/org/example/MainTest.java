@@ -353,4 +353,36 @@ class MainTest {
                 outContent.toString());
         outContent.reset();
     }
+
+    @Test
+    @DisplayName("Test Draw leads to Discard if needed")
+    void RESP_12_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+        //init a dummy event deck
+        game.EvDeck = new ArrayList<>();
+        game.initializeAdventureDeck();
+        game.initializePlayerHands();
+
+        //have P1 go up to 13 cards
+        game.drawAdCard(game.curPlayer, 1);
+        assertEquals("P1 is over the max hand size by 1. Please give controls to P1, and press enter.\n",
+                outContent.toString());
+        outContent.reset();
+
+        //have P3 go up to 15 cards
+        game.drawAdCard(game.PlayerList.get(2), 3);
+        assertEquals("P3 is over the max hand size by 3. Please give controls to P3, and press enter.\n",
+                outContent.toString());
+        outContent.reset();
+
+        //remove some cards from P2
+        game.PlayerList.get(1).hand.removeFirst();
+        game.PlayerList.get(1).hand.removeFirst();
+        game.PlayerList.get(1).hand.removeFirst();
+        //check that the discard doesn't activate
+        game.drawAdCard(game.PlayerList.get(1), 1);
+        assertEquals("", outContent.toString());
+        outContent.reset();
+    }
 }
