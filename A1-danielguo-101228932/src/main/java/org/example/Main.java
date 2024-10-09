@@ -291,6 +291,10 @@ public class Main {
             p.addCard(AdDeck.getFirst());
             AdDeck.removeFirst();
         }
+        if(p.hand.size() > 12){
+            System.out.print(p + " is over the max hand size by "+ (p.hand.size() - 12) + ". Please give controls to " + p);
+            //begin discarding method here
+        }
     }
 
     public Card drawEventCard() {
