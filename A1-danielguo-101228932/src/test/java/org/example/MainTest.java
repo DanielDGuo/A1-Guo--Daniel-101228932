@@ -508,4 +508,56 @@ class MainTest {
         outContent.reset();
         assertEquals(game.PlayerList.get(3), p);
     }
+
+    @Test
+    @DisplayName("Test Quest Building start")
+    void RESP_15_test_01() {
+        Main game = new Main();
+
+        //state that the build phase is beginning and upon confirmation that the sponsor is in control, display their hand
+        //leave the rest of the build phase later
+        Main.Player sponsor = game.PlayerList.get(0);
+
+        //create a dummy sponsor hand
+        sponsor.addCard(game.new Card("F5", "Foe", 5));
+        sponsor.addCard(game.new Card("F5", "Foe", 5));
+        sponsor.addCard(game.new Card("F5", "Foe", 5));
+        sponsor.addCard(game.new Card("F10", "Foe", 10));
+        sponsor.addCard(game.new Card("F15", "Foe", 15));
+        sponsor.addCard(game.new Card("F20", "Foe", 20));
+        sponsor.addCard(game.new Card("F20", "Foe", 20));
+        sponsor.addCard(game.new Card("F70", "Foe", 70));
+        sponsor.addCard(game.new Card("D5", "Weapon", 5));
+        sponsor.addCard(game.new Card("D5", "Weapon", 5));
+        sponsor.addCard(game.new Card("H10", "Weapon", 10));
+        sponsor.addCard(game.new Card("L20", "Weapon", 20));
+
+        game.beginQuestBuilding(sponsor, new Scanner("\n"));
+        assertEquals("""
+                        P1, you are the sponsor. Please confirm you are in control.
+                        P1, this is your hand:
+                        P1 Hand: F5, F5, F5, F10, F15, F20, F20, F70, D5, D5, H10, L20
+                        """
+                , outContent.toString());
+        outContent.reset();
+
+        //try the second player
+        sponsor = game.PlayerList.get(1);
+
+        //create a dummy sponsor hand
+        sponsor.addCard(game.new Card("F5", "Foe", 5));
+        sponsor.addCard(game.new Card("F5", "Foe", 5));
+        sponsor.addCard(game.new Card("D5", "Weapon", 5));
+        sponsor.addCard(game.new Card("D5", "Weapon", 5));
+
+        game.beginQuestBuilding(sponsor, new Scanner("K\n\n"));
+        assertEquals("""
+                        P2, you are the sponsor. Please confirm you are in control.
+                        Invalid input.
+                        P2, this is your hand:
+                        P2 Hand: F5, F5, D5, D5
+                        """
+                , outContent.toString());
+        outContent.reset();
+    }
 }
