@@ -5,11 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -559,5 +558,95 @@ class MainTest {
                         """
                 , outContent.toString());
         outContent.reset();
+    }
+
+    @Test
+    @DisplayName("Test Quest Building start")
+    void RESP_16_test_01() {
+        Main game = new Main();
+
+        //state that the build phase is beginning and upon confirmation that the sponsor is in control, display their hand
+        //leave the rest of the build phase later
+        Main.Player sponsor = game.PlayerList.get(0);
+
+        //create a dummy sponsor hand
+        sponsor.addCard(game.new Card("F5", "Foe", 5));
+        sponsor.addCard(game.new Card("F5", "Foe", 5));
+        sponsor.addCard(game.new Card("F5", "Foe", 5));
+        sponsor.addCard(game.new Card("F10", "Foe", 10));
+        sponsor.addCard(game.new Card("F15", "Foe", 15));
+        sponsor.addCard(game.new Card("F20", "Foe", 20));
+        sponsor.addCard(game.new Card("F20", "Foe", 20));
+        sponsor.addCard(game.new Card("F70", "Foe", 70));
+        sponsor.addCard(game.new Card("D5", "Weapon", 5));
+        sponsor.addCard(game.new Card("D5", "Weapon", 5));
+        sponsor.addCard(game.new Card("H10", "Weapon", 10));
+        sponsor.addCard(game.new Card("L20", "Weapon", 20));
+
+        //start building 4 stages
+        ArrayList<ArrayList<Main.Card>> stages = game.beginStageBuilding(sponsor, 4, new Scanner("1\n\n3\n\n3\n8\n\n5\n\n\n"));
+        assertEquals("""
+                        You must build 4 stages.
+                        Stage 1:\s
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F5, F10, F15, F20, F20, F70, D5, D5, H10, L20
+                        Stage 1: F5
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F10, F15, F20, F20, F70, D5, D5, H10, L20
+                        Stage 2:\s
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F10, F15, F20, F20, F70, D5, D5, H10, L20
+                        Stage 2: F10
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F15, F20, F20, F70, D5, D5, H10, L20
+                        Stage 3:\s
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F15, F20, F20, F70, D5, D5, H10, L20
+                        Stage 3: F15
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F20, F20, F70, D5, D5, H10, L20
+                        Stage 3: F15, H10
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F20, F20, F70, D5, D5, L20
+                        Stage 4:\s
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F20, F20, F70, D5, D5, L20
+                        Stage 4: F70
+                        Please select an index of a card you wish to add to the stage, or press enter to finish.
+                        P1 Hand: F5, F5, F20, F20, D5, D5, L20
+                        These are your stages:
+                        Stage 1: F5
+                        Stage 2: F10
+                        Stage 3: F15, H10
+                        Stage 4: F70
+                        Press enter to move to quest attacks.
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        """
+                , outContent.toString());
+        outContent.reset();
+        //check stage contents
+        assertEquals("F5", stages.get(0).get(0).toString());
+        assertEquals("F10", stages.get(1).get(0).toString());
+        assertEquals("F15", stages.get(2).get(0).toString());
+        assertEquals("H10", stages.get(2).get(1).toString());
+        assertEquals("F70", stages.get(3).get(0).toString());
     }
 }

@@ -448,4 +448,8 @@ public class Main {
         sponsor.printHand();
         System.out.print("\n");
     }
+
+    public ArrayList<ArrayList<Card>> begineStageBuilding(Player sponsor, int numStages, Scanner inContent){
+        return null;
+    }
 }
