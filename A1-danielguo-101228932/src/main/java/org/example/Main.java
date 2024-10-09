@@ -165,11 +165,16 @@ public class Main {
                 case "Plague" -> game.plagueEffect();
                 case "Queen's Favour" -> game.queenEffect();
                 case "Prosperity" -> game.prosperityEffect();
-                case "Quest" -> game.questEffect(curEventCard);
+                default -> game.questEffect(curEventCard);
             }
-            //end of Beginning Phase. Move on to Quest Building if needed
-            if(curEventCard.id.equals("Quest")){
+            //end of Beginning Phase. Move on to Questing if needed
+            if (curEventCard.type.equals("Quest")) {
                 Player sponsor = game.seekSponsor(game.inContent);
+                //Enter Quest Build
+                //Enter Quest Gather
+                //Enter Quest Attack, if Quest Gather was accepted by other players
+                //After Quest Attack, distribute shields to the winners
+                //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
             }
             game.endTurn(game.inContent);
         }
@@ -190,6 +195,7 @@ public class Main {
             this.type = type;
             this.value = value;
         }
+
         @Override
         public String toString() {
             return id;
@@ -289,49 +295,49 @@ public class Main {
         System.out.print(outString.substring(0, outString.length() - 2) + " Won.");
     }
 
-    public void drawAdCard(Player p, int num){
-        for(int i = 0; i < num; i++){
+    public void drawAdCard(Player p, int num) {
+        for (int i = 0; i < num; i++) {
             p.addCard(AdDeck.getFirst());
             AdDeck.removeFirst();
         }
-        if(p.hand.size() > 12){
-            System.out.print(p + " is over the max hand size by "+ (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
+        if (p.hand.size() > 12) {
+            System.out.print("\n\n\n\n\n\n\n\n\n\n" + p + " is over the max hand size by " + (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
             this.discardAdCard(p, (p.hand.size() - 12), inContent);
         }
     }
 
     //for testing tests prior to R-CODE-13
-    public void drawAdCardNoDiscard(Player p, int num){
-        for(int i = 0; i < num; i++){
+    public void drawAdCardNoDiscard(Player p, int num) {
+        for (int i = 0; i < num; i++) {
             p.addCard(AdDeck.getFirst());
             AdDeck.removeFirst();
         }
-        if(p.hand.size() > 12){
-            System.out.print(p + " is over the max hand size by "+ (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
+        if (p.hand.size() > 12) {
+            System.out.print("\n\n\n\n\n\n\n\n\n\n" + p + " is over the max hand size by " + (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
         }
     }
 
-    public void discardAdCard(Player p, int num, Scanner inContent){
+    public void discardAdCard(Player p, int num, Scanner inContent) {
         System.out.print("\nAre you " + p + "?\n");
         String input = inContent.nextLine();
-        while(!input.isEmpty()){
+        while (!input.isEmpty()) {
             System.out.print("Invalid input. Please press Enter.\n");
-            try{
+            try {
                 input = inContent.nextLine();
-            }catch (java.util.NoSuchElementException e){
+            } catch (java.util.NoSuchElementException e) {
                 input = "";
             }
         }
-        while(num > 0){
+        while (num > 0) {
             System.out.print("You have to discard " + num + " more card(s)\n");
             System.out.print(p + ", This is your hand:\n");
             p.printHand();
             System.out.print("\nPlease select a card to discard by index(1 - " + (num + 12) + ")\n");
             input = inContent.nextLine();
-            if(!input.isEmpty() && !(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= num + 12)){
+            if (!input.isEmpty() && !(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= num + 12)) {
                 System.out.print("Invalid index. Try again.\n");
                 continue;
-            }else if(input.equals("")){
+            } else if (input.isEmpty()) {
                 System.out.print("Please specify an index.\n");
                 continue;
             }
@@ -354,7 +360,7 @@ public class Main {
         System.out.print("Plague Drawn. Current player's shields decreased from " + curPlayer.shields);
         curPlayer.addShields(-2);
         //if it's less than 0, set it to 0
-        if (curPlayer.shields< 0) {
+        if (curPlayer.shields < 0) {
             curPlayer.addShields(-curPlayer.shields);
         }
         System.out.print(" to " + curPlayer.shields + "\n");
@@ -373,7 +379,7 @@ public class Main {
 
     public void prosperityEffect() {
         System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
-        for(Player p : PlayerList){
+        for (Player p : PlayerList) {
             drawAdCard(p, 2);
         }
     }
@@ -381,43 +387,43 @@ public class Main {
     //for testing tests prior to R-CODE-13
     public void prosperityEffectNoDiscard() {
         System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
-        for(Player p : PlayerList){
+        for (Player p : PlayerList) {
             drawAdCardNoDiscard(p, 2);
         }
     }
 
-    public void questEffect(Card c){
+    public void questEffect(Card c) {
         System.out.print("Beginning the effects of a Quest card with " + c.value + " stages.\n");
     }
 
-    public void endTurn(Scanner inContent){
-        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + curPlayer + "'s turn has ended. Please give controls to " + (PlayerList.get((PlayerList.indexOf(curPlayer)+1)%4)) + ", and press enter.\n");
+    public void endTurn(Scanner inContent) {
+        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + curPlayer + "'s turn has ended. Please give controls to " + (PlayerList.get((PlayerList.indexOf(curPlayer) + 1) % 4)) + ", and press enter.\n");
 
         String input = inContent.nextLine();
-        while(!input.isEmpty()){
+        while (!input.isEmpty()) {
             System.out.print("Invalid input.\n");
-            try{
+            try {
                 input = inContent.nextLine();
-            }catch (java.util.NoSuchElementException e){
+            } catch (java.util.NoSuchElementException e) {
                 input = "";
             }
         }
     }
 
-    public Player seekSponsor(Scanner inContent){
+    public Player seekSponsor(Scanner inContent) {
         int curPlayerIndex = curPlayer.id - 1;
-        for(int i = 0; i < 4; i++){
-            System.out.print(PlayerList.get(curPlayerIndex + i) + ", would you like to sponsor this quest? (Y/N)\n");
+        for (int i = 0; i < 4; i++) {
+            System.out.print(PlayerList.get((curPlayerIndex + i) % 4) + ", would you like to sponsor this quest? (Y/N)\n");
             String input = inContent.nextLine();
-            while(!(input.equals("Y") || input.equals("N"))){
+            while (!(input.equals("Y") || input.equals("N"))) {
                 System.out.print("Invalid input.\n");
-                try{
+                try {
                     input = inContent.nextLine();
-                }catch (java.util.NoSuchElementException e){
+                } catch (java.util.NoSuchElementException e) {
                     input = "";
                 }
             }
-            if(input.equals("Y")){
+            if (input.equals("Y")) {
                 System.out.print(PlayerList.get(curPlayerIndex + i) + " has accepted to sponsor this quest.\n");
                 return PlayerList.get(curPlayerIndex + i);
             }
