@@ -19,6 +19,7 @@ class MainTest {
     private ByteArrayInputStream inContent;
     private final PrintStream outContentOriginal = System.out;
     private final InputStream inContentOriginal = System.in;
+
     @BeforeEach
     public void setUpStreams() {
         //any prints will be put into the outContent instead
@@ -30,12 +31,6 @@ class MainTest {
         //reset the prints back to the original I/O
         System.setOut(outContentOriginal);
         System.setIn(inContentOriginal);
-    }
-
-    //helper that converts the data into ByteArrayInputStream readable format
-    void provideInput(String data) {
-        inContent = new ByteArrayInputStream(data.getBytes());
-        System.setIn(inContent);
     }
 
     @Test
@@ -179,7 +174,7 @@ class MainTest {
         game.EvDeck.add(game.new Card("Plague", "Event", 0));
 
         Main.Card curCard = game.drawEventCard();
-        if (curCard.id.equals("Plague")){
+        if (curCard.id.equals("Plague")) {
             game.plagueEffect();
         }
         //check Plague works on a player with no shields
@@ -187,7 +182,7 @@ class MainTest {
 
         game.curPlayer.addShields(1);
         curCard = game.drawEventCard();
-        if (curCard.id.equals("Plague")){
+        if (curCard.id.equals("Plague")) {
             game.plagueEffect();
         }
         //check Plague works on a player with 1 shield
@@ -195,7 +190,7 @@ class MainTest {
 
         game.curPlayer.addShields(3);
         curCard = game.drawEventCard();
-        if (curCard.id.equals("Plague")){
+        if (curCard.id.equals("Plague")) {
             game.plagueEffect();
         }
         //check Plague works on a player with 3 shields
@@ -219,7 +214,7 @@ class MainTest {
         assertEquals(52, game.AdDeck.size());
 
         Main.Card curCard = game.drawEventCard();
-        if (curCard.id.equals("Queen's Favour")){
+        if (curCard.id.equals("Queen's Favour")) {
             game.queenEffectNoDiscard();
         }
         //check Queen's Favour works on hand with 12 cards
@@ -232,7 +227,7 @@ class MainTest {
         game.curPlayer.hand.removeFirst();
         assertEquals(11, game.curPlayer.hand.size());
         curCard = game.drawEventCard();
-        if (curCard.id.equals("Queen's Favour")){
+        if (curCard.id.equals("Queen's Favour")) {
             game.queenEffectNoDiscard();
         }
         assertEquals(13, game.curPlayer.hand.size());
@@ -257,7 +252,7 @@ class MainTest {
         assertEquals(52, game.AdDeck.size());
 
         Main.Card curCard = game.drawEventCard();
-        if (curCard.id.equals("Prosperity")){
+        if (curCard.id.equals("Prosperity")) {
             game.prosperityEffectNoDiscard();
         }
         //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
@@ -276,7 +271,7 @@ class MainTest {
         game.PlayerList.get(1).hand.removeFirst();
 
         curCard = game.drawEventCard();
-        if (curCard.id.equals("Prosperity")){
+        if (curCard.id.equals("Prosperity")) {
             game.prosperityEffectNoDiscard();
         }
         //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
@@ -303,7 +298,7 @@ class MainTest {
 
         Main.Card curCard = game.drawEventCard();
         outContent.reset();
-        if (curCard.type.equals("Quest")){
+        if (curCard.type.equals("Quest")) {
             game.questEffect(curCard);
         }
         assertEquals("Beginning the effects of a Quest card with " + 2 + " stages.\n", outContent.toString());
@@ -311,7 +306,7 @@ class MainTest {
 
         curCard = game.drawEventCard();
         outContent.reset();
-        if (curCard.type.equals("Quest")){
+        if (curCard.type.equals("Quest")) {
             game.questEffect(curCard);
         }
         assertEquals("Beginning the effects of a Quest card with " + 3 + " stages.\n", outContent.toString());
@@ -319,7 +314,7 @@ class MainTest {
 
         curCard = game.drawEventCard();
         outContent.reset();
-        if (curCard.type.equals("Quest")){
+        if (curCard.type.equals("Quest")) {
             game.questEffect(curCard);
         }
         assertEquals("Beginning the effects of a Quest card with " + 5 + " stages.\n", outContent.toString());
@@ -331,10 +326,6 @@ class MainTest {
     void RESP_11_test_01() {
         Main game = new Main();
         game.curPlayer = game.PlayerList.get(0);
-        //init a dummy event deck
-        game.EvDeck = new ArrayList<>();
-        game.initializeAdventureDeck();
-        game.initializePlayerHands();
 
         //test for end of turn message
         //test for one invalid input then one valid input
@@ -359,20 +350,18 @@ class MainTest {
     void RESP_12_test_01() {
         Main game = new Main();
         game.curPlayer = game.PlayerList.get(0);
-        //init a dummy event deck
-        game.EvDeck = new ArrayList<>();
         game.initializeAdventureDeck();
         game.initializePlayerHands();
 
         //have P1 go up to 13 cards
         game.drawAdCardNoDiscard(game.curPlayer, 1);
-        assertEquals("P1 is over the max hand size by 1. Please give controls to P1, and press enter.\n",
+        assertEquals("\n\n\n\n\n\n\n\n\n\nP1 is over the max hand size by 1. Please give controls to P1, and press enter.\n",
                 outContent.toString());
         outContent.reset();
 
         //have P3 go up to 15 cards
         game.drawAdCardNoDiscard(game.PlayerList.get(2), 3);
-        assertEquals("P3 is over the max hand size by 3. Please give controls to P3, and press enter.\n",
+        assertEquals("\n\n\n\n\n\n\n\n\n\nP3 is over the max hand size by 3. Please give controls to P3, and press enter.\n",
                 outContent.toString());
         outContent.reset();
 
@@ -391,9 +380,6 @@ class MainTest {
     void RESP_13_test_01() {
         Main game = new Main();
         game.curPlayer = game.PlayerList.get(0);
-        //init a dummy event deck
-        game.EvDeck = new ArrayList<>();
-        game.initializeAdventureDeck();
 
         //create a dummy hand of 15 cards
         game.curPlayer.addCard(game.new Card("F5", "Foe", 5));
