@@ -292,8 +292,19 @@ public class Main {
             AdDeck.removeFirst();
         }
         if(p.hand.size() > 12){
-            System.out.print(p + " is over the max hand size by "+ (p.hand.size() - 12) + ". Please give controls to " + p);
-            //begin discarding method here
+            System.out.print(p + " is over the max hand size by "+ (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
+            this.discardAdCard(p, (p.hand.size() - 12), inContent);
+        }
+    }
+
+    //for testing tests prior to R-CODE-13
+    public void drawAdCardNoDiscard(Player p, int num){
+        for(int i = 0; i < num; i++){
+            p.addCard(AdDeck.getFirst());
+            AdDeck.removeFirst();
+        }
+        if(p.hand.size() > 12){
+            System.out.print(p + " is over the max hand size by "+ (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
         }
     }
 
@@ -317,13 +328,16 @@ public class Main {
             if(!input.isEmpty() && !(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= num + 12)){
                 System.out.print("Invalid index. Try again.\n");
                 continue;
+            }else if(input.equals("")){
+                System.out.print("Please specify an index.\n");
+                continue;
             }
             p.hand.remove((Integer.parseInt(input)) - 1);
             num--;
         }
         System.out.print("Discarding Complete. This is your new hand:\n");
         p.printHand();
-        System.out.print("\n\n");
+        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
     public Card drawEventCard() {
@@ -348,10 +362,24 @@ public class Main {
         drawAdCard(curPlayer, 2);
     }
 
+    //for testing tests prior to R-CODE-13
+    public void queenEffectNoDiscard() {
+        System.out.print("Queen's Favour Drawn. Current player draws 2 cards.\n");
+        drawAdCardNoDiscard(curPlayer, 2);
+    }
+
     public void prosperityEffect() {
         System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
         for(Player p : PlayerList){
             drawAdCard(p, 2);
+        }
+    }
+
+    //for testing tests prior to R-CODE-13
+    public void prosperityEffectNoDiscard() {
+        System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
+        for(Player p : PlayerList){
+            drawAdCardNoDiscard(p, 2);
         }
     }
 

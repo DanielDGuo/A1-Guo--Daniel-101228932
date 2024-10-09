@@ -220,7 +220,7 @@ class MainTest {
 
         Main.Card curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")){
-            game.queenEffect();
+            game.queenEffectNoDiscard();
         }
         //check Queen's Favour works on hand with 12 cards
         assertEquals(14, game.curPlayer.hand.size());
@@ -233,7 +233,7 @@ class MainTest {
         assertEquals(11, game.curPlayer.hand.size());
         curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")){
-            game.queenEffect();
+            game.queenEffectNoDiscard();
         }
         assertEquals(13, game.curPlayer.hand.size());
         assertEquals(48, game.AdDeck.size());
@@ -258,7 +258,7 @@ class MainTest {
 
         Main.Card curCard = game.drawEventCard();
         if (curCard.id.equals("Prosperity")){
-            game.prosperityEffect();
+            game.prosperityEffectNoDiscard();
         }
         //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
         assertEquals(14, game.PlayerList.get(0).hand.size());
@@ -277,7 +277,7 @@ class MainTest {
 
         curCard = game.drawEventCard();
         if (curCard.id.equals("Prosperity")){
-            game.prosperityEffect();
+            game.prosperityEffectNoDiscard();
         }
         //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
         assertEquals(16, game.PlayerList.get(0).hand.size());
@@ -365,13 +365,13 @@ class MainTest {
         game.initializePlayerHands();
 
         //have P1 go up to 13 cards
-        game.drawAdCard(game.curPlayer, 1);
+        game.drawAdCardNoDiscard(game.curPlayer, 1);
         assertEquals("P1 is over the max hand size by 1. Please give controls to P1, and press enter.\n",
                 outContent.toString());
         outContent.reset();
 
         //have P3 go up to 15 cards
-        game.drawAdCard(game.PlayerList.get(2), 3);
+        game.drawAdCardNoDiscard(game.PlayerList.get(2), 3);
         assertEquals("P3 is over the max hand size by 3. Please give controls to P3, and press enter.\n",
                 outContent.toString());
         outContent.reset();
@@ -381,7 +381,7 @@ class MainTest {
         game.PlayerList.get(1).hand.removeFirst();
         game.PlayerList.get(1).hand.removeFirst();
         //check that the discard doesn't activate
-        game.drawAdCard(game.PlayerList.get(1), 1);
+        game.drawAdCardNoDiscard(game.PlayerList.get(1), 1);
         assertEquals("", outContent.toString());
         outContent.reset();
     }
@@ -437,6 +437,16 @@ class MainTest {
                         Discarding Complete. This is your new hand:
                         P1 Hand: F5, F5, F10, F15, F20, F20, F20, F70, D5, D5, H10, L20
                         
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         """,
                 outContent.toString());
         outContent.reset();
@@ -453,6 +463,16 @@ class MainTest {
                         Please select a card to discard by index(1 - 13)
                         Discarding Complete. This is your new hand:
                         P1 Hand: F5, F5, F5, F10, F15, F20, F20, F70, D5, D5, H10, L20
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         
                         """,
                 outContent.toString());
