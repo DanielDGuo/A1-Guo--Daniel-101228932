@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Main {
     public Player curPlayer;
+    public Scanner inContent = new Scanner(System.in);
     public ArrayList<Card> AdDeck;
     public ArrayList<Card> EvDeck;
     public ArrayList<Card> EvDiscard = new ArrayList<>();
@@ -148,7 +149,6 @@ public class Main {
         game.initializeAdventureDeck();
         game.initializeEventDeck();
         game.initializePlayerHands();
-        Scanner inContent = new Scanner(System.in);
 
         game.curPlayer = game.PlayerList.get(3);
         while (!game.findWinners()) {
@@ -168,7 +168,7 @@ public class Main {
                 case "Quest" -> game.questEffect(curEventCard);
             }
             //end of Beginning Phase. Move on to Quest Building if needed
-            game.endTurn(inContent);
+            game.endTurn(game.inContent);
         }
         game.printWinners();
     }
@@ -298,6 +298,32 @@ public class Main {
     }
 
     public void discardAdCard(Player p, int num, Scanner inContent){
+        System.out.print("\nAre you " + p + "?\n");
+        String input = inContent.nextLine();
+        while(!input.isEmpty()){
+            System.out.print("Invalid input. Please press Enter.\n");
+            try{
+                input = inContent.nextLine();
+            }catch (java.util.NoSuchElementException e){
+                input = "";
+            }
+        }
+        while(num > 0){
+            System.out.print("You have to discard " + num + " more card(s)\n");
+            System.out.print(p + ", This is your hand:\n");
+            p.printHand();
+            System.out.print("\nPlease select a card to discard by index(1 - " + (num + 12) + ")\n");
+            input = inContent.nextLine();
+            if(!input.isEmpty() && !(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= num + 12)){
+                System.out.print("Invalid index. Try again.\n");
+                continue;
+            }
+            p.hand.remove((Integer.parseInt(input)) - 1);
+            num--;
+        }
+        System.out.print("Discarding Complete. This is your new hand:\n");
+        p.printHand();
+        System.out.print("\n\n");
     }
 
     public Card drawEventCard() {
