@@ -400,4 +400,8 @@ public class Main {
             }
         }
     }
+
+    public Player seekSponsor(Scanner inContent){
+        return null;
+    }
 }

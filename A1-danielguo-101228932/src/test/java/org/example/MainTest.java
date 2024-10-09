@@ -478,4 +478,51 @@ class MainTest {
                 outContent.toString());
         outContent.reset();
     }
+
+    @Test
+    @DisplayName("Test sponsor seeking")
+    void RESP_14_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+
+        //ask p1, p2, p3, p4 if they'd like to sponsor.
+        //test p1, p2 decline, p3 accept
+        Main.Player p = game.seekSponsor(new Scanner("K\nN\nN\nY"));
+        assertEquals("""
+                        P1, would you like to sponsor this quest? (Y/N)
+                        Invalid input.
+                        P2, would you like to sponsor this quest? (Y/N)
+                        P3, would you like to sponsor this quest? (Y/N)
+                        P3 has accepted to sponsor this quest.
+                        """
+                , outContent.toString());
+        outContent.reset();
+        assertEquals(game.PlayerList.get(2), p);
+
+        //ask p1, p2, p3, p4 if they'd like to sponsor.
+        //test all decline
+        p = game.seekSponsor(new Scanner("N\nN\nN\nN"));
+        assertEquals("""
+                        P1, would you like to sponsor this quest? (Y/N)
+                        P2, would you like to sponsor this quest? (Y/N)
+                        P3, would you like to sponsor this quest? (Y/N)
+                        P4, would you like to sponsor this quest? (Y/N)
+                        Everybody turned down the sponsor.
+                        """
+                , outContent.toString());
+        outContent.reset();
+        assertNull(p);
+
+        //start on P3 instead
+        game.curPlayer = game.PlayerList.get(2);
+        p = game.seekSponsor(new Scanner("N\nY"));
+        assertEquals("""
+                        P3, would you like to sponsor this quest? (Y/N)
+                        P4, would you like to sponsor this quest? (Y/N)
+                        P4 has accepted to sponsor this quest.
+                        """
+                , outContent.toString());
+        outContent.reset();
+        assertEquals(game.PlayerList.get(3), p);
+    }
 }
