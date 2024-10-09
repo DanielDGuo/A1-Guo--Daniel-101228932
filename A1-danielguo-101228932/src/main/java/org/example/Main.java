@@ -168,6 +168,9 @@ public class Main {
                 case "Quest" -> game.questEffect(curEventCard);
             }
             //end of Beginning Phase. Move on to Quest Building if needed
+            if(curEventCard.id.equals("Quest")){
+                Player sponsor = game.seekSponsor(game.inContent);
+            }
             game.endTurn(game.inContent);
         }
         game.printWinners();
@@ -402,6 +405,24 @@ public class Main {
     }
 
     public Player seekSponsor(Scanner inContent){
+        int curPlayerIndex = curPlayer.id - 1;
+        for(int i = 0; i < 4; i++){
+            System.out.print(PlayerList.get(curPlayerIndex + i) + ", would you like to sponsor this quest? (Y/N)\n");
+            String input = inContent.nextLine();
+            while(!(input.equals("Y") || input.equals("N"))){
+                System.out.print("Invalid input.\n");
+                try{
+                    input = inContent.nextLine();
+                }catch (java.util.NoSuchElementException e){
+                    input = "";
+                }
+            }
+            if(input.equals("Y")){
+                System.out.print(PlayerList.get(curPlayerIndex + i) + " has accepted to sponsor this quest.\n");
+                return PlayerList.get(curPlayerIndex + i);
+            }
+        }
+        System.out.print("Everybody turned down the sponsor.\n");
         return null;
     }
 }
