@@ -385,4 +385,77 @@ class MainTest {
         assertEquals("", outContent.toString());
         outContent.reset();
     }
+
+    @Test
+    @DisplayName("Test discard prompts and verifies with the player")
+    void RESP_13_test_01() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
+        //init a dummy event deck
+        game.EvDeck = new ArrayList<>();
+        game.initializeAdventureDeck();
+
+        //create a dummy hand of 15 cards
+        game.curPlayer.addCard(game.new Card("F5", "Foe", 5));
+        game.curPlayer.addCard(game.new Card("F5", "Foe", 5));
+        game.curPlayer.addCard(game.new Card("F5", "Foe", 5));
+        game.curPlayer.addCard(game.new Card("F10", "Foe", 10));
+        game.curPlayer.addCard(game.new Card("F10", "Foe", 10));
+        game.curPlayer.addCard(game.new Card("F15", "Foe", 15));
+        game.curPlayer.addCard(game.new Card("F20", "Foe", 20));
+        game.curPlayer.addCard(game.new Card("F20", "Foe", 20));
+        game.curPlayer.addCard(game.new Card("F20", "Foe", 20));
+        game.curPlayer.addCard(game.new Card("F70", "Foe", 70));
+        game.curPlayer.addCard(game.new Card("D5", "Weapon", 5));
+        game.curPlayer.addCard(game.new Card("D5", "Weapon", 5));
+        game.curPlayer.addCard(game.new Card("S10", "Weapon", 10));
+        game.curPlayer.addCard(game.new Card("H10", "Weapon", 10));
+        game.curPlayer.addCard(game.new Card("L20", "Weapon", 20));
+
+        //test one invalid then 3 valid. Index starts at 1
+        game.discardAdCard(game.curPlayer, 3, new Scanner("\n16\n2\n4\n11"));
+        assertEquals("""
+                        
+                        Are you P1?
+                        You have to discard 3 more card(s)
+                        P1, This is your hand:
+                        P1 Hand: F5, F5, F5, F10, F10, F15, F20, F20, F20, F70, D5, D5, S10, H10, L20
+                        Please select a card to discard by index(1 - 15)
+                        Invalid index. Try again.
+                        You have to discard 3 more card(s)
+                        P1, This is your hand:
+                        P1 Hand: F5, F5, F5, F10, F10, F15, F20, F20, F20, F70, D5, D5, S10, H10, L20
+                        Please select a card to discard by index(1 - 15)
+                        You have to discard 2 more card(s)
+                        P1, This is your hand:
+                        P1 Hand: F5, F5, F10, F10, F15, F20, F20, F20, F70, D5, D5, S10, H10, L20
+                        Please select a card to discard by index(1 - 14)
+                        You have to discard 1 more card(s)
+                        P1, This is your hand:
+                        P1 Hand: F5, F5, F10, F15, F20, F20, F20, F70, D5, D5, S10, H10, L20
+                        Please select a card to discard by index(1 - 13)
+                        Discarding Complete. This is your new hand:
+                        P1 Hand: F5, F5, F10, F15, F20, F20, F20, F70, D5, D5, H10, L20
+                        
+                        """,
+                outContent.toString());
+        outContent.reset();
+        //one more test with an invalid input at the very beginning
+        game.curPlayer.addCard(game.new Card("F5", "Foe", 5));
+        game.discardAdCard(game.curPlayer, 1, new Scanner("asdf\n\n7"));
+        assertEquals("""
+                        
+                        Are you P1?
+                        Invalid input. Please press Enter.
+                        You have to discard 1 more card(s)
+                        P1, This is your hand:
+                        P1 Hand: F5, F5, F5, F10, F15, F20, F20, F20, F70, D5, D5, H10, L20
+                        Please select a card to discard by index(1 - 13)
+                        Discarding Complete. This is your new hand:
+                        P1 Hand: F5, F5, F5, F10, F15, F20, F20, F70, D5, D5, H10, L20
+                        
+                        """,
+                outContent.toString());
+        outContent.reset();
+    }
 }

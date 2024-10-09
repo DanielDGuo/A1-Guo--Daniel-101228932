@@ -297,6 +297,9 @@ public class Main {
         }
     }
 
+    public void discardAdCard(Player p, int num, Scanner inContent){
+    }
+
     public Card drawEventCard() {
         Card curEvent = EvDeck.removeFirst();
         EvDiscard.add(curEvent);
