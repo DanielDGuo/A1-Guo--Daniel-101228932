@@ -171,6 +171,7 @@ public class Main {
             if (curEventCard.type.equals("Quest")) {
                 Player sponsor = game.seekSponsor(game.inContent);
                 //Enter Quest Build
+                game.beginQuestBuilding(sponsor, game.inContent);
                 //Enter Quest Gather
                 //Enter Quest Attack, if Quest Gather was accepted by other players
                 //After Quest Attack, distribute shields to the winners
@@ -430,5 +431,21 @@ public class Main {
         }
         System.out.print("Everybody turned down the sponsor.\n");
         return null;
+    }
+
+    public void beginQuestBuilding(Player sponsor, Scanner inContent){
+        System.out.print(sponsor + ", you are the sponsor. Please confirm you are in control.\n");
+        String input = inContent.nextLine();
+        while (!input.isEmpty()) {
+            System.out.print("Invalid input.\n");
+            try {
+                input = inContent.nextLine();
+            } catch (java.util.NoSuchElementException e) {
+                input = "";
+            }
+        }
+        System.out.print(sponsor + ", this is your hand:\n");
+        sponsor.printHand();
+        System.out.print("\n");
     }
 }
