@@ -172,6 +172,7 @@ public class Main {
                 Player sponsor = game.seekSponsor(game.inContent);
                 //Enter Quest Build
                 game.beginQuestBuilding(sponsor, game.inContent);
+                game.beginStageBuilding(sponsor, curEventCard.value, game.inContent);
                 //Enter Quest Gather
                 //Enter Quest Attack, if Quest Gather was accepted by other players
                 //After Quest Attack, distribute shields to the winners
@@ -433,7 +434,7 @@ public class Main {
         return null;
     }
 
-    public void beginQuestBuilding(Player sponsor, Scanner inContent){
+    public void beginQuestBuilding(Player sponsor, Scanner inContent) {
         System.out.print(sponsor + ", you are the sponsor. Please confirm you are in control.\n");
         String input = inContent.nextLine();
         while (!input.isEmpty()) {
@@ -449,7 +450,57 @@ public class Main {
         System.out.print("\n");
     }
 
-    public ArrayList<ArrayList<Card>> begineStageBuilding(Player sponsor, int numStages, Scanner inContent){
-        return null;
+    public ArrayList<ArrayList<Card>> beginStageBuilding(Player sponsor, int numStages, Scanner inContent) {
+        ArrayList<ArrayList<Card>> stages = new ArrayList<>();
+        System.out.print("You must build " + numStages + " stages.\n");
+        //start building each stage
+        for (int i = 0; i < numStages; i++) {
+            ArrayList<Card> curStage = new ArrayList<>();
+            String input = "temp";
+            while (!input.isEmpty()) {
+                //print the relevant information
+                String curStageToString = curStage.toString().substring(1, curStage.toString().length() - 1);
+                System.out.print("Stage " + (i + 1) + ": " + curStageToString + "\n");
+                System.out.print("Please select an index of a card you wish to add to the stage, or press enter to finish.\n");
+                sponsor.printHand();
+                System.out.print("\n");
+                input = inContent.nextLine();
+                //valid input is an empty line to go to next stage, or a valid index
+                while (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.hand.size()))) {
+                    System.out.print("Invalid input.\n");
+                    try {
+                        input = inContent.nextLine();
+                    } catch (java.util.NoSuchElementException e) {
+                        input = "";
+                    }
+                }
+                if (input.isEmpty()) {
+                    //continue if sponsor skipped
+                    continue;
+                } else if (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.hand.size()) {
+                    //add the card at index and continue. Remove from sponsor hand.
+                    curStage.add(sponsor.hand.remove(Integer.parseInt(input) - 1));
+                }
+            }
+            stages.add(curStage);
+        }
+        System.out.print("These are your stages:\n");
+        for (int i = 0; i < stages.size(); i++) {
+            String curStageToString = stages.get(i).toString().substring(1, stages.get(i).toString().length() - 1);
+            System.out.print("Stage " + (i + 1) + ": " + curStageToString + "\n");
+
+        }
+        System.out.print("Press enter to move to quest attacks.");
+        String input = inContent.nextLine();
+        while (!input.isEmpty()) {
+            System.out.print("Invalid input.\n");
+            try {
+                input = inContent.nextLine();
+            } catch (java.util.NoSuchElementException e) {
+                input = "";
+            }
+        }
+        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        return stages;
     }
 }
