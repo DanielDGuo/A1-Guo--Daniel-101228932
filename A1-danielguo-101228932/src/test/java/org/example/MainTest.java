@@ -614,31 +614,6 @@ class MainTest {
                         Stage 4: F70
                         Please select an index of a card you wish to add to the stage, or press enter to finish.
                         P1 Hand: F5, F5, F20, F20, D5, D5, L20
-                        These are your stages:
-                        Stage 1: F5
-                        Stage 2: F10
-                        Stage 3: F15, H10
-                        Stage 4: F70
-                        Press enter to move to quest attacks.
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
                         """
                 , outContent.toString());
         outContent.reset();
@@ -723,31 +698,6 @@ class MainTest {
                         Stage 4: F70, D5
                         Please select an index of a card you wish to add to the stage, or press enter to finish.
                         P1 Hand: F5, F5, F20, F20, D5, L20
-                        These are your stages:
-                        Stage 1: F5
-                        Stage 2: F10
-                        Stage 3: F15, H10
-                        Stage 4: F70, D5
-                        Press enter to move to quest attacks.
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
                         """
                 , outContent.toString());
         outContent.reset();

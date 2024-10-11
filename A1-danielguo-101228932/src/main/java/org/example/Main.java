@@ -476,27 +476,28 @@ public class Main {
                     if (curStage.isEmpty()) {
                         System.out.print("Stage cannot be empty. Please insert at least one foe.\n");
                         input = "temp";
+                        continue;
                     }
                     //stages must be in ascending order
                     int curStageValue = 0;
-                    for(Card c : curStage){
+                    for (Card c : curStage) {
                         curStageValue += c.value;
                     }
                     int priorStageValue = 0;
-                    if(!stages.isEmpty()){
-                        for(Card c : stages.getLast()){
+                    if (!stages.isEmpty()) {
+                        for (Card c : stages.getLast()) {
                             priorStageValue += c.value;
                         }
                     }
-                    if(priorStageValue >= curStageValue){
+                    if (priorStageValue >= curStageValue) {
                         System.out.print("Current stage must have value greater than the prior stage.\n");
                         input = "temp";
                     }
-                } else if (!input.isEmpty() && sponsor.hand.get(Integer.parseInt(input) - 1).type.equals("Foe")) {
+                } else if (sponsor.hand.get(Integer.parseInt(input) - 1).type.equals("Foe")) {
                     //check if there's already a foe or not
                     boolean hadFoe = false;
-                    for (int j = 0; j < curStage.size(); j++) {
-                        if (curStage.get(j).type.equals("Foe")) {
+                    for (Card card : curStage) {
+                        if (card.type.equals("Foe")) {
                             System.out.print("Invalid input. Cannot put two foes in one stage.\n");
                             hadFoe = true;
                             break;
@@ -506,11 +507,11 @@ public class Main {
                         //add the card at index and continue. Remove from sponsor hand.
                         curStage.add(sponsor.hand.remove(Integer.parseInt(input) - 1));
                     }
-                } else if (!input.isEmpty() && sponsor.hand.get(Integer.parseInt(input) - 1).type.equals("Weapon")) {
+                } else if (sponsor.hand.get(Integer.parseInt(input) - 1).type.equals("Weapon")) {
                     //check if there's already a foe or not
                     boolean hadDupe = false;
-                    for (int j = 0; j < curStage.size(); j++) {
-                        if (curStage.get(j).toString().equals(sponsor.hand.get(Integer.parseInt(input) - 1).toString())) {
+                    for (Card card : curStage) {
+                        if (card.toString().equals(sponsor.hand.get(Integer.parseInt(input) - 1).toString())) {
                             System.out.print("Invalid input. Duplicate weapon.\n");
                             hadDupe = true;
                             break;
@@ -524,30 +525,14 @@ public class Main {
             }
             stages.add(curStage);
         }
-        System.out.print("These are your stages:\n");
-        for (int i = 0; i < stages.size(); i++) {
-            String curStageToString = stages.get(i).toString().substring(1, stages.get(i).toString().length() - 1);
-            System.out.print("Stage " + (i + 1) + ": " + curStageToString + "\n");
-        }
-        System.out.print("Press enter to move to quest attacks.");
-        String input = inContent.nextLine();
-        while (!input.isEmpty()) {
-            System.out.print("Invalid input.\n");
-            try {
-                input = inContent.nextLine();
-            } catch (java.util.NoSuchElementException e) {
-                input = "";
-            }
-        }
-        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         return stages;
     }
 
-    public void endStageBuilding(Player sponsor, ArrayList<ArrayList<Card>> stages, Scanner inContent){
+    public void endStageBuilding(Player sponsor, ArrayList<ArrayList<Card>> stages, Scanner inContent) {
         System.out.print(sponsor + ", here are your stages:\n");
-        for(int i = 0; i < stages.size(); i++){
-            System.out.print("Stage " + (i+1) + ": ");
-            System.out.print(stages.get(i).toString().substring(1, stages.get(i).toString().length()-1) + "\n");
+        for (int i = 0; i < stages.size(); i++) {
+            System.out.print("Stage " + (i + 1) + ": ");
+            System.out.print(stages.get(i).toString().substring(1, stages.get(i).toString().length() - 1) + "\n");
         }
         System.out.print("Press enter to confirm.\n");
         String input = inContent.nextLine();
