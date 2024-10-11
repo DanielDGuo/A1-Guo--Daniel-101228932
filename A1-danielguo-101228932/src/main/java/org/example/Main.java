@@ -466,20 +466,59 @@ public class Main {
                 System.out.print("\n");
                 input = inContent.nextLine();
                 //valid input is an empty line to go to next stage, or a valid index
-                while (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.hand.size()))) {
-                    System.out.print("Invalid input.\n");
-                    try {
-                        input = inContent.nextLine();
-                    } catch (java.util.NoSuchElementException e) {
-                        input = "";
-                    }
+                if (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.hand.size()))) {
+                    System.out.print("Invalid input. Please provide a valid index or press enter.\n");
+                    continue;
                 }
                 if (input.isEmpty()) {
-                    //continue if sponsor skipped
-                    continue;
-                } else if (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.hand.size()) {
-                    //add the card at index and continue. Remove from sponsor hand.
-                    curStage.add(sponsor.hand.remove(Integer.parseInt(input) - 1));
+                    //stages cannot be empty.
+                    if (curStage.isEmpty()) {
+                        System.out.print("Stage cannot be empty. Please insert at least one foe.\n");
+                        input = "temp";
+                    }
+                    //stages must be in ascending order
+                    int curStageValue = 0;
+                    for(Card c : curStage){
+                        curStageValue += c.value;
+                    }
+                    int priorStageValue = 0;
+                    if(!stages.isEmpty()){
+                        for(Card c : stages.getLast()){
+                            priorStageValue += c.value;
+                        }
+                    }
+                    if(priorStageValue >= curStageValue){
+                        System.out.print("Current stage must have value greater than the prior stage.\n");
+                        input = "temp";
+                    }
+                } else if (!input.isEmpty() && sponsor.hand.get(Integer.parseInt(input) - 1).type.equals("Foe")) {
+                    //check if there's already a foe or not
+                    boolean hadFoe = false;
+                    for (int j = 0; j < curStage.size(); j++) {
+                        if (curStage.get(j).type.equals("Foe")) {
+                            System.out.print("Invalid input. Cannot put two foes in one stage.\n");
+                            hadFoe = true;
+                            break;
+                        }
+                    }
+                    if (!hadFoe) {
+                        //add the card at index and continue. Remove from sponsor hand.
+                        curStage.add(sponsor.hand.remove(Integer.parseInt(input) - 1));
+                    }
+                } else if (!input.isEmpty() && sponsor.hand.get(Integer.parseInt(input) - 1).type.equals("Weapon")) {
+                    //check if there's already a foe or not
+                    boolean hadDupe = false;
+                    for (int j = 0; j < curStage.size(); j++) {
+                        if (curStage.get(j).toString().equals(sponsor.hand.get(Integer.parseInt(input) - 1).toString())) {
+                            System.out.print("Invalid input. Duplicate weapon.\n");
+                            hadDupe = true;
+                            break;
+                        }
+                    }
+                    if (!hadDupe) {
+                        //add the card at index and continue. Remove from sponsor hand.
+                        curStage.add(sponsor.hand.remove(Integer.parseInt(input) - 1));
+                    }
                 }
             }
             stages.add(curStage);
@@ -488,7 +527,6 @@ public class Main {
         for (int i = 0; i < stages.size(); i++) {
             String curStageToString = stages.get(i).toString().substring(1, stages.get(i).toString().length() - 1);
             System.out.print("Stage " + (i + 1) + ": " + curStageToString + "\n");
-
         }
         System.out.print("Press enter to move to quest attacks.");
         String input = inContent.nextLine();
