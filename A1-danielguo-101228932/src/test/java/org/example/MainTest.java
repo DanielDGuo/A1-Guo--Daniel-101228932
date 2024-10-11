@@ -759,4 +759,59 @@ class MainTest {
         assertEquals("F70", stages.get(3).get(0).toString());
         assertEquals("D5", stages.get(3).get(1).toString());
     }
+
+    @Test
+    @DisplayName("Test Quest Build End")
+    void RESP_18_test_01() {
+        Main game = new Main();
+        Main.Player sponsor = game.PlayerList.get(0);
+
+        //display the completed stages to the sponsor, then clear the screen
+        ArrayList<ArrayList<Main.Card>> stages = new ArrayList<>();
+
+        stages.add(new ArrayList<>());
+        stages.get(0).add(game.new Card("F5", "Foe", 5));
+        stages.get(0).add(game.new Card("D5", "Weapon", 5));
+        stages.add(new ArrayList<>());
+        stages.get(1).add(game.new Card("F15", "Foe", 15));
+        stages.add(new ArrayList<>());
+        stages.get(2).add(game.new Card("F15", "Foe", 15));
+        stages.get(2).add(game.new Card("D5", "Weapon", 5));
+        stages.add(new ArrayList<>());
+        stages.get(3).add(game.new Card("F70", "Foe", 70));
+
+        //print the stages
+        game.endStageBuilding(sponsor, stages, new Scanner("\n"));
+        assertEquals("""
+                        P1, here are your stages:
+                        Stage 1: F5, D5
+                        Stage 2: F15
+                        Stage 3: F15, D5
+                        Stage 4: F70
+                        Press enter to confirm.
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        """
+                , outContent.toString());
+        outContent.reset();
+    }
+
 }

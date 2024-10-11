@@ -541,4 +541,7 @@ public class Main {
         System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         return stages;
     }
+
+    public void endStageBuilding(Player sponsor, ArrayList<ArrayList<Card>> stages, Scanner inContent){
+    }
 }
