@@ -764,4 +764,56 @@ class MainTest {
         outContent.reset();
     }
 
+    @Test
+    @DisplayName("Test participant seeking")
+    void RESP_19_test_01() {
+        Main game = new Main();
+        Main.Player sponsor = game.PlayerList.get(0);
+        //being the sponsor makes you ineligible
+        //declining to participate makes you ineligible
+        //failing a stage makes you ineligible
+
+        //ask p2, p3, p4 if they'd like to participate. p1 ineligible due to being the sponsor
+        ArrayList<Main.Player> participants = game.seekParticipants(sponsor, true, new Scanner("K\nN\nY\nY"));
+        assertEquals("""
+                        P2, would you like to participate in this stage? (Y/N)
+                        Invalid input.
+                        P3, would you like to participate in this stage? (Y/N)
+                        P4, would you like to participate in this stage? (Y/N)
+                        P3, P4 will participate in this stage.
+                        """
+                , outContent.toString());
+        outContent.reset();
+        //double-check the player list
+        assertFalse(participants.contains(game.PlayerList.get(0)));
+        assertFalse(participants.contains(game.PlayerList.get(1)));
+        assertTrue(participants.contains(game.PlayerList.get(2)));
+        assertTrue(participants.contains(game.PlayerList.get(3)));
+        //double-check eligibility
+        assertFalse(game.PlayerList.get(0).eligible);
+        assertFalse(game.PlayerList.get(1).eligible);
+        assertTrue(game.PlayerList.get(2).eligible);
+        assertTrue(game.PlayerList.get(3).eligible);
+
+        //second stage test. Have P4 "fail" stage 1
+        game.PlayerList.get(3).eligible = false;
+        participants = game.seekParticipants(sponsor, false, new Scanner("Y\n"));
+        assertEquals("""
+                        P3, would you like to participate in this stage? (Y/N)
+                        P3 will participate in this stage.
+                        """
+                , outContent.toString());
+        outContent.reset();
+        //double-check the player list
+        assertFalse(participants.contains(game.PlayerList.get(0)));
+        assertFalse(participants.contains(game.PlayerList.get(1)));
+        assertTrue(participants.contains(game.PlayerList.get(2)));
+        assertFalse(participants.contains(game.PlayerList.get(3)));
+        //double-check eligibility
+        assertFalse(game.PlayerList.get(0).eligible);
+        assertFalse(game.PlayerList.get(1).eligible);
+        assertTrue(game.PlayerList.get(2).eligible);
+        assertFalse(game.PlayerList.get(3).eligible);
+    }
+
 }

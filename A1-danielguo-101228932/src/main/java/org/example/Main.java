@@ -234,6 +234,7 @@ public class Main {
         int id;
         int shields;
         ArrayList<Card> hand;
+        boolean eligible;
 
         public Player(int id) {
             this.id = id;
@@ -545,5 +546,9 @@ public class Main {
             }
         }
         System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    }
+
+    public ArrayList<Player> seekParticipants(Player sponsor, boolean firstStage, Scanner inContent) {
+        return new ArrayList<Player>();
     }
 }
