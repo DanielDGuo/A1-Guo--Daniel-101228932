@@ -176,9 +176,11 @@ public class Main {
                 game.endStageBuilding(sponsor, stages, game.inContent);
                 //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value\
                 ArrayList<Player> stageParticipants = new ArrayList<>();
-                for(int i = 0; i < curEventCard.value; i++){
+                for (int i = 0; i < curEventCard.value; i++) {
                     //Find participants for the current stage
                     stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
+                    ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
+                    //resolve attacks here
                 }
                 //After Quest Attack, distribute shields to the winners
                 //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
@@ -188,7 +190,7 @@ public class Main {
         game.printWinners();
     }
 
-    class Card implements Comparable<Card> {
+    public class Card implements Comparable<Card> {
         //valid ID include but aren't limited to: F5, F10, D, H, S, Q2, Q3, Plague, Queen's favor
         String id;
         //Types include Foe, Weapon, Quest, and Event
@@ -234,7 +236,7 @@ public class Main {
         }
     }
 
-    class Player {
+    public class Player {
         int id;
         int shields;
         ArrayList<Card> hand;
@@ -528,6 +530,7 @@ public class Main {
                     }
                 }
             }
+            Collections.sort(curStage);
             stages.add(curStage);
         }
         return stages;
@@ -555,16 +558,16 @@ public class Main {
     public ArrayList<Player> seekParticipants(Player sponsor, boolean firstStage, Scanner inContent) {
         //set up the base eligibility of the quest if it's the first stage
         //this is to overwrite any prior changes to the eligibility
-        if(firstStage){
-            for(Player p : PlayerList){
+        if (firstStage) {
+            for (Player p : PlayerList) {
                 p.eligible = true;
             }
             sponsor.eligible = false;
         }
         ArrayList<Player> stageParticipants = new ArrayList<>();
         //loop and ask each player for participation
-        for(Player p : PlayerList){
-            if(p.eligible){
+        for (Player p : PlayerList) {
+            if (p.eligible) {
                 System.out.print(p + ", would you like to participate in this stage? (Y/N)\n");
                 String input = inContent.nextLine();
                 while (!(input.equals("Y") || input.equals("N"))) {
@@ -575,18 +578,69 @@ public class Main {
                         input = "";
                     }
                 }
-                if(input.equals("Y")){
+                if (input.equals("Y")) {
                     stageParticipants.add(p);
-                }else {
+                } else {
                     p.eligible = false;
                 }
             }
         }
-        System.out.print(stageParticipants.toString().substring(1, stageParticipants.toString().length()-1) +  " will participate in this stage.\n");
+        System.out.print(stageParticipants.toString().substring(1, stageParticipants.toString().length() - 1) + " will participate in this stage.\n");
         return stageParticipants;
     }
 
-    public ArrayList<ArrayList<Card>> createAttackTeams(ArrayList<Player> stageParticipants, Scanner inContent){
-        return new ArrayList<>();
+    public ArrayList<ArrayList<Card>> createAttackTeams(ArrayList<Player> stageParticipants, Scanner inContent) {
+        ArrayList<ArrayList<Card>> attackTeams = new ArrayList<>();
+        for (Player p : stageParticipants) {
+            System.out.print("Please confirm you are " + p + "\n");
+            String input = inContent.nextLine();
+            while (!input.isEmpty()) {
+                System.out.print("Invalid input.\n");
+                try {
+                    input = inContent.nextLine();
+                } catch (java.util.NoSuchElementException e) {
+                    input = "";
+                }
+            }
+
+            ArrayList<Card> curAttack = new ArrayList<>();
+            String curAttackToString = "";
+            input = "temp";
+            while (!input.isEmpty()) {
+                //print the relevant information
+                curAttackToString = curAttack.toString().substring(1, curAttack.toString().length() - 1);
+                System.out.print("Current Attack Team: " + curAttackToString + "\n");
+                System.out.print("Please select an index of a card you wish to add to the attack, or press enter to finish.\n");
+                p.printHand();
+                System.out.print("\n");
+                input = inContent.nextLine();
+                //valid input is an empty line to go to end the attack creation, or a valid index
+                if (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= p.hand.size()))) {
+                    System.out.print("Invalid input. Please provide a valid index or press enter.\n");
+                    continue;
+                }
+                if (!input.isEmpty()) {
+                    curAttack.add(p.hand.remove(Integer.parseInt(input) - 1));
+                }
+            }
+            Collections.sort(curAttack);
+            attackTeams.add(curAttack);
+            System.out.print(p + ", Here is your attack team:\n");
+            System.out.print("Current Attack Team: " + curAttackToString + "\n");
+            System.out.print("Press enter to confirm.\n");
+            input = inContent.nextLine();
+            while (!input.isEmpty()) {
+                System.out.print("Invalid input.\n");
+                try {
+                    input = inContent.nextLine();
+                } catch (java.util.NoSuchElementException e) {
+                    input = "";
+                }
+            }
+            System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        }
+
+
+        return attackTeams;
     }
 }
