@@ -774,7 +774,7 @@ class MainTest {
         //failing a stage makes you ineligible
 
         //ask p2, p3, p4 if they'd like to participate. p1 ineligible due to being the sponsor
-        ArrayList<Main.Player> participants = game.seekParticipants(sponsor, true, new Scanner("K\nN\nY\nY"));
+        ArrayList<Main.Player> participants = game.seekParticipants(sponsor, true, new Scanner("K\nN\nY\nY\n"));
         assertEquals("""
                         P2, would you like to participate in this stage? (Y/N)
                         Invalid input.
