@@ -816,4 +816,119 @@ class MainTest {
         assertFalse(game.PlayerList.get(3).eligible);
     }
 
+    @Test
+    @DisplayName("Test Quest Attack Team Building")
+    void RESP_20_test_01() {
+        Main game = new Main();
+
+        ArrayList<Main.Player> stageParticipants = new ArrayList<>();
+        stageParticipants.add(game.PlayerList.get(1));
+        stageParticipants.add(game.PlayerList.get(2));
+
+        //create two dummy hands
+        stageParticipants.get(0).addCard(game.new Card("F5", "Foe", 5));
+        stageParticipants.get(0).addCard(game.new Card("F5", "Foe", 5));
+        stageParticipants.get(0).addCard(game.new Card("F5", "Foe", 5));
+        stageParticipants.get(0).addCard(game.new Card("F10", "Foe", 10));
+        stageParticipants.get(0).addCard(game.new Card("F15", "Foe", 15));
+        stageParticipants.get(0).addCard(game.new Card("F20", "Foe", 20));
+        stageParticipants.get(0).addCard(game.new Card("F20", "Foe", 20));
+        stageParticipants.get(0).addCard(game.new Card("F70", "Foe", 70));
+        stageParticipants.get(0).addCard(game.new Card("D5", "Weapon", 5));
+        stageParticipants.get(0).addCard(game.new Card("D5", "Weapon", 5));
+        stageParticipants.get(0).addCard(game.new Card("H10", "Weapon", 10));
+        stageParticipants.get(0).addCard(game.new Card("L20", "Weapon", 20));
+
+        stageParticipants.get(1).addCard(game.new Card("F5", "Foe", 5));
+        stageParticipants.get(1).addCard(game.new Card("F5", "Foe", 5));
+        stageParticipants.get(1).addCard(game.new Card("F10", "Foe", 10));
+        stageParticipants.get(1).addCard(game.new Card("F15", "Foe", 15));
+        stageParticipants.get(1).addCard(game.new Card("F20", "Foe", 20));
+        stageParticipants.get(1).addCard(game.new Card("D5", "Weapon", 5));
+        stageParticipants.get(1).addCard(game.new Card("D5", "Weapon", 5));
+        stageParticipants.get(1).addCard(game.new Card("H10", "Weapon", 10));
+        stageParticipants.get(1).addCard(game.new Card("S10", "Weapon", 10));
+        stageParticipants.get(1).addCard(game.new Card("S10", "Weapon", 10));
+        stageParticipants.get(1).addCard(game.new Card("B15", "Weapon", 10));
+        stageParticipants.get(1).addCard(game.new Card("L20", "Weapon", 20));
+
+        //start building 4 stages
+        ArrayList<ArrayList<Main.Card>> attackTeams = game.createAttackTeams(stageParticipants, new Scanner("\n9\n\n\n\n6\n7\n8\n\n\n"));
+        assertEquals("""
+                        Please confirm you are P2
+                        Current Attack Team:\s
+                        Please select an index of a card you wish to add to the attack, or press enter to finish.
+                        P2 Hand: F5, F5, F5, F10, F15, F20, F20, F70, D5, D5, H10, L20
+                        Current Attack Team: D5
+                        Please select an index of a card you wish to add to the attack, or press enter to finish.
+                        P2 Hand: F5, F5, F5, F10, F15, F20, F20, F70, D5, H10, L20
+                        P2, Here is your attack team:
+                        Current Attack Team: D5
+                        Press enter to confirm.
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        Please confirm you are P3
+                        Current Attack Team:\s
+                        Please select an index of a card you wish to add to the attack, or press enter to finish.
+                        P3 Hand: F5, F5, F10, F15, F20, D5, D5, S10, S10, H10, B15, L20
+                        Current Attack Team: D5
+                        Please select an index of a card you wish to add to the attack, or press enter to finish.
+                        P3 Hand: F5, F5, F10, F15, F20, D5, S10, S10, H10, B15, L20
+                        Current Attack Team: D5, S10
+                        Please select an index of a card you wish to add to the attack, or press enter to finish.
+                        P3 Hand: F5, F5, F10, F15, F20, D5, S10, H10, B15, L20
+                        Current Attack Team: D5, S10, H10
+                        Please select an index of a card you wish to add to the attack, or press enter to finish.
+                        P3 Hand: F5, F5, F10, F15, F20, D5, S10, B15, L20
+                        P3, Here is your attack team:
+                        Current Attack Team: D5, S10, H10
+                        Press enter to confirm.
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        """
+                , outContent.toString());
+        outContent.reset();
+        //check attack team contents
+        assertEquals("D5", attackTeams.get(0).get(0).toString());
+        assertEquals("D5", attackTeams.get(1).get(0).toString());
+        assertEquals("S10", attackTeams.get(1).get(1).toString());
+        assertEquals("H10", attackTeams.get(1).get(2).toString());
+        //no need to check hands; above function will use printHand(), which will cause an assert fail on string if incorrect
+    }
+
+
 }
