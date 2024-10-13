@@ -738,4 +738,8 @@ public class Main {
             System.out.print("The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length()-1)+  ". They each get " + numStages + " shields.\n");
         }
     }
+
+    public void discardQuestStages(ArrayList<ArrayList<Card>> stages, Player sponsor, Scanner inContent){
+
+    }
 }

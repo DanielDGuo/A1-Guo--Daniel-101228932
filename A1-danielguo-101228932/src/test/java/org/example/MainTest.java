@@ -1250,4 +1250,46 @@ class MainTest {
         assertEquals("The Quest was failed. No shields.\n", outContent.toString());
         outContent.reset();
     }
+
+    @Test
+    @DisplayName("Test discard quest")
+    void RESP_27_test_01() {
+        Main game = new Main();
+        Main.Player sponsor = game.PlayerList.get(0);
+        game.initializeAdventureDeck();
+        //dummy quest stages
+        ArrayList<ArrayList<Main.Card>> stages = new ArrayList<>();
+
+        stages.add(new ArrayList<>());
+        Main.Card a = game.new Card("F5", "Foe", 5);
+        stages.get(0).add(a);
+        Main.Card b = game.new Card("D5", "Weapon", 5);
+        stages.get(0).add(b);
+
+        stages.add(new ArrayList<>());
+        Main.Card c = game.new Card("F15", "Foe", 15);
+        stages.get(1).add(c);
+
+        stages.add(new ArrayList<>());
+        Main.Card d = game.new Card("F15", "Foe", 15);
+        stages.get(2).add(d);
+        Main.Card e = game.new Card("D5", "Weapon", 5);
+        stages.get(2).add(e);
+        stages.add(new ArrayList<>());
+        Main.Card f = game.new Card("F70", "Foe", 70);
+        stages.get(3).add(f);
+
+        //since this can cause card draw, add in a scanner
+        game.discardQuestStages(stages, sponsor, new Scanner(""));
+
+        //check that the discard is correct
+        assertTrue(game.AdDiscard.contains(a));
+        assertTrue(game.AdDiscard.contains(b));
+        assertTrue(game.AdDiscard.contains(c));
+        assertTrue(game.AdDiscard.contains(d));
+        assertTrue(game.AdDiscard.contains(e));
+        assertTrue(game.AdDiscard.contains(f));
+        //4 stages, 6 cards, sponsor draws 10
+        assertEquals(10, sponsor.hand.size());
+    }
 }
