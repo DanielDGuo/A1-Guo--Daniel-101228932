@@ -450,6 +450,18 @@ class MainTest {
                         
                         
                         
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         """,
                 outContent.toString());
         outContent.reset();
@@ -466,6 +478,18 @@ class MainTest {
                         Please select a card to discard by index(1 - 13)
                         Discarding Complete. This is your new hand:
                         P1 Hand: F5, F5, F5, F10, F15, F20, F20, F70, D5, D5, H10, L20
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         
                         
                         
@@ -557,7 +581,7 @@ class MainTest {
                         P2, would you like to sponsor this quest? (Y/N)
                         P3, would you like to sponsor this quest? (Y/N)
                         P4, would you like to sponsor this quest? (Y/N)
-                        Everybody turned down the sponsor.
+                        Everybody turned down the sponsor opportunity.
                         """
                 , outContent.toString());
         outContent.reset();

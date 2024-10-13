@@ -171,6 +171,9 @@ public class Main {
             //end of Beginning Phase. Move on to Questing if needed
             if (curEventCard.type.equals("Quest")) {
                 Player sponsor = game.seekSponsor(game.inContent);
+                if (sponsor == null) {
+                    continue;
+                }
                 //Enter Quest Build
                 game.beginQuestBuilding(sponsor, game.inContent);
                 ArrayList<ArrayList<Card>> stages = game.beginStageBuilding(sponsor, curEventCard.value, game.inContent);
@@ -358,7 +361,7 @@ public class Main {
         }
         System.out.print("Discarding Complete. This is your new hand:\n");
         p.printHand();
-        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
     public Card drawEventCard() {
@@ -430,11 +433,11 @@ public class Main {
                 }
             }
             if (input.equals("Y")) {
-                System.out.print(PlayerList.get(curPlayerIndex + i) + " has accepted to sponsor this quest.\n");
-                return PlayerList.get(curPlayerIndex + i);
+                System.out.print(PlayerList.get((curPlayerIndex + i) % 4) + " has accepted to sponsor this quest.\n");
+                return PlayerList.get((curPlayerIndex + i) % 4);
             }
         }
-        System.out.print("Everybody turned down the sponsor.\n");
+        System.out.print("Everybody turned down the sponsor opportunity.\n");
         return null;
     }
 
