@@ -852,7 +852,7 @@ class MainTest {
         stageParticipants.get(1).addCard(game.new Card("B15", "Weapon", 10));
         stageParticipants.get(1).addCard(game.new Card("L20", "Weapon", 20));
 
-        //start building 4 stages
+        //have each participant create attacks
         ArrayList<ArrayList<Main.Card>> attackTeams = game.createAttackTeams(stageParticipants, new Scanner("\n9\n\n\n\n6\n7\n8\n\n\n"));
         assertEquals("""
                         Please confirm you are P2
@@ -929,6 +929,7 @@ class MainTest {
         assertEquals("H10", attackTeams.get(1).get(2).toString());
         //no need to check hands; above function will use printHand(), which will cause an assert fail on string if incorrect
     }
+
     @Test
     @DisplayName("Test Quest Attack Team Building w/ invalid selections")
     void RESP_21_test_01() {
@@ -965,7 +966,6 @@ class MainTest {
         stageParticipants.get(1).addCard(game.new Card("B15", "Weapon", 10));
         stageParticipants.get(1).addCard(game.new Card("L20", "Weapon", 20));
 
-        //start building 4 stages
         //this time, select invalid indexes and cards as well. Otherwise, it's the same expected in/out.
         //foes are invalid options, as well as duplicate weapons
         ArrayList<ArrayList<Main.Card>> attackTeams = game.createAttackTeams(stageParticipants, new Scanner("\n15\n9\n9\n\n\n\n6\n7\n8\n1\n\n\n"));
@@ -1057,5 +1057,51 @@ class MainTest {
         //no need to check hands; above function will use printHand(), which will cause an assert fail on string if incorrect
     }
 
+    @Test
+    @DisplayName("Test Card draw at beginning of each stage")
+    void RESP_22_test_01() {
+        Main game = new Main();
 
+        ArrayList<Main.Player> stageParticipants = new ArrayList<>();
+        stageParticipants.add(game.PlayerList.get(0));
+
+        //don't need to draw specific cards from AdDeck; just need to test if number of cards in hand and deck become as expected
+        game.initializeAdventureDeck();
+
+        //shouldn't output anything
+        game.participantsDrawCard(stageParticipants, new Scanner(""));
+        assertEquals("Player(s) P1 will draw a card.\n", outContent.toString());
+        outContent.reset();
+
+        assertEquals(1, game.PlayerList.get(0).hand.size());
+        assertEquals(0, game.PlayerList.get(1).hand.size());
+        assertEquals(0, game.PlayerList.get(2).hand.size());
+        assertEquals(0, game.PlayerList.get(3).hand.size());
+        assertEquals(99, game.AdDeck.size());
+
+        stageParticipants.add(game.PlayerList.get(1));
+        //shouldn't output anything
+        game.participantsDrawCard(stageParticipants, new Scanner(""));
+        assertEquals("Player(s) P1, P2 will draw a card.\n", outContent.toString());
+        outContent.reset();
+
+        assertEquals(2, game.PlayerList.get(0).hand.size());
+        assertEquals(1, game.PlayerList.get(1).hand.size());
+        assertEquals(0, game.PlayerList.get(2).hand.size());
+        assertEquals(0, game.PlayerList.get(3).hand.size());
+        assertEquals(97, game.AdDeck.size());
+
+        game.drawAdCard(game.PlayerList.get(0), 10, new Scanner(""));
+        assertEquals(12, game.PlayerList.get(0).hand.size());
+        assertEquals(87, game.AdDeck.size());
+        //should force P1 to discard some cards now
+        game.participantsDrawCard(stageParticipants, new Scanner("\n\n\n\n1\n\n\n\n"));
+        outContent.reset();
+
+        assertEquals(12, game.PlayerList.get(0).hand.size());
+        assertEquals(2, game.PlayerList.get(1).hand.size());
+        assertEquals(0, game.PlayerList.get(2).hand.size());
+        assertEquals(0, game.PlayerList.get(3).hand.size());
+        assertEquals(85, game.AdDeck.size());
+    }
 }

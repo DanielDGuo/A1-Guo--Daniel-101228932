@@ -179,6 +179,7 @@ public class Main {
                 for (int i = 0; i < curEventCard.value; i++) {
                     //Find participants for the current stage
                     stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
+                    //draw cards here
                     ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
                     //resolve attacks here
                 }
@@ -272,7 +273,7 @@ public class Main {
 
     public void initializePlayerHands() {
         for (Player p : PlayerList) {
-            drawAdCard(p, 12);
+            drawAdCard(p, 12, inContent);
         }
     }
 
@@ -305,7 +306,7 @@ public class Main {
         System.out.print(outString.substring(0, outString.length() - 2) + " Won.");
     }
 
-    public void drawAdCard(Player p, int num) {
+    public void drawAdCard(Player p, int num, Scanner inContent) {
         for (int i = 0; i < num; i++) {
             p.addCard(AdDeck.getFirst());
             AdDeck.removeFirst();
@@ -378,7 +379,7 @@ public class Main {
 
     public void queenEffect() {
         System.out.print("Queen's Favour Drawn. Current player draws 2 cards.\n");
-        drawAdCard(curPlayer, 2);
+        drawAdCard(curPlayer, 2, inContent);
     }
 
     //for testing tests prior to R-CODE-13
@@ -390,7 +391,7 @@ public class Main {
     public void prosperityEffect() {
         System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
         for (Player p : PlayerList) {
-            drawAdCard(p, 2);
+            drawAdCard(p, 2, inContent);
         }
     }
 
@@ -658,5 +659,9 @@ public class Main {
             System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         }
         return attackTeams;
+    }
+
+    public void participantsDrawCard(ArrayList<Player> participants, Scanner inContent){
+        
     }
 }
