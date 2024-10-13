@@ -1142,6 +1142,26 @@ class MainTest {
                 The current stage was: F5, D5.
                 P2 are the winner(s) and are eligible to continue.
                 """, outContent.toString());
+        outContent.reset();
     }
 
+    @Test
+    @DisplayName("Test continue attacks")
+    void RESP_24_test_01() {
+        Main game = new Main();
+        //if outcome is all false, all attack teams failed. Return false
+        ArrayList<Boolean> outcome = new ArrayList<>();
+        outcome.add(false);
+        outcome.add(false);
+        boolean continueQuest = game.findStageSurvivors(outcome);
+        assertFalse(continueQuest);
+        assertEquals("No one passed the stage. Aborting quest.\n", outContent.toString());
+        outContent.reset();
+
+        //have one survivor
+        outcome.add(true);
+        continueQuest = game.findStageSurvivors(outcome);
+        assertTrue(continueQuest);
+        assertEquals("", outContent.toString());
+    }
 }

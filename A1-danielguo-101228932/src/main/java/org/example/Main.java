@@ -175,7 +175,7 @@ public class Main {
                 game.beginQuestBuilding(sponsor, game.inContent);
                 ArrayList<ArrayList<Card>> stages = game.beginStageBuilding(sponsor, curEventCard.value, game.inContent);
                 game.endStageBuilding(sponsor, stages, game.inContent);
-                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value\
+                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
                 ArrayList<Player> stageParticipants = new ArrayList<>();
                 for (int i = 0; i < curEventCard.value; i++) {
                     //Find participants for the current stage
@@ -702,5 +702,9 @@ public class Main {
         winners += " are the winner(s) and are eligible to continue.\n";
         System.out.print(winners);
         return outcome;
+    }
+
+    public boolean findStageSurvivors(ArrayList<Boolean> outcome){
+        return false;
     }
 }
