@@ -8,6 +8,7 @@ public class Main {
     public Scanner inContent = new Scanner(System.in);
     public ArrayList<Card> AdDeck;
     public ArrayList<Card> EvDeck;
+    public ArrayList<Card> AdDiscard = new ArrayList<>();
     public ArrayList<Card> EvDiscard = new ArrayList<>();
     public final ArrayList<Player> PlayerList = new ArrayList<>(
             Arrays.asList(
@@ -712,5 +713,9 @@ public class Main {
             return false;
         }
         return true;
+    }
+
+    public void discardAttackTeams(ArrayList<ArrayList<Card>> attackTeams){
+
     }
 }

@@ -1164,4 +1164,31 @@ class MainTest {
         assertTrue(continueQuest);
         assertEquals("", outContent.toString());
     }
+
+    @Test
+    @DisplayName("Test discard attacks")
+    void RESP_25_test_01() {
+        Main game = new Main();
+        //dummy attacks
+        ArrayList<Main.Card> p1Attack = new ArrayList<>();
+        Main.Card a = game.new Card("D5", "Weapon", 5);
+        p1Attack.add(a);
+
+        ArrayList<Main.Card> p2Attack = new ArrayList<>();
+        Main.Card b = game.new Card("D5", "Weapon", 5);
+        p2Attack.add(b);
+        Main.Card c = game.new Card("S10", "Weapon", 10);
+        p2Attack.add(c);
+
+        ArrayList<ArrayList<Main.Card>> attackTeams = new ArrayList<>();
+        attackTeams.add(p1Attack);
+        attackTeams.add(p2Attack);
+
+        //test to see if cards are discarded from the attack teams to the AdDiscard
+        game.discardAttackTeams(attackTeams);
+        assertTrue(game.AdDiscard.contains(a));
+        assertTrue(game.AdDiscard.contains(b));
+        assertTrue(game.AdDiscard.contains(c));
+        assertEquals(3, game.AdDiscard.size());
+    }
 }
