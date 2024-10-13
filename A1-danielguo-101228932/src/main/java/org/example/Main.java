@@ -620,6 +620,24 @@ public class Main {
                     continue;
                 }
                 if (!input.isEmpty()) {
+                    //non-empty input; get the card and check if its valid
+                    //check if it's a weapon
+                    if(!p.hand.get(Integer.parseInt(input) - 1).type.equals("Weapon")){
+                        //must be a foe.
+                        System.out.print("Invalid input. Cannot add foes to attack team.\n");
+                        continue;
+                    }
+                    //check if it's a dupe
+                    boolean hasDupe = false;
+                    for (Card c : curAttack){
+                        if (c.toString().equals(p.hand.get(Integer.parseInt(input) - 1).toString())){
+                            hasDupe = true;
+                        }
+                    }
+                    if(hasDupe){
+                        System.out.print("Invalid input. Duplicate weapon.\n");
+                        continue;
+                    }
                     curAttack.add(p.hand.remove(Integer.parseInt(input) - 1));
                 }
             }
@@ -639,8 +657,6 @@ public class Main {
             }
             System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         }
-
-
         return attackTeams;
     }
 }
