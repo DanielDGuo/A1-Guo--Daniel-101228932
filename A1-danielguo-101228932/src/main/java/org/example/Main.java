@@ -315,8 +315,13 @@ public class Main {
 
     public void drawAdCard(Player p, int num, Scanner inContent) {
         for (int i = 0; i < num; i++) {
-            p.addCard(AdDeck.getFirst());
-            AdDeck.removeFirst();
+            if(AdDeck.isEmpty()){
+                System.out.print("Adventure Deck empty. Shuffling discard pile back in.\n");
+                AdDeck.addAll(AdDiscard);
+                AdDiscard.clear();
+                Collections.shuffle(AdDeck);
+            }
+            p.addCard(AdDeck.removeFirst());
         }
         if (p.hand.size() > 12) {
             System.out.print("\n\n\n\n\n\n\n\n\n\n" + p + " is over the max hand size by " + (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
