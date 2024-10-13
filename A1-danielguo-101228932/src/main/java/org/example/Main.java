@@ -315,7 +315,7 @@ public class Main {
 
     public void drawAdCard(Player p, int num, Scanner inContent) {
         for (int i = 0; i < num; i++) {
-            if(AdDeck.isEmpty()){
+            if (AdDeck.isEmpty()) {
                 System.out.print("Adventure Deck empty. Shuffling discard pile back in.\n");
                 AdDeck.addAll(AdDiscard);
                 AdDiscard.clear();
@@ -373,6 +373,12 @@ public class Main {
     }
 
     public Card drawEventCard() {
+        if (EvDeck.isEmpty()) {
+            System.out.print("Event Deck empty. Shuffling discard pile back in.\n");
+            EvDeck.addAll(EvDiscard);
+            EvDiscard.clear();
+            Collections.shuffle(EvDeck);
+        }
         Card curEvent = EvDeck.removeFirst();
         //immediately discard it; no reason to have it in the deck anymore, and no other zone it can be in
         EvDiscard.add(curEvent);
@@ -730,27 +736,27 @@ public class Main {
         }
     }
 
-    public void giveWinnersShields(int numStages){
+    public void giveWinnersShields(int numStages) {
         ArrayList<Player> winners = new ArrayList<>();
-        for(Player p : PlayerList){
-            if(p.eligible){
+        for (Player p : PlayerList) {
+            if (p.eligible) {
                 winners.add(p);
                 p.addShields(numStages);
             }
         }
-        if(winners.isEmpty()){
+        if (winners.isEmpty()) {
             System.out.print("The Quest was failed. No shields.\n");
-        }else{
-            System.out.print("The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length()-1)+  ". They each get " + numStages + " shields.\n");
+        } else {
+            System.out.print("The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length() - 1) + ". They each get " + numStages + " shields.\n");
         }
     }
 
-    public void discardQuestStages(ArrayList<ArrayList<Card>> stages, Player sponsor, Scanner inContent){
+    public void discardQuestStages(ArrayList<ArrayList<Card>> stages, Player sponsor, Scanner inContent) {
         int numCardsUsed = 0;
-        for(ArrayList<Card> s: stages){
+        for (ArrayList<Card> s : stages) {
             AdDiscard.addAll(s);
             numCardsUsed += s.size();
         }
-        drawAdCard(sponsor, numCardsUsed+stages.size(), inContent);
+        drawAdCard(sponsor, numCardsUsed + stages.size(), inContent);
     }
 }
