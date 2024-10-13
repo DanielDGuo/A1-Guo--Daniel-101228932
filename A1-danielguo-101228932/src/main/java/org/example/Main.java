@@ -191,6 +191,7 @@ public class Main {
                 //After Quest Attack, distribute shields to the winners
                 game.giveWinnersShields(curEventCard.value);
                 //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
+                game.discardQuestStages(stages, sponsor, game.inContent);
             }
             game.endTurn(game.inContent);
         }
@@ -740,6 +741,11 @@ public class Main {
     }
 
     public void discardQuestStages(ArrayList<ArrayList<Card>> stages, Player sponsor, Scanner inContent){
-
+        int numCardsUsed = 0;
+        for(ArrayList<Card> s: stages){
+            AdDiscard.addAll(s);
+            numCardsUsed += s.size();
+        }
+        drawAdCard(sponsor, numCardsUsed+stages.size(), inContent);
     }
 }
