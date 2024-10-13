@@ -182,7 +182,7 @@ public class Main {
                     stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
                     game.participantsDrawCard(stageParticipants, game.inContent);
                     ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
-                    //resolve attacks here
+                    ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
                 }
                 //After Quest Attack, distribute shields to the winners
                 //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
@@ -669,7 +669,38 @@ public class Main {
         }
     }
 
-    public ArrayList<Boolean> resolveAttacks(ArrayList<Card> curStage, ArrayList<ArrayList<Card>> attackTeams){
-        return new ArrayList<>();
+    public ArrayList<Boolean> resolveAttacks(ArrayList<Card> curStage, ArrayList<ArrayList<Card>> attackTeams, ArrayList<Player> participants) {
+        System.out.print("The current stage was: " + curStage.toString().substring(1, curStage.toString().length() - 1) + ".\n");
+
+        ArrayList<Boolean> outcome = new ArrayList<>();
+        //value of stage
+        int stageValue = 0;
+        for (Card c : curStage) {
+            stageValue += c.value;
+        }
+        //find and check hands against stage
+        for (int i = 0; i < attackTeams.size(); i++) {
+            int handValue = 0;
+            for (Card c : attackTeams.get(i)) {
+                handValue += c.value;
+            }
+            if (handValue >= stageValue) {
+                outcome.add(true);
+            } else {
+                outcome.add(false);
+                participants.get(i).eligible = false;
+            }
+        }
+        //find who won
+        String winners = "";
+        for(Player p : participants){
+            if(p.eligible){
+                winners += p + ", ";
+            }
+        }
+        winners = winners.substring(0, winners.length()-2);
+        winners += " are the winner(s) and are eligible to continue.\n";
+        System.out.print(winners);
+        return outcome;
     }
 }
