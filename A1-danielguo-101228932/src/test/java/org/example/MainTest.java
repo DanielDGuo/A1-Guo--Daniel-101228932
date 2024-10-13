@@ -1316,4 +1316,25 @@ class MainTest {
         game.AdDeck.add(game.curPlayer.hand.removeFirst());
         assertTrue(game.AdventureDeckList.containsAll(game.AdDeck));
     }
+
+    @Test
+    @DisplayName("Test draw from empty event deck")
+    void RESP_29_test_01() {
+        Main game = new Main();
+        //init the AdDeck and put them into the discard pile
+        game.initializeEventDeck();
+        game.EvDiscard.addAll(game.EvDeck);
+        game.EvDeck.clear();
+
+        //test drawing from empty ev deck
+        Main.Card curEvent = game.drawEventCard();
+
+        //assert that hand size is correct, deck size is correct, discard is now empty
+        assertEquals(1, game.EvDiscard.size());
+        assertEquals(16, game.EvDeck.size());
+        assertTrue(outContent.toString().contains("Event Deck empty. Shuffling discard pile back in.\n"));
+        //make sure that all cards were retained
+        game.EvDeck.add(game.EvDiscard.removeFirst());
+        assertTrue(game.EventDeckList.containsAll(game.EvDeck));
+    }
 }
