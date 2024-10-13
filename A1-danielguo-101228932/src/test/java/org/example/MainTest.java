@@ -483,7 +483,7 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("Test sponsor seeking")
+    @DisplayName("Test sponsor seeking - P3 Accept")
     void RESP_14_test_01() {
         Main game = new Main();
         game.curPlayer = game.PlayerList.get(0);
@@ -492,6 +492,26 @@ class MainTest {
         //test p1, p2 decline, p3 accept
         Main.Player p = game.seekSponsor(new Scanner("K\nN\nN\nY"));
         assertEquals("""
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         P1, would you like to sponsor this quest? (Y/N)
                         Invalid input.
                         P2, would you like to sponsor this quest? (Y/N)
@@ -501,11 +521,38 @@ class MainTest {
                 , outContent.toString());
         outContent.reset();
         assertEquals(game.PlayerList.get(2), p);
+    }
+
+    @Test
+    @DisplayName("Test sponsor seeking - All Decline")
+    void RESP_14_test_02() {
+        Main game = new Main();
+        game.curPlayer = game.PlayerList.get(0);
 
         //ask p1, p2, p3, p4 if they'd like to sponsor.
         //test all decline
-        p = game.seekSponsor(new Scanner("N\nN\nN\nN"));
+        Main.Player p = game.seekSponsor(new Scanner("N\nN\nN\nN"));
         assertEquals("""
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         P1, would you like to sponsor this quest? (Y/N)
                         P2, would you like to sponsor this quest? (Y/N)
                         P3, would you like to sponsor this quest? (Y/N)
@@ -515,11 +562,36 @@ class MainTest {
                 , outContent.toString());
         outContent.reset();
         assertNull(p);
+    }
 
-        //start on P3 instead
+    @Test
+    @DisplayName("Test sponsor seeking - P4 Accept, curPlayer P3")
+    void RESP_14_test_03() {
+        Main game = new Main();
         game.curPlayer = game.PlayerList.get(2);
-        p = game.seekSponsor(new Scanner("N\nY"));
+
+        Main.Player p  = game.seekSponsor(new Scanner("N\nY"));
         assertEquals("""
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         P3, would you like to sponsor this quest? (Y/N)
                         P4, would you like to sponsor this quest? (Y/N)
                         P4 has accepted to sponsor this quest.
@@ -530,7 +602,7 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("Test Quest Building start")
+    @DisplayName("Test Quest Building start for P1")
     void RESP_15_test_01() {
         Main game = new Main();
 
@@ -560,9 +632,16 @@ class MainTest {
                         """
                 , outContent.toString());
         outContent.reset();
+    }
 
-        //try the second player
-        sponsor = game.PlayerList.get(1);
+    @Test
+    @DisplayName("Test Quest Building start for non-P1")
+    void RESP_15_test_02() {
+        Main game = new Main();
+
+        //state that the build phase is beginning and upon confirmation that the sponsor is in control, display their hand
+        //leave the rest of the build phase later
+        Main.Player sponsor = game.PlayerList.get(1);
 
         //create a dummy sponsor hand
         sponsor.addCard(game.new Card("F5", "Foe", 5));
@@ -786,7 +865,7 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("Test participant seeking")
+    @DisplayName("Test participant seeking for first stage")
     void RESP_19_test_01() {
         Main game = new Main();
         Main.Player sponsor = game.PlayerList.get(0);
@@ -795,6 +874,7 @@ class MainTest {
         //failing a stage makes you ineligible
 
         //ask p2, p3, p4 if they'd like to participate. p1 ineligible due to being the sponsor
+        //if it's the first stage, reset their eligibility first
         ArrayList<Main.Player> participants = game.seekParticipants(sponsor, true, new Scanner("K\nN\nY\nY\n"));
         assertEquals("""
                         P2, would you like to participate in this stage? (Y/N)
@@ -815,10 +895,21 @@ class MainTest {
         assertFalse(game.PlayerList.get(1).eligible);
         assertTrue(game.PlayerList.get(2).eligible);
         assertTrue(game.PlayerList.get(3).eligible);
+    }
+
+
+    @Test
+    @DisplayName("Test participant seeking for second stage and beyond")
+    void RESP_19_test_02() {
+        Main game = new Main();
+        Main.Player sponsor = game.PlayerList.get(0);
+
+        game.PlayerList.get(2).eligible = true;
+        game.PlayerList.get(3).eligible = true;
 
         //second stage test. Have P4 "fail" stage 1
         game.PlayerList.get(3).eligible = false;
-        participants = game.seekParticipants(sponsor, false, new Scanner("Y\n"));
+        ArrayList<Main.Player> participants = game.seekParticipants(sponsor, false, new Scanner("Y\n"));
         assertEquals("""
                         P3, would you like to participate in this stage? (Y/N)
                         P3 will participate in this stage.

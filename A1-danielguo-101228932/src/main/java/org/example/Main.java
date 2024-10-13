@@ -322,6 +322,7 @@ public class Main {
             }
             p.addCard(AdDeck.removeFirst());
         }
+        Collections.sort(p.hand);
         if (p.hand.size() > 12) {
             System.out.print("\n\n\n\n\n\n\n\n\n\n" + p + " is over the max hand size by " + (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
             this.discardAdCard(p, (p.hand.size() - 12), inContent);
@@ -415,6 +416,7 @@ public class Main {
     }
 
     public Player seekSponsor(Scanner inContent) {
+        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         int curPlayerIndex = curPlayer.id - 1;
         for (int i = 0; i < 4; i++) {
             System.out.print(PlayerList.get((curPlayerIndex + i) % 4) + ", would you like to sponsor this quest? (Y/N)\n");
@@ -460,6 +462,7 @@ public class Main {
             ArrayList<Card> curStage = new ArrayList<>();
             String input = "temp";
             while (!input.isEmpty()) {
+                Collections.sort(curStage);
                 //print the relevant information
                 String curStageToString = curStage.toString().substring(1, curStage.toString().length() - 1);
                 System.out.print("Stage " + (i + 1) + ": " + curStageToString + "\n");
@@ -524,7 +527,6 @@ public class Main {
                     }
                 }
             }
-            Collections.sort(curStage);
             stages.add(curStage);
         }
         return stages;
@@ -601,6 +603,7 @@ public class Main {
             String curAttackToString = "";
             input = "temp";
             while (!input.isEmpty()) {
+                Collections.sort(curAttack);
                 //print the relevant information
                 curAttackToString = curAttack.toString().substring(1, curAttack.toString().length() - 1);
                 System.out.print("Current Attack Team: " + curAttackToString + "\n");
@@ -635,7 +638,6 @@ public class Main {
                     curAttack.add(p.hand.remove(Integer.parseInt(input) - 1));
                 }
             }
-            Collections.sort(curAttack);
             attackTeams.add(curAttack);
             System.out.print(p + ", Here is your attack team:\n");
             System.out.print("Current Attack Team: " + curAttackToString + "\n");
@@ -690,9 +692,11 @@ public class Main {
                 winners += p + ", ";
             }
         }
-        winners = winners.substring(0, winners.length() - 2);
-        winners += " are the winner(s) and are eligible to continue.\n";
-        System.out.print(winners);
+        if (!winners.isEmpty()) {
+            winners = winners.substring(0, winners.length() - 2);
+            winners += " are the winner(s) and are eligible to continue.\n";
+            System.out.print(winners);
+        }
         return outcome;
     }
 
