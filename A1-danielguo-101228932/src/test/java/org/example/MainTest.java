@@ -1292,4 +1292,28 @@ class MainTest {
         //4 stages, 6 cards, sponsor draws 10
         assertEquals(10, sponsor.hand.size());
     }
+
+    @Test
+    @DisplayName("Test draw from empty adventure deck")
+    void RESP_28_test_01() {
+        Main game = new Main();
+        //init the AdDeck and put them into the discard pile
+        game.initializeAdventureDeck();
+        game.AdDiscard.addAll(game.AdDeck);
+        game.AdDeck.clear();
+
+        game.curPlayer = game.PlayerList.get(0);
+
+        //test drawing from empty ad deck
+        game.drawAdCard(game.curPlayer, 1, new Scanner(""));
+
+        //assert that hand size is correct, deck size is correct, discard is now empty
+        assertEquals(1, game.curPlayer.hand.size());
+        assertEquals(99, game.AdDeck.size());
+        assertEquals(0, game.AdDiscard.size());
+        assertEquals("Adventure Deck empty. Shuffling discard pile back in.\n", outContent.toString());
+        //make sure that all cards were retained
+        game.AdDeck.add(game.curPlayer.hand.removeFirst());
+        assertTrue(game.AdventureDeckList.containsAll(game.AdDeck));
+    }
 }
