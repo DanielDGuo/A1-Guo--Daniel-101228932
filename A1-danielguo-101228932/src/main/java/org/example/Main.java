@@ -176,13 +176,15 @@ public class Main {
                 ArrayList<ArrayList<Card>> stages = game.beginStageBuilding(sponsor, curEventCard.value, game.inContent);
                 game.endStageBuilding(sponsor, stages, game.inContent);
                 //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
-                ArrayList<Player> stageParticipants = new ArrayList<>();
                 for (int i = 0; i < curEventCard.value; i++) {
                     //Find participants for the current stage
-                    stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
+                    ArrayList<Player> stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
                     game.participantsDrawCard(stageParticipants, game.inContent);
                     ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
                     ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
+                    if(!game.findStageSurvivors(stageOutcome)){
+                        break;
+                    }
                 }
                 //After Quest Attack, distribute shields to the winners
                 //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
@@ -705,6 +707,10 @@ public class Main {
     }
 
     public boolean findStageSurvivors(ArrayList<Boolean> outcome){
-        return false;
+        if(!outcome.contains(true)){
+            System.out.print("No one passed the stage. Aborting quest.\n");
+            return false;
+        }
+        return true;
     }
 }
