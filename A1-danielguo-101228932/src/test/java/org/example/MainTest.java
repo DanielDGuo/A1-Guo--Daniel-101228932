@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -209,24 +208,30 @@ class MainTest {
         game.initializePlayerHands();
         assertEquals(52, game.AdDeck.size());
 
+        //remove 2 cards from the hand
+        game.curPlayer.hand.removeFirst();
+        game.curPlayer.hand.removeFirst();
+
         Main.Card curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")) {
-            game.queenEffectNoDiscard();
+            game.queenEffect();
         }
         //check Queen's Favour works on hand with 12 cards
-        assertEquals(14, game.curPlayer.hand.size());
+        assertEquals(12, game.curPlayer.hand.size());
         assertEquals(50, game.AdDeck.size());
 
         //remove some cards and test again
         game.curPlayer.hand.removeFirst();
         game.curPlayer.hand.removeFirst();
         game.curPlayer.hand.removeFirst();
-        assertEquals(11, game.curPlayer.hand.size());
+        game.curPlayer.hand.removeFirst();
+        game.curPlayer.hand.removeFirst();
+        assertEquals(7, game.curPlayer.hand.size());
         curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")) {
-            game.queenEffectNoDiscard();
+            game.queenEffect();
         }
-        assertEquals(13, game.curPlayer.hand.size());
+        assertEquals(9, game.curPlayer.hand.size());
         assertEquals(48, game.AdDeck.size());
     }
 
@@ -247,18 +252,36 @@ class MainTest {
         game.initializePlayerHands();
         assertEquals(52, game.AdDeck.size());
 
+        game.PlayerList.get(0).hand.removeFirst();
+        game.PlayerList.get(0).hand.removeFirst();
+        game.PlayerList.get(1).hand.removeFirst();
+        game.PlayerList.get(1).hand.removeFirst();
+        game.PlayerList.get(2).hand.removeFirst();
+        game.PlayerList.get(2).hand.removeFirst();
+        game.PlayerList.get(3).hand.removeFirst();
+        game.PlayerList.get(3).hand.removeFirst();
+
         Main.Card curCard = game.drawEventCard();
         if (curCard.id.equals("Prosperity")) {
-            game.prosperityEffectNoDiscard();
+            game.prosperityEffect();
         }
         //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
-        assertEquals(14, game.PlayerList.get(0).hand.size());
-        assertEquals(14, game.PlayerList.get(1).hand.size());
-        assertEquals(14, game.PlayerList.get(2).hand.size());
-        assertEquals(14, game.PlayerList.get(3).hand.size());
+        assertEquals(12, game.PlayerList.get(0).hand.size());
+        assertEquals(12, game.PlayerList.get(1).hand.size());
+        assertEquals(12, game.PlayerList.get(2).hand.size());
+        assertEquals(12, game.PlayerList.get(3).hand.size());
         assertEquals(44, game.AdDeck.size());
 
-        //remove some cards
+        //remove some more cards
+        game.PlayerList.get(0).hand.removeFirst();
+        game.PlayerList.get(0).hand.removeFirst();
+        game.PlayerList.get(1).hand.removeFirst();
+        game.PlayerList.get(1).hand.removeFirst();
+        game.PlayerList.get(2).hand.removeFirst();
+        game.PlayerList.get(2).hand.removeFirst();
+        game.PlayerList.get(3).hand.removeFirst();
+        game.PlayerList.get(3).hand.removeFirst();
+
         game.PlayerList.get(3).hand.removeFirst();
         game.PlayerList.get(3).hand.removeFirst();
         game.PlayerList.get(3).hand.removeFirst();
@@ -268,13 +291,13 @@ class MainTest {
 
         curCard = game.drawEventCard();
         if (curCard.id.equals("Prosperity")) {
-            game.prosperityEffectNoDiscard();
+            game.prosperityEffect();
         }
         //make sure everyone's drawn 2 cards. Discards only happen at the end of each turn
-        assertEquals(16, game.PlayerList.get(0).hand.size());
-        assertEquals(15, game.PlayerList.get(1).hand.size());
-        assertEquals(14, game.PlayerList.get(2).hand.size());
-        assertEquals(13, game.PlayerList.get(3).hand.size());
+        assertEquals(12, game.PlayerList.get(0).hand.size());
+        assertEquals(11, game.PlayerList.get(1).hand.size());
+        assertEquals(10, game.PlayerList.get(2).hand.size());
+        assertEquals(9, game.PlayerList.get(3).hand.size());
         assertEquals(36, game.AdDeck.size());
     }
 
@@ -349,16 +372,14 @@ class MainTest {
         game.initializeAdventureDeck();
         game.initializePlayerHands();
 
-        //have P1 go up to 13 cards
-        game.drawAdCardNoDiscard(game.curPlayer, 1);
-        assertEquals("\n\n\n\n\n\n\n\n\n\nP1 is over the max hand size by 1. Please give controls to P1, and press enter.\n",
-                outContent.toString());
+        //have P1 go up to 13 cards, then discard the first
+        game.drawAdCard(game.curPlayer, 1, new Scanner("\n\n\n\n\n\n\n1\n\n\n\n\n\n"));
+        assertTrue(outContent.toString().contains("\n\n\n\n\n\n\n\n\n\nP1 is over the max hand size by 1. Please give controls to P1, and press enter.\n"));
         outContent.reset();
 
         //have P3 go up to 15 cards
-        game.drawAdCardNoDiscard(game.PlayerList.get(2), 3);
-        assertEquals("\n\n\n\n\n\n\n\n\n\nP3 is over the max hand size by 3. Please give controls to P3, and press enter.\n",
-                outContent.toString());
+        game.drawAdCard(game.PlayerList.get(2), 3, new Scanner("\n\n\n\n\n\n\n1\n1\n1\n\n\n\n"));
+        assertTrue(outContent.toString().contains("\n\n\n\n\n\n\n\n\n\nP3 is over the max hand size by 3. Please give controls to P3, and press enter.\n"));
         outContent.reset();
 
         //remove some cards from P2
@@ -366,7 +387,7 @@ class MainTest {
         game.PlayerList.get(1).hand.removeFirst();
         game.PlayerList.get(1).hand.removeFirst();
         //check that the discard doesn't activate
-        game.drawAdCardNoDiscard(game.PlayerList.get(1), 1);
+        game.drawAdCard(game.PlayerList.get(1), 1, new Scanner(""));
         assertEquals("", outContent.toString());
         outContent.reset();
     }
@@ -1327,7 +1348,7 @@ class MainTest {
         game.EvDeck.clear();
 
         //test drawing from empty ev deck
-        Main.Card curEvent = game.drawEventCard();
+        game.drawEventCard();
 
         //assert that hand size is correct, deck size is correct, discard is now empty
         assertEquals(1, game.EvDiscard.size());

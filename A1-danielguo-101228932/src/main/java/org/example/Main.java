@@ -1,6 +1,5 @@
 package org.example;
 
-import javax.swing.*;
 import java.util.*;
 
 public class Main {
@@ -329,17 +328,6 @@ public class Main {
         }
     }
 
-    //for testing tests prior to R-CODE-13
-    public void drawAdCardNoDiscard(Player p, int num) {
-        for (int i = 0; i < num; i++) {
-            p.addCard(AdDeck.getFirst());
-            AdDeck.removeFirst();
-        }
-        if (p.hand.size() > 12) {
-            System.out.print("\n\n\n\n\n\n\n\n\n\n" + p + " is over the max hand size by " + (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
-        }
-    }
-
     public void discardAdCard(Player p, int num, Scanner inContent) {
         System.out.print("\nAre you " + p + "?\n");
         String input = inContent.nextLine();
@@ -401,24 +389,10 @@ public class Main {
         drawAdCard(curPlayer, 2, inContent);
     }
 
-    //for testing tests prior to R-CODE-13
-    public void queenEffectNoDiscard() {
-        System.out.print("Queen's Favour Drawn. Current player draws 2 cards.\n");
-        drawAdCardNoDiscard(curPlayer, 2);
-    }
-
     public void prosperityEffect() {
         System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
         for (Player p : PlayerList) {
             drawAdCard(p, 2, inContent);
-        }
-    }
-
-    //for testing tests prior to R-CODE-13
-    public void prosperityEffectNoDiscard() {
-        System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
-        for (Player p : PlayerList) {
-            drawAdCardNoDiscard(p, 2);
         }
     }
 
