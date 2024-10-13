@@ -183,6 +183,7 @@ public class Main {
                     game.participantsDrawCard(stageParticipants, game.inContent);
                     ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
                     ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
+                    game.discardAttackTeams(stageAttackTeams);
                     if(!game.findStageSurvivors(stageOutcome)){
                         break;
                     }
@@ -716,6 +717,8 @@ public class Main {
     }
 
     public void discardAttackTeams(ArrayList<ArrayList<Card>> attackTeams){
-
+        for(ArrayList<Card> team : attackTeams){
+            AdDiscard.addAll(team);
+        }
     }
 }
