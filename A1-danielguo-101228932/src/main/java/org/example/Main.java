@@ -1,5 +1,6 @@
 package org.example;
 
+import javax.swing.*;
 import java.util.*;
 
 public class Main {
@@ -179,7 +180,7 @@ public class Main {
                 for (int i = 0; i < curEventCard.value; i++) {
                     //Find participants for the current stage
                     stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
-                    //draw cards here
+                    game.participantsDrawCard(stageParticipants, game.inContent);
                     ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
                     //resolve attacks here
                 }
@@ -623,19 +624,19 @@ public class Main {
                 if (!input.isEmpty()) {
                     //non-empty input; get the card and check if its valid
                     //check if it's a weapon
-                    if(!p.hand.get(Integer.parseInt(input) - 1).type.equals("Weapon")){
+                    if (!p.hand.get(Integer.parseInt(input) - 1).type.equals("Weapon")) {
                         //must be a foe.
                         System.out.print("Invalid input. Cannot add foes to attack team.\n");
                         continue;
                     }
                     //check if it's a dupe
                     boolean hasDupe = false;
-                    for (Card c : curAttack){
-                        if (c.toString().equals(p.hand.get(Integer.parseInt(input) - 1).toString())){
+                    for (Card c : curAttack) {
+                        if (c.toString().equals(p.hand.get(Integer.parseInt(input) - 1).toString())) {
                             hasDupe = true;
                         }
                     }
-                    if(hasDupe){
+                    if (hasDupe) {
                         System.out.print("Invalid input. Duplicate weapon.\n");
                         continue;
                     }
@@ -661,7 +662,10 @@ public class Main {
         return attackTeams;
     }
 
-    public void participantsDrawCard(ArrayList<Player> participants, Scanner inContent){
-        
+    public void participantsDrawCard(ArrayList<Player> participants, Scanner inContent) {
+        System.out.print("Player(s) " + participants.toString().substring(1, participants.toString().length() - 1) + " will draw a card.\n");
+        for (Player p : participants) {
+            drawAdCard(p, 1, inContent);
+        }
     }
 }
