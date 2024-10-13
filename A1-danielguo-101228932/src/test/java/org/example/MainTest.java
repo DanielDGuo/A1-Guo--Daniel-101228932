@@ -1191,4 +1191,63 @@ class MainTest {
         assertTrue(game.AdDiscard.contains(c));
         assertEquals(3, game.AdDiscard.size());
     }
+
+    @Test
+    @DisplayName("Test distribute shields")
+    void RESP_26_test_01() {
+        Main game = new Main();
+        //dummy attacks
+        Main.Card curEvent = game.new Card("Q4", "Quest", 4);
+        //dummy eligibility. If a player is still eligible after a quest, they must have survived.
+        game.PlayerList.get(0).eligible = false;
+        game.PlayerList.get(1).eligible = true;
+        game.PlayerList.get(2).eligible = false;
+        game.PlayerList.get(3).eligible = true;
+
+        game.giveWinnersShields(curEvent.value);
+
+        //test to see if cards are discarded from the attack teams to the AdDiscard
+        assertEquals(0, game.PlayerList.get(0).shields);
+        assertEquals(4, game.PlayerList.get(1).shields);
+        assertEquals(0, game.PlayerList.get(2).shields);
+        assertEquals(4, game.PlayerList.get(3).shields);
+        assertEquals("The quest was completed by player(s) P2, P4. They each get 4 shields.\n", outContent.toString());
+        outContent.reset();
+
+        //again
+        curEvent = game.new Card("Q2", "Quest", 2);
+        //dummy eligibility. If a player is still eligible after a quest, they must have survived.
+        game.PlayerList.get(0).eligible = true;
+        game.PlayerList.get(1).eligible = false;
+        game.PlayerList.get(2).eligible = false;
+        game.PlayerList.get(3).eligible = true;
+
+        game.giveWinnersShields(curEvent.value);
+
+        //test to see if cards are discarded from the attack teams to the AdDiscard
+        assertEquals(2, game.PlayerList.get(0).shields);
+        assertEquals(4, game.PlayerList.get(1).shields);
+        assertEquals(0, game.PlayerList.get(2).shields);
+        assertEquals(6, game.PlayerList.get(3).shields);
+        assertEquals("The quest was completed by player(s) P1, P4. They each get 2 shields.\n", outContent.toString());
+        outContent.reset();
+
+        //again with no winners
+        curEvent = game.new Card("Q3", "Quest", 3);
+        //dummy eligibility. If a player is still eligible after a quest, they must have survived.
+        game.PlayerList.get(0).eligible = false;
+        game.PlayerList.get(1).eligible = false;
+        game.PlayerList.get(2).eligible = false;
+        game.PlayerList.get(3).eligible = false;
+
+        game.giveWinnersShields(curEvent.value);
+
+        //test to see if cards are discarded from the attack teams to the AdDiscard
+        assertEquals(2, game.PlayerList.get(0).shields);
+        assertEquals(4, game.PlayerList.get(1).shields);
+        assertEquals(0, game.PlayerList.get(2).shields);
+        assertEquals(6, game.PlayerList.get(3).shields);
+        assertEquals("The Quest was failed. No shields.\n", outContent.toString());
+        outContent.reset();
+    }
 }

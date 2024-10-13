@@ -722,4 +722,8 @@ public class Main {
             AdDiscard.addAll(team);
         }
     }
+
+    public void giveWinnersShields(int numStages){
+
+    }
 }
