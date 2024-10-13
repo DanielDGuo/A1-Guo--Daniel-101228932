@@ -1104,4 +1104,44 @@ class MainTest {
         assertEquals(0, game.PlayerList.get(3).hand.size());
         assertEquals(85, game.AdDeck.size());
     }
+
+    @Test
+    @DisplayName("Test stage resolution")
+    void RESP_23_test_01() {
+        Main game = new Main();
+        //dummy stage and attack teams
+        ArrayList<Main.Card> curStage = new ArrayList<>();
+        curStage.add(game.new Card("F5", "Foe", 5));
+        curStage.add(game.new Card("D5", "Weapon", 5));
+
+        ArrayList<Main.Player> participants = new ArrayList<>();
+        participants.add(game.PlayerList.get(0));
+        participants.add(game.PlayerList.get(1));
+
+        ArrayList<Main.Card> p1Attack = new ArrayList<>();
+        p1Attack.add(game.new Card("D5", "Weapon", 5));
+
+        ArrayList<Main.Card> p2Attack = new ArrayList<>();
+        p2Attack.add(game.new Card("D5", "Weapon", 5));
+        p2Attack.add(game.new Card("S10", "Weapon", 10));
+
+        ArrayList<ArrayList<Main.Card>> attackTeams = new ArrayList<>();
+        attackTeams.add(p1Attack);
+        attackTeams.add(p2Attack);
+
+        game.PlayerList.get(0).eligible = true;
+        game.PlayerList.get(1).eligible = true;
+
+        //init done. Test resolve function. Should return a list of who passed and who didn't, and set eligibility if required
+        ArrayList<Boolean> attackOutcomes = game.resolveAttacks(curStage, attackTeams, participants);
+        assertFalse(attackOutcomes.get(0));
+        assertTrue(attackOutcomes.get(1));
+        assertFalse(game.PlayerList.get(0).eligible);
+        assertTrue(game.PlayerList.get(1).eligible);
+        assertEquals("""
+                The current stage was: F5, D5.
+                P2 are the winner(s) and are eligible to continue.
+                """, outContent.toString());
+    }
+
 }

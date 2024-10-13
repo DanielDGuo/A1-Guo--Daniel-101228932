@@ -668,4 +668,8 @@ public class Main {
             drawAdCard(p, 1, inContent);
         }
     }
+
+    public ArrayList<Boolean> resolveAttacks(ArrayList<Card> curStage, ArrayList<ArrayList<Card>> attackTeams){
+        return new ArrayList<>();
+    }
 }
