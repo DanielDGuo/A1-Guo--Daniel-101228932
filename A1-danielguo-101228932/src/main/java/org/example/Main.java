@@ -189,6 +189,7 @@ public class Main {
                     }
                 }
                 //After Quest Attack, distribute shields to the winners
+                game.giveWinnersShields(curEventCard.value);
                 //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
             }
             game.endTurn(game.inContent);
@@ -724,6 +725,17 @@ public class Main {
     }
 
     public void giveWinnersShields(int numStages){
-
+        ArrayList<Player> winners = new ArrayList<>();
+        for(Player p : PlayerList){
+            if(p.eligible){
+                winners.add(p);
+                p.addShields(numStages);
+            }
+        }
+        if(winners.isEmpty()){
+            System.out.print("The Quest was failed. No shields.\n");
+        }else{
+            System.out.print("The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length()-1)+  ". They each get " + numStages + " shields.\n");
+        }
     }
 }
