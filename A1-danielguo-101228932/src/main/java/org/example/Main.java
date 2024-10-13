@@ -184,7 +184,7 @@ public class Main {
                     ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
                     ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
                     game.discardAttackTeams(stageAttackTeams);
-                    if(!game.findStageSurvivors(stageOutcome)){
+                    if (!game.findStageSurvivors(stageOutcome)) {
                         break;
                     }
                 }
@@ -357,7 +357,7 @@ public class Main {
                 System.out.print("Please specify an index.\n");
                 continue;
             }
-            p.hand.remove((Integer.parseInt(input)) - 1);
+            AdDiscard.add(p.hand.remove((Integer.parseInt(input)) - 1));
             num--;
         }
         System.out.print("Discarding Complete. This is your new hand:\n");
@@ -367,6 +367,7 @@ public class Main {
 
     public Card drawEventCard() {
         Card curEvent = EvDeck.removeFirst();
+        //immediately discard it; no reason to have it in the deck anymore, and no other zone it can be in
         EvDiscard.add(curEvent);
         System.out.print("\nThe current event is: " + curEvent + "\n");
         return curEvent;
@@ -697,27 +698,27 @@ public class Main {
         }
         //find who won
         String winners = "";
-        for(Player p : participants){
-            if(p.eligible){
+        for (Player p : participants) {
+            if (p.eligible) {
                 winners += p + ", ";
             }
         }
-        winners = winners.substring(0, winners.length()-2);
+        winners = winners.substring(0, winners.length() - 2);
         winners += " are the winner(s) and are eligible to continue.\n";
         System.out.print(winners);
         return outcome;
     }
 
-    public boolean findStageSurvivors(ArrayList<Boolean> outcome){
-        if(!outcome.contains(true)){
+    public boolean findStageSurvivors(ArrayList<Boolean> outcome) {
+        if (!outcome.contains(true)) {
             System.out.print("No one passed the stage. Aborting quest.\n");
             return false;
         }
         return true;
     }
 
-    public void discardAttackTeams(ArrayList<ArrayList<Card>> attackTeams){
-        for(ArrayList<Card> team : attackTeams){
+    public void discardAttackTeams(ArrayList<ArrayList<Card>> attackTeams) {
+        for (ArrayList<Card> team : attackTeams) {
             AdDiscard.addAll(team);
         }
     }
