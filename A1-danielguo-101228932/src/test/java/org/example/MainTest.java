@@ -570,7 +570,7 @@ class MainTest {
         Main game = new Main();
         game.curPlayer = game.PlayerList.get(2);
 
-        Main.Player p  = game.seekSponsor(new Scanner("N\nY"));
+        Main.Player p = game.seekSponsor(new Scanner("N\nY"));
         assertEquals("""
                         
                         
@@ -1448,5 +1448,209 @@ class MainTest {
         //make sure that all cards were retained
         game.EvDeck.add(game.EvDiscard.removeFirst());
         assertTrue(game.EventDeckList.containsAll(game.EvDeck));
+    }
+
+    @Test
+    @DisplayName("A-TEST-JP-Scenario")
+    void A_TEST_JP_Scenario() {
+        //1
+        Main game = new Main();
+        game.initializeEventDeck();
+        game.initializeAdventureDeck();
+        game.initializePlayerHands();
+        game.curPlayer = game.PlayerList.get(0);
+
+        //2
+        String P1HandRig = "F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 B15 L20";
+        String P2HandRig = "F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30";
+        String P3HandRig = "F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20";
+        String P4HandRig = "F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30";
+        //put back the drawn cards
+        game.AdDeck.addAll(game.PlayerList.get(0).hand);
+        game.PlayerList.get(0).hand.clear();
+        game.AdDeck.addAll(game.PlayerList.get(1).hand);
+        game.PlayerList.get(1).hand.clear();
+        game.AdDeck.addAll(game.PlayerList.get(2).hand);
+        game.PlayerList.get(2).hand.clear();
+        game.AdDeck.addAll(game.PlayerList.get(3).hand);
+        game.PlayerList.get(3).hand.clear();
+        //rig the hands
+        for (String r : P1HandRig.split(" ")) {
+            for (Main.Card c : game.AdDeck) {
+                if (c.toString().equals(r)) {
+                    game.PlayerList.get(0).hand.add(c);
+                    game.AdDeck.remove(c);
+                    break;
+                }
+            }
+        }
+        for (String r : P2HandRig.split(" ")) {
+            for (Main.Card c : game.AdDeck) {
+                if (c.toString().equals(r)) {
+                    game.PlayerList.get(1).hand.add(c);
+                    game.AdDeck.remove(c);
+                    break;
+                }
+            }
+        }
+        for (String r : P3HandRig.split(" ")) {
+            for (Main.Card c : game.AdDeck) {
+                if (c.toString().equals(r)) {
+                    game.PlayerList.get(2).hand.add(c);
+                    game.AdDeck.remove(c);
+                    break;
+                }
+            }
+        }
+        for (String r : P4HandRig.split(" ")) {
+            for (Main.Card c : game.AdDeck) {
+                if (c.toString().equals(r)) {
+                    game.PlayerList.get(3).hand.add(c);
+                    game.AdDeck.remove(c);
+                    break;
+                }
+            }
+        }
+
+        //3
+        //lets rig the top card to be Q4 before drawing it. I think this is the easiest way to do it while maintaining the draw card func
+        for (Main.Card c : game.EvDeck) {
+            if (c.toString().equals("Q4")) {
+                game.EvDeck.remove(c);
+                game.EvDeck.addFirst(c);
+                break;
+            }
+        }
+        Main.Card curEventCard = game.drawEventCard();
+
+        //4, 5
+        Main.Player sponsor = game.seekSponsor(new Scanner("N\nY\n"));
+        game.beginQuestBuilding(sponsor, new Scanner("\n"));
+        ArrayList<ArrayList<Main.Card>> stages = game.beginStageBuilding(sponsor, curEventCard.value, new Scanner("1\n8\n\n2\n5\n\n2\n3\n4\n\n2\n3\n\n"));
+        game.endStageBuilding(sponsor, stages, new Scanner("\n"));
+
+        //6 - stage 1
+        //Find participants for the current stage
+        ArrayList<Main.Player> stageParticipants = game.seekParticipants(sponsor, true, new Scanner("Y\nY\nY\n"));
+        //rig the top 3 cards to be F30, S10, B15
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("B15")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("S10")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("F30")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+
+        game.participantsDrawCard(stageParticipants, new Scanner("\n1\n\n1\n\n1\n"));
+        ArrayList<ArrayList<Main.Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, new Scanner("\n5\n5\n\n\n\n5\n4\n\n\n\n4\n6\n\n\n"));
+        ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(0), stageAttackTeams, stageParticipants);
+        game.discardAttackTeams(stageAttackTeams);
+
+        //7 - stage 2
+        //Find participants for the current stage
+        stageParticipants = game.seekParticipants(sponsor, false, new Scanner("Y\nY\nY\n"));
+        //rig the top 3 cards to be F10, L20, L20
+        int lancesAdded = 0;
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("L20")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+        //move a different lance to the top
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("L20") && game.AdDeck.getFirst() != c) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("F10")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+
+        game.participantsDrawCard(stageParticipants, new Scanner(""));
+        stageAttackTeams = game.createAttackTeams(stageParticipants, new Scanner("\n7\n6\n\n\n\n9\n4\n\n\n\n6\n6\n\n\n"));
+        stageOutcome = game.resolveAttacks(stages.get(1), stageAttackTeams, stageParticipants);
+        assertEquals(0, game.PlayerList.get(0).shields);
+        assertEquals("[F5, F10, F15, F15, F30, H10, B15, B15, L20]", game.PlayerList.get(0).hand.toString());
+        game.discardAttackTeams(stageAttackTeams);
+
+        //8 - stage 3
+        //Find participants for the current stage
+        stageParticipants = game.seekParticipants(sponsor, false, new Scanner("Y\nY\n"));
+        //rig the top 2 cards to be B15, S10
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("S10")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("B15")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+
+        game.participantsDrawCard(stageParticipants, new Scanner(""));
+        stageAttackTeams = game.createAttackTeams(stageParticipants, new Scanner("\n9\n7\n5\n\n\n\n7\n6\n7\n\n\n"));
+        stageOutcome = game.resolveAttacks(stages.get(2), stageAttackTeams, stageParticipants);
+        game.discardAttackTeams(stageAttackTeams);
+
+        //9 - stage 4
+        //Find participants for the current stage
+        stageParticipants = game.seekParticipants(sponsor, false, new Scanner("Y\nY\n"));
+        //rig the top 2 cards to be F30, L20
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("L20")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+        for (Main.Card c : game.AdDeck) {
+            if (c.toString().equals("F30")) {
+                game.AdDeck.remove(c);
+                game.AdDeck.addFirst(c);
+                break;
+            }
+        }
+
+        game.participantsDrawCard(stageParticipants, new Scanner(""));
+        stageAttackTeams = game.createAttackTeams(stageParticipants, new Scanner("\n7\n6\n6\n\n\n\n4\n4\n4\n5\n\n\n"));
+        stageOutcome = game.resolveAttacks(stages.get(3), stageAttackTeams, stageParticipants);
+        //After Quest Attack, distribute shields to the winners
+        game.giveWinnersShields(curEventCard.value);
+        game.discardAttackTeams(stageAttackTeams);
+        //assert shield counts
+        assertEquals(0, game.PlayerList.get(2).shields);
+        assertEquals("[F5, F5, F15, F30, S10]", game.PlayerList.get(2).hand.toString());
+        assertEquals(4, game.PlayerList.get(3).shields);
+        assertEquals("[F15, F15, F40, L20]", game.PlayerList.get(3).hand.toString());
+
+        game.discardQuestStages(stages, sponsor, new Scanner("\n1\n1\n1\n1\n"));
+        assertEquals(12, game.PlayerList.get(1).hand.size());
     }
 }
