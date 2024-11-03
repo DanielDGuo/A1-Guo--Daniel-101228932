@@ -85,5 +85,26 @@ Feature: Adventure Game
     And "P4" has 4 shields
 
   Scenario: 2winner_game_2winner_quest
+    #setup the game state. Rig if necessary, otherwise use random values.
+    Given a new game starts
+    And the current player is "P1"
+    And "P1" has a rigged hand of "F5 F5 F15 F15 D5 D5"
+    And "P2" has a rigged hand of "???"
+    And "P3" has a rigged hand of "???"
+    And "P4" has a rigged hand of "???"
+    And the event deck is rigged to have "Q4" on top
+    And the event deck has 0 random cards at the bottom
+    And the adventure deck is rigged to have "???" on top
+    And the adventure deck has 0 random cards at the bottom
+
+    #begin the event
+    And an event card is drawn
+    #seek a sponsor for the quest
+    And The "first" player asked accepts the sponsor
+
+    #quest composition
+    And the sponsor "P1" composes 4 stages that consist of "F5, F5 D5, F15, F15 D5" in order
+    #TODO: Everything after the 2nd bullet point
+
   Scenario: 1winner_game_with_events
   Scenario: 0_winner_quest
