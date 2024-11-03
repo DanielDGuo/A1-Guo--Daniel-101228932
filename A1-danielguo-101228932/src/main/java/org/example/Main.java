@@ -5,8 +5,8 @@ import java.util.*;
 public class Main {
     public Player curPlayer;
     public Scanner inContent = new Scanner(System.in);
-    public ArrayList<Card> AdDeck;
-    public ArrayList<Card> EvDeck;
+    public ArrayList<Card> AdDeck = new ArrayList<>();
+    public ArrayList<Card> EvDeck = new ArrayList<>();
     public ArrayList<Card> AdDiscard = new ArrayList<>();
     public ArrayList<Card> EvDiscard = new ArrayList<>();
     public final ArrayList<Player> PlayerList = new ArrayList<>(

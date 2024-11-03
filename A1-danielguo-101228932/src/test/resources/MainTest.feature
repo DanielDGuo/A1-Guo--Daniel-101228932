@@ -23,9 +23,9 @@ Feature: Adventure Game
     #stage 1 participation. Each draw and discard simulates game.participantsDrawCard,
       #however splits it up and uses the more atomic drawCard function.
     And "P1, P3, P4" are participants for stage 1 of the quest sponsored by "P2"
-    And "P1" draws 1 card and discards "F5"
-    And "P3" draws 1 card and discards "F5"
-    And "P4" draws 1 card and discards "F5"
+    And "P1" draws 1 card(s) and discards "F5"
+    And "P3" draws 1 card(s) and discards "F5"
+    And "P4" draws 1 card(s) and discards "F5"
 
     #stage 1 attack building
     And "P1" builds an attack of D5 S10
@@ -38,9 +38,9 @@ Feature: Adventure Game
 
     #stage 2 participation
     And "P1, P3, P4" are participants for stage 2 of the quest sponsored by "P2"
-    And "P1" draws 1 card
-    And "P3" draws 1 card
-    And "P4" draws 1 card
+    And "P1" draws 1 card(s)
+    And "P3" draws 1 card(s)
+    And "P4" draws 1 card(s)
 
     #stage 2 attack building
     And "P1" builds an attack of H10 S10
@@ -49,8 +49,8 @@ Feature: Adventure Game
 
     #stage 3 participation
     And "P3, P4" are participants for stage 3 of the quest sponsored by "P2"
-    And "P3" draws 1 card
-    And "P4" draws 1 card
+    And "P3" draws 1 card(s)
+    And "P4" draws 1 card(s)
 
     #stage 3 attack building
     And "P3" builds an attack of L20 H10 S10
@@ -58,8 +58,8 @@ Feature: Adventure Game
 
     #stage 4 participation
     And "P3, P4" are participants for stage 4 of the quest sponsored by "P2"
-    And "P3" draws 1 card
-    And "P4" draws 1 card
+    And "P3" draws 1 card(s)
+    And "P4" draws 1 card(s)
 
     #stage 4 quest building
     And "P3" builds an attack of B15 H10 L20
@@ -72,7 +72,7 @@ Feature: Adventure Game
     And "P4" has a hand equal to "F15 F15 F40 L20"
 
     #quest conclusion
-    And "P2" draws 9 cards
+    And "P2" draws 9 card(s)
 
     #quest conclusion
     When the quest fully concludes
