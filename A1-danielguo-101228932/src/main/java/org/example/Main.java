@@ -215,6 +215,13 @@ public class Main {
             this.value = value;
         }
 
+        //copy constructor
+        public Card(Card c) {
+            this.id = c.id;
+            this.type = c.type;
+            this.value = c.value;
+        }
+
         @Override
         public String toString() {
             return id;

@@ -8,11 +8,6 @@ import java.util.*;
 
 public class GameSteps {
 
-    public GameSteps() {
-    }
-
-    ;
-
     private Main game;
     Random generator = new Random();
     ArrayList<ArrayList<Main.Card>> curStages = new ArrayList<>();
@@ -63,13 +58,11 @@ public class GameSteps {
         for (Main.Player p : game.PlayerList) {
             if (p.toString().equals(player)) {
                 for (String cardName : handNameArray) {
-                    p.addCard(stringToAdCard.get(cardName));
+                    p.addCard(game.new Card(stringToAdCard.get(cardName)));
                 }
                 break;
             }
         }
-
-
     }
 
     @And("the adventure deck is initialized")
@@ -87,7 +80,7 @@ public class GameSteps {
         //separate the given rigged cards into an array
         String[] cardNameArray = cards.split(" ");
         for (String cardName : cardNameArray) {
-            game.EvDeck.add(stringToEvCard.get(cardName));
+            game.EvDeck.add(game.new Card(stringToEvCard.get(cardName)));
         }
     }
 
@@ -96,15 +89,15 @@ public class GameSteps {
         //separate the given rigged cards into an array
         String[] cardNameArray = cards.split(" ");
         for (String cardName : cardNameArray) {
-            game.AdDeck.add(stringToAdCard.get(cardName));
+            game.AdDeck.add(game.new Card(stringToAdCard.get(cardName)));
         }
     }
 
     @And("the event deck has {int} random cards at the bottom")
     public void randEvDeckBottom(int numCards) {
-        Object[] possibleCards = stringToAdCard.values().toArray();
+        Object[] possibleCards = stringToEvCard.values().toArray();
         for (int i = 0; i < numCards; i++) {
-            game.EvDeck.add((Main.Card) possibleCards[generator.nextInt(possibleCards.length)]);
+            game.EvDeck.add(game.new Card((Main.Card) possibleCards[generator.nextInt(possibleCards.length)]));
         }
     }
 
@@ -112,7 +105,7 @@ public class GameSteps {
     public void randAdDeckBottom(int numCards) {
         Object[] possibleCards = stringToAdCard.values().toArray();
         for (int i = 0; i < numCards; i++) {
-            game.AdDeck.add((Main.Card) possibleCards[generator.nextInt(possibleCards.length)]);
+            game.AdDeck.add(game.new Card((Main.Card) possibleCards[generator.nextInt(possibleCards.length)]));
         }
     }
 
@@ -149,7 +142,10 @@ public class GameSteps {
             if (p.toString().equals(sponsor)) {
                 //convert cardsUsed into a series of inputs
                 String[] stageCards = cardsUsed.split(" ");
-                ArrayList<Main.Card> pHandCopy = (ArrayList<Main.Card>) p.hand.clone();
+                ArrayList<Main.Card> pHandCopy = new ArrayList<>();
+                for (Main.Card c : p.hand) {
+                    pHandCopy.add(game.new Card(c));
+                }
                 //build an input string based on data given
                 StringBuilder inputString = new StringBuilder();
 
@@ -189,15 +185,14 @@ public class GameSteps {
                 break;
             }
         }
-
     }
 
     @And("{string} are participants for stage {int} of the quest sponsored by {string}")
     public void getParticipants(String participants, int stageNum, String sponsor) {
         //format the participant string
-        List<String> participantList = Arrays.asList(participants.split(","));
+        List<String> participantList = Arrays.asList(participants.split(" "));
         for (int i = 0; i < participantList.size(); i++) {
-            participantList.set(i, participantList.get(i).trim());
+            participantList.set(i, participantList.get(i));
         }
 
         //get the actual sponsor player
@@ -211,7 +206,8 @@ public class GameSteps {
                         //yes if they're participating, otherwise no.
                         if (participantList.contains(game.PlayerList.get(i).toString())) {
                             inputString.append("Y\n");
-                        } else if(!sponsor.equals(game.PlayerList.get(i).toString())){
+                        } else if (!sponsor.equals(game.PlayerList.get(i).toString())) {
+                            //skips over the sponsor player as they are not asked
                             inputString.append("N\n");
                         }
                     }
@@ -223,7 +219,103 @@ public class GameSteps {
     }
 
     @And("{string} draws {int} card\\(s) and discards {string}")
-    public void drawsCardAndDiscards(String player, int numCard, String discardedCards) {
-        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)));
+    public void drawsCardsAndDiscard(String player, int numCard, String discardedCards) {
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1))-1);
+        String[] discardList = discardedCards.split(" ");
+
+        //create a simulated copy of the hand after the cards are drawn
+        ArrayList<Main.Card> pHandCopy = new ArrayList<>();
+        for (Main.Card c : curPlayer.hand) {
+            pHandCopy.add(game.new Card(c));
+        }
+        //draw the x cards into the simulated hand
+        for (int i = 0; i < numCard; i++) {
+            pHandCopy.add(game.new Card(game.AdDeck.get(i)));
+        }
+        //find the indices at which to discard the requested card
+        //build an input string based on data given
+        StringBuilder inputString = new StringBuilder("\n");
+
+        //build the input string by matching the given card with the index
+        for (String s : discardList) {
+            int cardIndex = 0;
+
+            //find the index of a matching card
+            for (int i = 0; i < pHandCopy.size(); i++) {
+                if (pHandCopy.get(i).toString().equals(s)) {
+                    cardIndex = i + 1;
+                    break;
+                }
+            }
+            inputString.append(cardIndex).append("\n");
+            pHandCopy.remove(cardIndex - 1);
+
+        }
+        inputString.append("\n");
+        inputString.append("\n");
+
+        game.drawAdCard(curPlayer, numCard, new Scanner(inputString.toString()));
+    }
+
+    @And("{string} draws {int} card\\(s)")
+    public void drawsCards(String player, int numCard) {
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1))-1);
+        game.drawAdCard(curPlayer, numCard, new Scanner(""));
+    }
+
+    @And("{string} draws {int} card\\(s) and discard to hand size randomly")
+    public void drawCardsAndRandDiscard(String player, int numCard) {
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1))-1);
+        int numCardToDiscard = curPlayer.hand.size() + numCard - 12;
+        StringBuilder inputString = new StringBuilder();
+        for(int i = 0; i < numCardToDiscard; i++){
+            inputString.append("1\n");
+        }
+        game.drawAdCard(curPlayer, numCard, new Scanner(inputString.toString()));
+    }
+
+    @And("{string} build attack teams of {string}")
+    public void buildAttackTeamsOf(String players, String attackCards) {
+        //get the list of participants
+        ArrayList<Main.Player> participants = new ArrayList<>();
+        for(String s : players.split(" ")){
+            for(Main.Player p : game.PlayerList){
+                if(s.equals(p.toString())){
+                    participants.add(p);
+                }
+            }
+        }
+
+        //make the input for the attacks
+        String[] attackTeamStrings = attackCards.split(",");
+        StringBuilder inputString = new StringBuilder();
+        for(int i = 0; i < attackTeamStrings.length; i++){
+            //relate the given cards in the attack to the player
+            Main.Player curPlayer = participants.get(i);
+            //make a copy of the hand to derive inputs from
+            ArrayList<Main.Card> curPlayerHandCopy = new ArrayList<>();
+            for (Main.Card c : curPlayer.hand) {
+                curPlayerHandCopy.add(game.new Card(c));
+            }
+
+            //confirmation line
+            inputString.append("\n");
+            String[] attackTeamCardString = attackTeamStrings[i].trim().split(" ");
+            for (String c : attackTeamCardString){
+                int cardIndex = 0;
+
+                //find the index of a matching card
+                for (int j = 0; j < curPlayerHandCopy.size(); j++) {
+                    if (curPlayerHandCopy.get(j).toString().equals(c)) {
+                        cardIndex = j + 1;
+                        break;
+                    }
+                }
+                inputString.append(cardIndex).append("\n");
+                curPlayerHandCopy.remove(cardIndex - 1);
+            }
+            inputString.append("\n\n");
+        }
+        ArrayList<ArrayList<Main.Card>> stageAttackTeams = game.createAttackTeams(participants, new Scanner(inputString.toString()));
     }
 }
