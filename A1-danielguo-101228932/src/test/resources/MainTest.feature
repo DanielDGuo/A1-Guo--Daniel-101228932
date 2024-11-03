@@ -18,15 +18,14 @@ Feature: Adventure Game
     And The "second" player asked accepts the sponsor
 
     #quest composition
-    And the sponsor composes 4 stages that consist of "F5 H10, F15 S10, F15 D5 B15, and F40 B15" in order
+    And the sponsor "P2" composes 4 stages that consist of "F5 H10, F15 S10, F15 D5 B15, F40 B15" in order
 
-    #stage 1 participating
-    And "P1" is a participant
-    And "P3" is a participant
-    And "P4" is a participant
-    And "P1" draws 1 card and discards F5
-    And "P3" draws 1 card and discards F5
-    And "P4" draws 1 card and discards F5
+    #stage 1 participation. Each draw and discard simulates game.participantsDrawCard,
+      #however splits it up and uses the more atomic drawCard function.
+    And "P1, P3, P4" are participants for stage 1 of the quest sponsored by "P2"
+    And "P1" draws 1 card and discards "F5"
+    And "P3" draws 1 card and discards "F5"
+    And "P4" draws 1 card and discards "F5"
 
     #stage 1 attack building
     And "P1" builds an attack of D5 S10
@@ -38,7 +37,7 @@ Feature: Adventure Game
     And "P1" has 0 shields
 
     #stage 2 participation
-    And "P1" "P3" "P4" are participants
+    And "P1, P3, P4" are participants for stage 2 of the quest sponsored by "P2"
     And "P1" draws 1 card
     And "P3" draws 1 card
     And "P4" draws 1 card
@@ -49,7 +48,7 @@ Feature: Adventure Game
     And "P4" builds an attack of H10 B15
 
     #stage 3 participation
-    And "P3" "P4" are participants
+    And "P3, P4" are participants for stage 3 of the quest sponsored by "P2"
     And "P3" draws 1 card
     And "P4" draws 1 card
 
@@ -58,7 +57,7 @@ Feature: Adventure Game
     And "P4" builds an attack of B15 S10 L20
 
     #stage 4 participation
-    And "P3" "P4" are participants
+    And "P3, P4" are participants for stage 4 of the quest sponsored by "P2"
     And "P3" draws 1 card
     And "P4" draws 1 card
 
