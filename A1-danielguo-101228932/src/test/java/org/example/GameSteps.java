@@ -10,7 +10,9 @@ public class GameSteps {
 
     private Main game;
     Random generator = new Random();
+    ArrayList<Main.Player> curParticipants = new ArrayList<>();
     ArrayList<ArrayList<Main.Card>> curStages = new ArrayList<>();
+    ArrayList<ArrayList<Main.Card>> curAttacks = new ArrayList<>();
 
     public Map<String, Main.Card> stringToAdCard = new HashMap<>();
     public Map<String, Main.Card> stringToEvCard = new HashMap<>();
@@ -46,7 +48,6 @@ public class GameSteps {
         stringToEvCard.put("Queen's Favor", game.new Card("Queen's Favor", "Event", 0));
         stringToEvCard.put("Prosperity", game.new Card("Prosperity", "Event", 0));
 
-        game.curPlayer = game.PlayerList.get(0);
     }
 
     @And("{string} has a rigged hand of {string}")
@@ -181,7 +182,7 @@ public class GameSteps {
                 }
                 inputString.append("\n");
                 //call the function
-                game.beginStageBuilding(p, numStages, new Scanner(inputString.toString()));
+                curStages = game.beginStageBuilding(p, numStages, new Scanner(inputString.toString()));
                 break;
             }
         }
@@ -195,32 +196,29 @@ public class GameSteps {
             participantList.set(i, participantList.get(i));
         }
 
-        //get the actual sponsor player
-        for (Main.Player p : game.PlayerList) {
-            if (p.toString().equals(sponsor)) {
-                StringBuilder inputString = new StringBuilder();
-                //loop through the player list and create the input
-                for (int i = 0; i < 4; i++) {
-                    //if they're eligible an action is needed
-                    if (stageNum == 1 || game.PlayerList.get(i).eligible) {
-                        //yes if they're participating, otherwise no.
-                        if (participantList.contains(game.PlayerList.get(i).toString())) {
-                            inputString.append("Y\n");
-                        } else if (!sponsor.equals(game.PlayerList.get(i).toString())) {
-                            //skips over the sponsor player as they are not asked
-                            inputString.append("N\n");
-                        }
-                    }
+        //get the sponsor as the player object
+        Main.Player playerSponsor = game.PlayerList.get(Integer.parseInt(sponsor.substring(sponsor.length() - 1)) - 1);
+
+        StringBuilder inputString = new StringBuilder();
+        //loop through the player list and create the input
+        for (int i = 0; i < 4; i++) {
+            //if they're eligible an action is needed
+            if (stageNum == 1 || game.PlayerList.get(i).eligible) {
+                //yes if they're participating, otherwise no.
+                if (participantList.contains(game.PlayerList.get(i).toString())) {
+                    inputString.append("Y\n");
+                } else if (!sponsor.equals(game.PlayerList.get(i).toString())) {
+                    //skips over the sponsor player as they are not asked
+                    inputString.append("N\n");
                 }
-                game.seekParticipants(p, stageNum == 1, new Scanner(inputString.toString()));
-                break;
             }
         }
+        curParticipants = game.seekParticipants(playerSponsor, stageNum == 1, new Scanner(inputString.toString()));
     }
 
     @And("{string} draws {int} card\\(s) and discards {string}")
     public void drawsCardsAndDiscard(String player, int numCard, String discardedCards) {
-        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1))-1);
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
         String[] discardList = discardedCards.split(" ");
 
         //create a simulated copy of the hand after the cards are drawn
@@ -259,28 +257,17 @@ public class GameSteps {
 
     @And("{string} draws {int} card\\(s)")
     public void drawsCards(String player, int numCard) {
-        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1))-1);
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
         game.drawAdCard(curPlayer, numCard, new Scanner(""));
     }
 
-    @And("{string} draws {int} card\\(s) and discard to hand size randomly")
-    public void drawCardsAndRandDiscard(String player, int numCard) {
-        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1))-1);
-        int numCardToDiscard = curPlayer.hand.size() + numCard - 12;
-        StringBuilder inputString = new StringBuilder();
-        for(int i = 0; i < numCardToDiscard; i++){
-            inputString.append("1\n");
-        }
-        game.drawAdCard(curPlayer, numCard, new Scanner(inputString.toString()));
-    }
-
     @And("{string} build attack teams of {string}")
-    public void buildAttackTeamsOf(String players, String attackCards) {
+    public void attackTeamBuilding(String players, String attackCards) {
         //get the list of participants
         ArrayList<Main.Player> participants = new ArrayList<>();
-        for(String s : players.split(" ")){
-            for(Main.Player p : game.PlayerList){
-                if(s.equals(p.toString())){
+        for (String s : players.split(" ")) {
+            for (Main.Player p : game.PlayerList) {
+                if (s.equals(p.toString())) {
                     participants.add(p);
                 }
             }
@@ -289,7 +276,7 @@ public class GameSteps {
         //make the input for the attacks
         String[] attackTeamStrings = attackCards.split(",");
         StringBuilder inputString = new StringBuilder();
-        for(int i = 0; i < attackTeamStrings.length; i++){
+        for (int i = 0; i < attackTeamStrings.length; i++) {
             //relate the given cards in the attack to the player
             Main.Player curPlayer = participants.get(i);
             //make a copy of the hand to derive inputs from
@@ -301,7 +288,7 @@ public class GameSteps {
             //confirmation line
             inputString.append("\n");
             String[] attackTeamCardString = attackTeamStrings[i].trim().split(" ");
-            for (String c : attackTeamCardString){
+            for (String c : attackTeamCardString) {
                 int cardIndex = 0;
 
                 //find the index of a matching card
@@ -316,6 +303,68 @@ public class GameSteps {
             }
             inputString.append("\n\n");
         }
-        ArrayList<ArrayList<Main.Card>> stageAttackTeams = game.createAttackTeams(participants, new Scanner(inputString.toString()));
+        curAttacks = game.createAttackTeams(participants, new Scanner(inputString.toString()));
+    }
+
+    @And("the attacks are resolved and discarded for stage {int}")
+    public void resolveAttacks(int stageNum) {
+        game.resolveAttacks(curStages.get(stageNum - 1), curAttacks, curParticipants);
+        game.discardAttackTeams(curAttacks);
+    }
+
+    @And("{string} has a hand equal to {string}")
+    public void hasAHandEqualTo(String player, String hand) {
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
+        assertEquals(hand, curPlayer.hand.toString().substring(1, curPlayer.hand.toString().length() - 1).replace(",", ""));
+    }
+
+    @And("{string} are still eligible")
+    public void areStillEligible(String players) {
+        List<String> pList = Arrays.asList(players.split(" "));
+        for (Main.Player p : game.PlayerList) {
+            if (pList.contains(p.toString())) {
+                assertTrue(p.eligible);
+            }
+        }
+    }
+
+    @And("{string} has {int} shields")
+    public void hasShields(String player, int shieldCount) {
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
+        assertEquals(shieldCount, curPlayer.shields);
+    }
+
+    @When("shields are given out")
+    public void giveShields() {
+        game.giveWinnersShields(curStages.size());
+    }
+
+    @And("{string} discards the quest stages")
+    public void discardStages(String sponsor) {
+        Main.Player sponsorPlayer = game.PlayerList.get(Integer.parseInt(sponsor.substring(sponsor.length() - 1)) - 1);
+
+        StringBuilder inputString = new StringBuilder("\n");
+
+        //arbitrarily choose to discard the 1st card over and over
+        inputString.append("1\n".repeat(100));
+
+        game.discardQuestStages(curStages, sponsorPlayer, new Scanner(inputString.toString()));
+    }
+
+    @Then("{string} has a hand of {int} cards")
+    public void handSizeCheck(String player, int numCards) {
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
+        assertEquals(numCards, curPlayer.hand.size());
+    }
+
+    @And("{string} starts with {int} shields")
+    public void startsWithShields(String player, int shieldCount) {
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
+        curPlayer.shields = shieldCount;
+    }
+
+    @And("the current player is {string}")
+    public void theCurrentPlayerIs(String player) {
+        game.curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
     }
 }
