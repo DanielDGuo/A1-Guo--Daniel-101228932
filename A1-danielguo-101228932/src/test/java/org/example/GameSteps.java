@@ -225,6 +225,7 @@ public class GameSteps {
         for (Main.Card c : curPlayer.hand) {
             pHandCopy.add(game.new Card(c));
         }
+        Collections.sort(pHandCopy);
         //draw the x cards into the simulated hand
         for (int i = 0; i < numCard; i++) {
             pHandCopy.add(game.new Card(game.AdDeck.get(i)));

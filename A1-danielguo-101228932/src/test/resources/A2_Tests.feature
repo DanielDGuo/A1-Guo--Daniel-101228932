@@ -88,10 +88,10 @@ Feature: Adventure Game
     #setup the game state
     Given a new game starts
     And the current player is "P1"
-    And "P1" has a rigged hand of "F10 F15 F20 F25"
-    And "P2" has a rigged hand of "S10 B15 L20 L20 D5 H10 H10 S10 D5"
-    And "P3" has a rigged hand of "F5 F10 F15 D5"
-    And "P4" has a rigged hand of "H10 B15 L20 S10 H10 D5 S10 H10 S10 D5"
+    And "P1" has a rigged hand of "F10 F15 F20 F25 F5 F5 F5 F5 F5 F5 F5 F5"
+    And "P2" has a rigged hand of "S10 B15 L20 L20 D5 H10 H10 S10 D5 F5 F5 F5"
+    And "P3" has a rigged hand of "F5 F10 F15 D5 F5 F5 F5 F5 F5 F5 F5 F5"
+    And "P4" has a rigged hand of "H10 B15 L20 S10 H10 D5 S10 H10 S10 D5 F5 F5"
     And the event deck is rigged to have "Q4 Q3" on top
     And the event deck has 15 random cards at the bottom
     And the adventure deck has 50 random cards at the bottom
@@ -106,9 +106,9 @@ Feature: Adventure Game
 
     #stage 1 participation.
     And "P2 P3 P4" are participants for stage 1 of the quest sponsored by "P1"
-    And "P2" draws 1 card(s)
-    And "P3" draws 1 card(s)
-    And "P4" draws 1 card(s)
+    And "P2" draws 1 card(s) and discards "F5"
+    And "P3" draws 1 card(s) and discards "F5"
+    And "P4" draws 1 card(s) and discards "F5"
 
     #stage 1 attack building
     And "P2 P3 P4" build attack teams of "S10, D5, H10"
@@ -221,10 +221,10 @@ Feature: Adventure Game
   Scenario: 1winner_game_with_events
     Given a new game starts
     And the current player is "P1"
-    And "P1" has a rigged hand of "F5 F10 F15 F20"
-    And "P2" has a rigged hand of "D5 S10 H10 D5 L20"
-    And "P3" has a rigged hand of "D5 H10 S10 D5 L20"
-    And "P4" has a rigged hand of "D5 S10 H10 D5 L20"
+    And "P1" has a rigged hand of "F5 F10 F15 F20 F5 F5 F5 F5 F5 F5 F5 F5"
+    And "P2" has a rigged hand of "D5 S10 H10 D5 L20 F5 F5 F5 F5 F5 F5 F5"
+    And "P3" has a rigged hand of "D5 H10 S10 D5 L20 F5 F5 F5 F5 F5 F5 F5"
+    And "P4" has a rigged hand of "D5 S10 H10 D5 L20 F5 F5 F5 F5 F5 F5 F5"
     And the event deck is rigged to have "Q4 Plague Prosperity Queen's_Favour Q3" on top
     And the event deck has 12 random cards at the bottom
     And the adventure deck has 50 random cards at the bottom
@@ -239,9 +239,9 @@ Feature: Adventure Game
 
     #stage 1 participation.
     And "P2 P3 P4" are participants for stage 1 of the quest sponsored by "P1"
-    And "P2" draws 1 card(s)
-    And "P3" draws 1 card(s)
-    And "P4" draws 1 card(s)
+    And "P2" draws 1 card(s) and discards "F5"
+    And "P3" draws 1 card(s) and discards "F5"
+    And "P4" draws 1 card(s) and discards "F5"
 
     #stage 1 attack building
     And "P2 P3 P4" build attack teams of "D5, D5, D5"
@@ -293,10 +293,10 @@ Feature: Adventure Game
     And shields are given out
     And "P1" discards the quest stages
 
-    And "P1" has a hand of 8 cards
-    And "P2" has a hand of 4 cards
-    And "P3" has a hand of 4 cards
-    And "P4" has a hand of 4 cards
+    And "P1" has a hand of 12 cards
+    And "P2" has a hand of 10 cards
+    And "P3" has a hand of 10 cards
+    And "P4" has a hand of 10 cards
 
     And "P1" has 0 shields
     And "P2" has 4 shields
@@ -314,31 +314,35 @@ Feature: Adventure Game
     And "P4" has 4 shields
     And the turn ends
 
-    #second event
+    #second event; could use "a "Prosperity" event card is drawn" but discards are required
     And the current player is "P3"
     And a "Prosperity" event card is drawn
-    And "Prosperity" takes effect
-    And "P1" has a hand of 10 cards
-    And "P2" has a hand of 6 cards
-    And "P3" has a hand of 6 cards
-    And "P4" has a hand of 6 cards
+    And "P1" draws 2 card(s) and discards "F5 F5"
+    And "P2" draws 2 card(s) and discards "F5"
+    And "P3" draws 2 card(s) and discards "F5"
+    And "P4" draws 2 card(s) and discards "F5"
+
+    And "P1" has a hand of 12 cards
+    And "P2" has a hand of 12 cards
+    And "P3" has a hand of 12 cards
+    And "P4" has a hand of 12 cards
     And the turn ends
 
-    #third event
+    #third event; could use "a "Queen's_Favour" event card is drawn" but discards are required
     And the current player is "P4"
     And a "Queen's_Favour" event card is drawn
-    And "Queen's_Favour" takes effect
-    And "P1" has a hand of 10 cards
-    And "P2" has a hand of 6 cards
-    And "P3" has a hand of 6 cards
-    And "P4" has a hand of 8 cards
+    And "P4" draws 2 card(s) and discards "F5 F5"
+    And "P1" has a hand of 12 cards
+    And "P2" has a hand of 12 cards
+    And "P3" has a hand of 12 cards
+    And "P4" has a hand of 12 cards
     And the turn ends
 
     #rig the hands
-    And "P1" has a rigged hand of "F10 F15 F20 F10 F15 F20 F10 F15 F20 F10"
-    And "P2" has a rigged hand of "S10 B15 H10 S10 F5 F5"
-    And "P3" has a rigged hand of "S10 B15 L20 F5 F5 F10"
-    And "P4" has a rigged hand of "D5 F5 F5 F10 F15 F20 F20 F40"
+    And "P1" has a rigged hand of "F10 F15 F20 F10 F15 F20 F10 F15 F20 F10 F5 F5"
+    And "P2" has a rigged hand of "S10 B15 H10 S10 F5 F5 F5 F5 F5 F5 F5 F5"
+    And "P3" has a rigged hand of "S10 B15 L20 F5 F5 F10 F5 F5 F5 F5 F5 F5"
+    And "P4" has a rigged hand of "D5 F5 F5 F10 F15 F20 F20 F40 F5 F5 F5 F5"
 
     #second quest
     And the current player is "P1"
@@ -353,9 +357,9 @@ Feature: Adventure Game
 
     #stage 1 participation.
     And "P2 P3 P4" are participants for stage 1 of the quest sponsored by "P1"
-    And "P2" draws 1 card(s)
-    And "P3" draws 1 card(s)
-    And "P4" draws 1 card(s)
+    And "P2" draws 1 card(s) and discards "F5"
+    And "P3" draws 1 card(s) and discards "F5"
+    And "P4" draws 1 card(s) and discards "F5"
 
     #stage 1 attack building
     And "P2 P3 P4" build attack teams of "S10, S10, D5"
