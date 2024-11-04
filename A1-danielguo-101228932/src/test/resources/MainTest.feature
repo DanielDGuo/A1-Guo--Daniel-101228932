@@ -398,3 +398,48 @@ Feature: Adventure Game
     And "P3" are winners
 
   Scenario: 0_winner_quest
+    Given a new game starts
+    And the current player is "P1"
+    And "P1" has a rigged hand of "F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 F25 F30"
+    And "P2" has a rigged hand of "F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30"
+    And "P3" has a rigged hand of "F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20"
+    And "P4" has a rigged hand of "F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30"
+    And the event deck is rigged to have "Q2" on top
+    And the event deck has 16 random cards at the bottom
+    And the adventure deck has 58 random cards at the bottom
+
+    #begin the event
+    And a "Q2" event card is drawn
+    #seek a sponsor for the quest. first/second/third/fourth is based on order ASKED, not player order
+    And the "first" player asked accepts the sponsor
+
+    #quest composition
+    And the sponsor "P1" composes 2 stages that consist of "F25, F30" in order
+
+    #stage 1 participation. Each draw and discard simulates game.participantsDrawCard,
+      #however splits it up and uses the more atomic drawCard function.
+    And "P2 P3 P4" are participants for stage 1 of the quest sponsored by "P1"
+    And "P2" draws 1 card(s) and discards "F5"
+    And "P3" draws 1 card(s) and discards "F5"
+    And "P4" draws 1 card(s) and discards "F5"
+
+    #stage 1 attack building
+    And "P2 P3 P4" build attack teams of "D5, D5, D5"
+    And the attacks are resolved and discarded for stage 1
+
+    #stage 1 asserts
+    And "P2 P3 P4" are ineligible
+
+    #quest conclusion
+    When shields are given out
+    And "P1" discards the quest stages
+
+    Then "P1" has a hand of 12 cards
+    And "P2" has a hand of 11 cards
+    And "P3" has a hand of 11 cards
+    And "P4" has a hand of 11 cards
+
+    And "P1" has 0 shields
+    And "P2" has 0 shields
+    And "P3" has 0 shields
+    And "P4" has 0 shields
