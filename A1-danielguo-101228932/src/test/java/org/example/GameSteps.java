@@ -1,9 +1,12 @@
 package org.example;
 
 import io.cucumber.java.en.*;
+import org.junit.Assert;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 public class GameSteps {
@@ -24,7 +27,7 @@ public class GameSteps {
         stringToAdCard.put("F5", game.new Card("F5", "Foe", 5));
         stringToAdCard.put("F10", game.new Card("F10", "Foe", 10));
         stringToAdCard.put("F15", game.new Card("F15", "Foe", 15));
-        stringToAdCard.put("F20", game.new Card("F10", "Foe", 20));
+        stringToAdCard.put("F20", game.new Card("F20", "Foe", 20));
         stringToAdCard.put("F25", game.new Card("F25", "Foe", 25));
         stringToAdCard.put("F30", game.new Card("F30", "Foe", 30));
         stringToAdCard.put("F35", game.new Card("F35", "Foe", 35));
@@ -47,7 +50,6 @@ public class GameSteps {
         stringToEvCard.put("Plague", game.new Card("Plague", "Event", 0));
         stringToEvCard.put("Queen's Favor", game.new Card("Queen's Favor", "Event", 0));
         stringToEvCard.put("Prosperity", game.new Card("Prosperity", "Event", 0));
-
     }
 
     @And("{string} has a rigged hand of {string}")
@@ -115,7 +117,7 @@ public class GameSteps {
         game.drawEventCard();
     }
 
-    @And("The {string} player asked accepts the sponsor")
+    @And("the {string} player asked accepts the sponsor")
     public void askForSponsor(String pos) {
         switch (pos) {
             case "first":
@@ -138,54 +140,51 @@ public class GameSteps {
 
     @And("the sponsor {string} composes {int} stages that consist of {string} in order")
     public void stageBuild(String sponsor, int numStages, String cardsUsed) {
-        for (Main.Player p : game.PlayerList) {
-            //find the sponsor from the given string
-            if (p.toString().equals(sponsor)) {
-                //convert cardsUsed into a series of inputs
-                String[] stageCards = cardsUsed.split(" ");
-                ArrayList<Main.Card> pHandCopy = new ArrayList<>();
-                for (Main.Card c : p.hand) {
-                    pHandCopy.add(game.new Card(c));
-                }
-                //build an input string based on data given
-                StringBuilder inputString = new StringBuilder();
+        Main.Player sponsorPlayer = game.PlayerList.get(Integer.parseInt(sponsor.substring(sponsor.length() - 1)) - 1);
+        //convert cardsUsed into a series of inputs
+        String[] stageCards = cardsUsed.split(" ");
+        ArrayList<Main.Card> pHandCopy = new ArrayList<>();
+        for (Main.Card c : sponsorPlayer.hand) {
+            pHandCopy.add(game.new Card(c));
+        }
+        //build an input string based on data given
+        StringBuilder inputString = new StringBuilder();
 
-                //build the input string by matching the given card with the index
-                for (String s : stageCards) {
-                    if (s.endsWith(",")) {
-                        s = s.substring(0, s.length() - 1);
-                        int cardIndex = 0;
+        //build the input string by matching the given card with the index
+        for (String s : stageCards) {
+            if (s.endsWith(",")) {
+                s = s.substring(0, s.length() - 1);
+                int cardIndex = 0;
 
-                        //find the index of a matching card
-                        for (int i = 0; i < pHandCopy.size(); i++) {
-                            if (pHandCopy.get(i).toString().equals(s)) {
-                                cardIndex = i + 1;
-                                break;
-                            }
-                        }
-
-                        inputString.append(cardIndex).append("\n\n");
-                        pHandCopy.remove(cardIndex - 1);
-                    } else {
-                        int cardIndex = 0;
-
-                        //find the index of a matching card
-                        for (int i = 0; i < pHandCopy.size(); i++) {
-                            if (pHandCopy.get(i).toString().equals(s)) {
-                                cardIndex = i + 1;
-                                break;
-                            }
-                        }
-                        inputString.append(cardIndex).append("\n");
-                        pHandCopy.remove(cardIndex - 1);
+                //find the index of a matching card
+                for (int i = 0; i < pHandCopy.size(); i++) {
+                    if (pHandCopy.get(i).toString().equals(s)) {
+                        cardIndex = i + 1;
+                        break;
                     }
                 }
-                inputString.append("\n");
-                //call the function
-                curStages = game.beginStageBuilding(p, numStages, new Scanner(inputString.toString()));
-                break;
+
+                inputString.append(cardIndex).append("\n\n");
+                pHandCopy.remove(cardIndex - 1);
+            } else {
+                int cardIndex = 0;
+
+                //find the index of a matching card
+                for (int i = 0; i < pHandCopy.size(); i++) {
+                    if (pHandCopy.get(i).toString().equals(s)) {
+                        cardIndex = i + 1;
+                        break;
+                    }
+                }
+                inputString.append(cardIndex).append("\n");
+                pHandCopy.remove(cardIndex - 1);
             }
         }
+        inputString.append("\n");
+        //call the function
+        curStages = game.beginStageBuilding(sponsorPlayer, numStages, new Scanner(inputString.toString()));
+
+
     }
 
     @And("{string} are participants for stage {int} of the quest sponsored by {string}")
@@ -343,12 +342,8 @@ public class GameSteps {
     public void discardStages(String sponsor) {
         Main.Player sponsorPlayer = game.PlayerList.get(Integer.parseInt(sponsor.substring(sponsor.length() - 1)) - 1);
 
-        StringBuilder inputString = new StringBuilder("\n");
-
         //arbitrarily choose to discard the 1st card over and over
-        inputString.append("1\n".repeat(100));
-
-        game.discardQuestStages(curStages, sponsorPlayer, new Scanner(inputString.toString()));
+        game.discardQuestStages(curStages, sponsorPlayer, new Scanner("\n" + "1\n".repeat(100)));
     }
 
     @Then("{string} has a hand of {int} cards")
@@ -366,5 +361,39 @@ public class GameSteps {
     @And("the current player is {string}")
     public void theCurrentPlayerIs(String player) {
         game.curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
+    }
+
+    @And("{string} are ineligible")
+    public void areIneligible(String players) {
+        List<String> pList = Arrays.asList(players.split(" "));
+        for (Main.Player p : game.PlayerList) {
+            if (pList.contains(p.toString())) {
+                assertFalse(p.eligible);
+            }
+        }
+    }
+
+    @And("the turn ends")
+    public void theTurnEnds() {
+        game.endTurn(new Scanner("\n"));
+    }
+
+    @And("{string} are winners")
+    public void areWinners(String players) {
+        //there are winners
+        assertTrue(game.findWinners());
+
+        //test the string output
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream outContentOriginal = System.out;
+        System.setOut(new PrintStream(outContent));
+
+        game.printWinners();
+
+        String expected = "Player(s) " + players.replace(" ", ", ") + " Won.";
+
+        assertEquals(expected, outContent.toString());
+
+        System.setOut(outContentOriginal);
     }
 }
