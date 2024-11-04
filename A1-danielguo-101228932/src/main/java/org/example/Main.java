@@ -201,7 +201,7 @@ public class Main {
     }
 
     public class Card implements Comparable<Card> {
-        //valid ID include but aren't limited to: F5, F10, D, H, S, Q2, Q3, Plague, Queen's favor
+        //valid ID include but aren't limited to: F5, F10, D, H, S, Q2, Q3, Plague, Queen's favour
         String id;
         //Types include Foe, Weapon, Quest, and Event
         String type;

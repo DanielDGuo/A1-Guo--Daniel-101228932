@@ -48,23 +48,21 @@ public class GameSteps {
         stringToEvCard.put("Q5", game.new Card("Q5", "Quest", 5));
 
         stringToEvCard.put("Plague", game.new Card("Plague", "Event", 0));
-        stringToEvCard.put("Queen's Favor", game.new Card("Queen's Favor", "Event", 0));
+        stringToEvCard.put("Queen's_Favour", game.new Card("Queen's Favour", "Event", 0));
         stringToEvCard.put("Prosperity", game.new Card("Prosperity", "Event", 0));
     }
 
     @And("{string} has a rigged hand of {string}")
     public void rigHand(String player, String hand) {
+        Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
         //separate the given rigged hand into an array
         String[] handNameArray = hand.split(" ");
 
-        //add the cards
-        for (Main.Player p : game.PlayerList) {
-            if (p.toString().equals(player)) {
-                for (String cardName : handNameArray) {
-                    p.addCard(game.new Card(stringToAdCard.get(cardName)));
-                }
-                break;
-            }
+        //clear the current hand
+        curPlayer.hand = new ArrayList<>();
+        //rig it
+        for (String cardName : handNameArray) {
+            curPlayer.addCard(game.new Card(stringToAdCard.get(cardName)));
         }
     }
 
@@ -112,9 +110,10 @@ public class GameSteps {
         }
     }
 
-    @And("an event card is drawn")
-    public void drawEvent() {
-        game.drawEventCard();
+    @And("a {string} event card is drawn")
+    public void drawEvent(String eventName) {
+        Main.Card curEvent = game.drawEventCard();
+        assertEquals(eventName.replace("_", " "), curEvent.toString());
     }
 
     @And("the {string} player asked accepts the sponsor")
@@ -147,6 +146,7 @@ public class GameSteps {
         for (Main.Card c : sponsorPlayer.hand) {
             pHandCopy.add(game.new Card(c));
         }
+        Collections.sort(pHandCopy);
         //build an input string based on data given
         StringBuilder inputString = new StringBuilder();
 
@@ -395,5 +395,14 @@ public class GameSteps {
         assertEquals(expected, outContent.toString());
 
         System.setOut(outContentOriginal);
+    }
+
+    @And("{string} takes effect")
+    public void effects(String card) {
+        switch (card) {
+            case "Plague" -> game.plagueEffect();
+            case "Queen's_Favour" -> game.queenEffect();
+            case "Prosperity" -> game.prosperityEffect();
+        }
     }
 }
