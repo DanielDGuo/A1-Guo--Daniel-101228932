@@ -1,7 +1,6 @@
 package org.example;
 
 import io.cucumber.java.en.*;
-import org.junit.Assert;
 
 import static org.junit.Assert.*;
 

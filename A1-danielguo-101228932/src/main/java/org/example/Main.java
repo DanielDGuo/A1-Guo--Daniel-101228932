@@ -270,13 +270,14 @@ public class Main {
 
         public void addCard(Card c) {
             hand.add(c);
+            Collections.sort(hand);
         }
 
         public void printHand() {
-            String outString = "P" + id + " Hand: ";
+            StringBuilder outString = new StringBuilder("P" + id + " Hand: ");
             Collections.sort(hand);
             for (Card c : hand) {
-                outString += c + ", ";
+                outString.append(c).append(", ");
             }
             System.out.print(outString.substring(0, outString.length() - 2));
         }
@@ -313,10 +314,10 @@ public class Main {
     }
 
     public void printWinners() {
-        String outString = "Player(s) ";
+        StringBuilder outString = new StringBuilder("Player(s) ");
         for (Player p : PlayerList) {
             if (p.shields >= 7) {
-                outString += p + ", ";
+                outString.append(p).append(", ");
             }
         }
         System.out.print(outString.substring(0, outString.length() - 2) + " Won.");
@@ -696,15 +697,15 @@ public class Main {
             }
         }
         //find who won
-        String winners = "";
+        StringBuilder winners = new StringBuilder();
         for (Player p : participants) {
             if (p.eligible) {
-                winners += p + ", ";
+                winners.append(p).append(", ");
             }
         }
         if (!winners.isEmpty()) {
-            winners = winners.substring(0, winners.length() - 2);
-            winners += " are the winner(s) and are eligible to continue.\n";
+            winners = new StringBuilder(winners.substring(0, winners.length() - 2));
+            winners.append(" are the winner(s) and are eligible to continue.\n");
             System.out.print(winners);
         }
         return outcome;

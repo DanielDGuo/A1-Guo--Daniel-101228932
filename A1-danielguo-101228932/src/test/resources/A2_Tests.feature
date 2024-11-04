@@ -223,9 +223,10 @@ Feature: Adventure Game
     And "P1" has a rigged hand of "F5 F10 F15 F20 F5 F5 F5 F5 F5 F5 F5 F5"
     And "P2" has a rigged hand of "D5 S10 H10 D5 L20 F5 F5 F5 F5 F5 F5 F5"
     And "P3" has a rigged hand of "D5 H10 S10 D5 L20 F5 F5 F5 F5 F5 F5 F5"
-    And "P4" has a rigged hand of "D5 S10 H10 D5 L20 F5 F5 F5 F5 F5 F5 F5"
+    And "P4" has a rigged hand of "D5 S10 H10 D5 L20 F20 F20 F5 F5 F5 F5 F5"
     And the event deck is rigged to have "Q4 Plague Prosperity Queen's_Favour Q3" on top
     And the event deck has 12 random cards at the bottom
+    And the adventure deck is rigged to have "S10 S10 D5 B15 B15 F5 H10 L20 F5 S10 F5 F10 F10 F15 F20 F10 F15 F20 F10 F15 F15 F40" on top
     And the adventure deck has 50 random cards at the bottom
 
     #begin the event
@@ -290,6 +291,7 @@ Feature: Adventure Game
 
     #first quest completion
     And shields are given out
+    #draws 8 cards, discards the first card until hand size is hit. Since F5 is the lowest value card, it is prioritized
     And "P1" discards the quest stages
 
     Then "P1" has a hand of 12 cards
@@ -317,9 +319,9 @@ Feature: Adventure Game
     And the current player is "P3"
     And a "Prosperity" event card is drawn
     And "P1" draws 2 card(s) and discards "F5 F5"
-    And "P2" draws 2 card(s) and discards "F5"
-    And "P3" draws 2 card(s) and discards "F5"
-    And "P4" draws 2 card(s) and discards "F5"
+    And "P2" draws 2 card(s)
+    And "P3" draws 2 card(s)
+    And "P4" draws 2 card(s)
 
     Then "P1" has a hand of 12 cards
     And "P2" has a hand of 12 cards
@@ -336,12 +338,6 @@ Feature: Adventure Game
     And "P3" has a hand of 12 cards
     And "P4" has a hand of 12 cards
     And the turn ends
-
-    #rig the hands
-    And "P1" has a rigged hand of "F10 F15 F20 F10 F15 F20 F10 F15 F20 F10 F5 F5"
-    And "P2" has a rigged hand of "S10 B15 H10 S10 F5 F5 F5 F5 F5 F5 F5 F5"
-    And "P3" has a rigged hand of "S10 B15 L20 F5 F5 F10 F5 F5 F5 F5 F5 F5"
-    And "P4" has a rigged hand of "D5 F5 F5 F10 F15 F20 F20 F40 F5 F5 F5 F5"
 
     #second quest
     And the current player is "P1"
