@@ -80,7 +80,13 @@ Feature: Adventure Game
     And shields are given out
     And "P2" discards the quest stages
 
-    Then "P2" has a hand of 12 cards
+    Then "P1" has a hand of 9 cards
+    And "P2" has a hand of 12 cards
+    And "P3" has a hand of 5 cards
+    And "P4" has a hand of 4 cards
+
+    And "P1" has 0 shields
+    And "P2" has 0 shields
     And "P3" has 0 shields
     And "P4" has 4 shields
 
