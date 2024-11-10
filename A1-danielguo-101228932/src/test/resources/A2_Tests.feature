@@ -4,14 +4,11 @@ Feature: Adventure Game
     #setup the game state. Rig if necessary, otherwise use random values.
     Given a new game starts
     And the current player is "P1"
-    And "P1" has a rigged hand of "F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 B15 L20"
-    And "P2" has a rigged hand of "F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30"
-    And "P3" has a rigged hand of "F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20"
-    And "P4" has a rigged hand of "F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30"
     And the event deck is rigged to have "Q4" on top
     And the event deck has 16 random cards at the bottom
-    And the adventure deck is rigged to have "F30 S10 B15 F10 L20 L20 B15 S10 F30 L20" on top
+    And the adventure deck is rigged to have "F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 B15 L20 F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30 F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20 F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30 F30 S10 B15 F10 L20 L20 B15 S10 F30 L20" on top
     And the adventure deck has 58 random cards at the bottom
+    And the players hands are initialized
 
     #begin the event
     When a "Q4" event card is drawn
@@ -94,13 +91,11 @@ Feature: Adventure Game
     #setup the game state
     Given a new game starts
     And the current player is "P1"
-    And "P1" has a rigged hand of "F10 F15 F20 F25 F5 F5 F5 F5 F5 F5 F5 F5"
-    And "P2" has a rigged hand of "S10 B15 L20 L20 D5 H10 H10 S10 D5 F5 F5 F5"
-    And "P3" has a rigged hand of "F5 F10 F15 D5 F5 F5 F5 F5 F5 F5 F5 F5"
-    And "P4" has a rigged hand of "H10 B15 L20 S10 H10 D5 S10 H10 S10 D5 F5 F5"
     And the event deck is rigged to have "Q4 Q3" on top
     And the event deck has 15 random cards at the bottom
+    And the adventure deck is rigged to have "F10 F15 F20 F25 F5 F5 F5 F5 F5 F5 F5 F5 S10 B15 L20 L20 D5 H10 H10 S10 D5 F5 F5 F5 F5 F10 F15 D5 F5 F5 F5 F5 F5 F5 F5 F5 H10 B15 L20 S10 H10 D5 S10 H10 S10 D5 F5 F5" on top
     And the adventure deck has 50 random cards at the bottom
+    And the players hands are initialized
 
     #begin the event
     When a "Q4" event card is drawn
@@ -226,14 +221,11 @@ Feature: Adventure Game
   Scenario: 1winner_game_with_events
     Given a new game starts
     And the current player is "P1"
-    And "P1" has a rigged hand of "F5 F10 F15 F20 F5 F5 F5 F5 F5 F5 F5 F5"
-    And "P2" has a rigged hand of "D5 S10 H10 D5 L20 F5 F5 F5 F5 F5 F5 F5"
-    And "P3" has a rigged hand of "D5 H10 S10 D5 L20 F5 F5 F5 F5 F5 F5 F5"
-    And "P4" has a rigged hand of "D5 S10 H10 D5 L20 F20 F20 F5 F5 F5 F5 F5"
     And the event deck is rigged to have "Q4 Plague Prosperity Queen's_Favour Q3" on top
     And the event deck has 12 random cards at the bottom
-    And the adventure deck is rigged to have "S10 S10 D5 B15 B15 F5 H10 L20 F5 S10 F5 F10 F10 F15 F20 F10 F15 F20 F10 F15 F15 F40" on top
+    And the adventure deck is rigged to have "F5 F10 F15 F20 F5 F5 F5 F5 F5 F5 F5 F5 D5 S10 H10 D5 L20 F5 F5 F5 F5 F5 F5 F5 D5 H10 S10 D5 L20 F5 F5 F5 F5 F5 F5 F5 D5 S10 H10 D5 L20 F20 F20 F5 F5 F5 F5 F5 S10 S10 D5 B15 B15 F5 H10 L20 F5 S10 F5 F10 F10 F15 F20 F10 F15 F20 F10 F15 F15 F40" on top
     And the adventure deck has 50 random cards at the bottom
+    And the players hands are initialized
 
     #begin the event
     When a "Q4" event card is drawn
@@ -405,13 +397,11 @@ Feature: Adventure Game
   Scenario: 0_winner_quest
     Given a new game starts
     And the current player is "P1"
-    And "P1" has a rigged hand of "F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 F25 F30"
-    And "P2" has a rigged hand of "F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30"
-    And "P3" has a rigged hand of "F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20"
-    And "P4" has a rigged hand of "F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30"
     And the event deck is rigged to have "Q2" on top
     And the event deck has 16 random cards at the bottom
+    And the adventure deck is rigged to have "F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 F25 F30 F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30 F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20 F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30" on top
     And the adventure deck has 58 random cards at the bottom
+    And the players hands are initialized
 
     #begin the event
     When a "Q2" event card is drawn

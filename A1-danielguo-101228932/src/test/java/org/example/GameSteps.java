@@ -51,6 +51,7 @@ public class GameSteps {
         stringToEvCard.put("Prosperity", game.new Card("Prosperity", "Event", 0));
     }
 
+    //deprecated; deck is rigged instead
     @And("{string} has a rigged hand of {string}")
     public void rigHand(String player, String hand) {
         Main.Player curPlayer = game.PlayerList.get(Integer.parseInt(player.substring(player.length() - 1)) - 1);
@@ -404,5 +405,10 @@ public class GameSteps {
             case "Queen's_Favour" -> game.queenEffect();
             case "Prosperity" -> game.prosperityEffect();
         }
+    }
+
+    @And("the players hands are initialized")
+    public void initHands() {
+        game.initializePlayerHands();
     }
 }
