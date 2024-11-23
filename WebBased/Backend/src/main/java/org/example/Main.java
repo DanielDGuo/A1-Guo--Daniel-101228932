@@ -2,6 +2,7 @@ package org.example;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
@@ -756,5 +757,14 @@ public class Main {
             numCardsUsed += s.size();
         }
         drawAdCard(sponsor, numCardsUsed + stages.size(), inContent);
+    }
+
+    @GetMapping("/startGame")
+    public String startGame(){
+        Main game = new Main();
+        game.initializeAdventureDeck();
+        game.initializeEventDeck();
+        game.initializePlayerHands();
+        return "game started";
     }
 }
