@@ -5,7 +5,7 @@ async function startGame() {
         const response = await fetch(`${apiBaseUrl}/startGame`);
         const result = await response.text();
         console.log("Start Game Response:", result);
-        document.getElementById("game-status").innerText = result;
+        document.getElementById("output").innerText += result;
     } catch (error) {
         console.error("Error in startGame:", error);
     }
