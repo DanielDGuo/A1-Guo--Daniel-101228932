@@ -209,8 +209,8 @@ class MainTest {
         assertEquals(52, game.AdDeck.size());
 
         //remove 2 cards from the hand
-        game.curPlayer.hand.removeFirst();
-        game.curPlayer.hand.removeFirst();
+        game.curPlayer.hand.remove(0);
+        game.curPlayer.hand.remove(0);
 
         Main.Card curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")) {
@@ -221,11 +221,11 @@ class MainTest {
         assertEquals(50, game.AdDeck.size());
 
         //remove some cards and test again
-        game.curPlayer.hand.removeFirst();
-        game.curPlayer.hand.removeFirst();
-        game.curPlayer.hand.removeFirst();
-        game.curPlayer.hand.removeFirst();
-        game.curPlayer.hand.removeFirst();
+        game.curPlayer.hand.remove(0);
+        game.curPlayer.hand.remove(0);
+        game.curPlayer.hand.remove(0);
+        game.curPlayer.hand.remove(0);
+        game.curPlayer.hand.remove(0);
         assertEquals(7, game.curPlayer.hand.size());
         curCard = game.drawEventCard();
         if (curCard.id.equals("Queen's Favour")) {
@@ -252,14 +252,14 @@ class MainTest {
         game.initializePlayerHands();
         assertEquals(52, game.AdDeck.size());
 
-        game.PlayerList.get(0).hand.removeFirst();
-        game.PlayerList.get(0).hand.removeFirst();
-        game.PlayerList.get(1).hand.removeFirst();
-        game.PlayerList.get(1).hand.removeFirst();
-        game.PlayerList.get(2).hand.removeFirst();
-        game.PlayerList.get(2).hand.removeFirst();
-        game.PlayerList.get(3).hand.removeFirst();
-        game.PlayerList.get(3).hand.removeFirst();
+        game.PlayerList.get(0).hand.remove(0);
+        game.PlayerList.get(0).hand.remove(0);
+        game.PlayerList.get(1).hand.remove(0);
+        game.PlayerList.get(1).hand.remove(0);
+        game.PlayerList.get(2).hand.remove(0);
+        game.PlayerList.get(2).hand.remove(0);
+        game.PlayerList.get(3).hand.remove(0);
+        game.PlayerList.get(3).hand.remove(0);
 
         Main.Card curCard = game.drawEventCard();
         if (curCard.id.equals("Prosperity")) {
@@ -273,21 +273,21 @@ class MainTest {
         assertEquals(44, game.AdDeck.size());
 
         //remove some more cards
-        game.PlayerList.get(0).hand.removeFirst();
-        game.PlayerList.get(0).hand.removeFirst();
-        game.PlayerList.get(1).hand.removeFirst();
-        game.PlayerList.get(1).hand.removeFirst();
-        game.PlayerList.get(2).hand.removeFirst();
-        game.PlayerList.get(2).hand.removeFirst();
-        game.PlayerList.get(3).hand.removeFirst();
-        game.PlayerList.get(3).hand.removeFirst();
+        game.PlayerList.get(0).hand.remove(0);
+        game.PlayerList.get(0).hand.remove(0);
+        game.PlayerList.get(1).hand.remove(0);
+        game.PlayerList.get(1).hand.remove(0);
+        game.PlayerList.get(2).hand.remove(0);
+        game.PlayerList.get(2).hand.remove(0);
+        game.PlayerList.get(3).hand.remove(0);
+        game.PlayerList.get(3).hand.remove(0);
 
-        game.PlayerList.get(3).hand.removeFirst();
-        game.PlayerList.get(3).hand.removeFirst();
-        game.PlayerList.get(3).hand.removeFirst();
-        game.PlayerList.get(2).hand.removeFirst();
-        game.PlayerList.get(2).hand.removeFirst();
-        game.PlayerList.get(1).hand.removeFirst();
+        game.PlayerList.get(3).hand.remove(0);
+        game.PlayerList.get(3).hand.remove(0);
+        game.PlayerList.get(3).hand.remove(0);
+        game.PlayerList.get(2).hand.remove(0);
+        game.PlayerList.get(2).hand.remove(0);
+        game.PlayerList.get(1).hand.remove(0);
 
         curCard = game.drawEventCard();
         if (curCard.id.equals("Prosperity")) {
@@ -383,9 +383,9 @@ class MainTest {
         outContent.reset();
 
         //remove some cards from P2
-        game.PlayerList.get(1).hand.removeFirst();
-        game.PlayerList.get(1).hand.removeFirst();
-        game.PlayerList.get(1).hand.removeFirst();
+        game.PlayerList.get(1).hand.remove(0);
+        game.PlayerList.get(1).hand.remove(0);
+        game.PlayerList.get(1).hand.remove(0);
         //check that the discard doesn't activate
         game.drawAdCard(game.PlayerList.get(1), 1, new Scanner(""));
         assertEquals("", outContent.toString());
@@ -1449,7 +1449,7 @@ class MainTest {
         assertEquals(0, game.AdDiscard.size());
         assertEquals("Adventure Deck empty. Shuffling discard pile back in.\n", outContent.toString());
         //make sure that all cards were retained
-        game.AdDeck.add(game.curPlayer.hand.removeFirst());
+        game.AdDeck.add(game.curPlayer.hand.remove(0));
         assertTrue(game.AdventureDeckList.containsAll(game.AdDeck));
     }
 
@@ -1470,7 +1470,7 @@ class MainTest {
         assertEquals(16, game.EvDeck.size());
         assertTrue(outContent.toString().contains("Event Deck empty. Shuffling discard pile back in.\n"));
         //make sure that all cards were retained
-        game.EvDeck.add(game.EvDiscard.removeFirst());
+        game.EvDeck.add(game.EvDiscard.remove(0));
         assertTrue(game.EventDeckList.containsAll(game.EvDeck));
     }
 
@@ -1541,7 +1541,7 @@ class MainTest {
         for (Main.Card c : game.EvDeck) {
             if (c.toString().equals("Q4")) {
                 game.EvDeck.remove(c);
-                game.EvDeck.addFirst(c);
+                game.EvDeck.add(0, c);
                 break;
             }
         }
@@ -1560,21 +1560,21 @@ class MainTest {
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("B15")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("S10")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("F30")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
@@ -1592,22 +1592,22 @@ class MainTest {
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("L20")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
         //move a different lance to the top
         for (Main.Card c : game.AdDeck) {
-            if (c.toString().equals("L20") && game.AdDeck.getFirst() != c) {
+            if (c.toString().equals("L20") && game.AdDeck.get(0) != c) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("F10")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
@@ -1626,14 +1626,14 @@ class MainTest {
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("S10")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("B15")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
@@ -1650,14 +1650,14 @@ class MainTest {
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("L20")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }
         for (Main.Card c : game.AdDeck) {
             if (c.toString().equals("F30")) {
                 game.AdDeck.remove(c);
-                game.AdDeck.addFirst(c);
+                game.AdDeck.add(0, c);
                 break;
             }
         }

@@ -1,6 +1,13 @@
 package org.example;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.*;
+
+@RestController
+@CrossOrigin(origins = "http://127.0.0.1:8081")
 
 public class Main {
     public Player curPlayer;
@@ -331,7 +338,8 @@ public class Main {
                 AdDiscard.clear();
                 Collections.shuffle(AdDeck);
             }
-            p.addCard(AdDeck.removeFirst());
+            //p.addCard(AdDeck.removeFirst());
+            p.addCard(AdDeck.remove(0));
         }
         Collections.sort(p.hand);
         if (p.hand.size() > 12) {
@@ -379,7 +387,8 @@ public class Main {
             EvDiscard.clear();
             Collections.shuffle(EvDeck);
         }
-        Card curEvent = EvDeck.removeFirst();
+        //Card curEvent = EvDeck.removeFirst();
+        Card curEvent = EvDeck.remove(0);
         //immediately discard it; no reason to have it in the deck anymore, and no other zone it can be in
         EvDiscard.add(curEvent);
         System.out.print("\nThe current event is: " + curEvent + "\n");
@@ -500,7 +509,7 @@ public class Main {
                     }
                     int priorStageValue = 0;
                     if (!stages.isEmpty()) {
-                        for (Card c : stages.getLast()) {
+                        for (Card c : stages.get(stages.size() - 1)) {
                             priorStageValue += c.value;
                         }
                     }
