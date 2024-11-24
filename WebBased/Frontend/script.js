@@ -5,30 +5,24 @@ async function startGame() {
         const response = await fetch(`${apiBaseUrl}/startGame`);
         const result = await response.text();
         console.log("Start Game Response:", result);
-        document.getElementById("output").innerText += result;
+        document.getElementById("output").innerText += "Game Started\n";
+
+        const eventResult = await getEvent();
     } catch (error) {
         console.error("Error in startGame:", error);
     }
 }
 
-//async function hit() {
-//    try {
-//        const response = await fetch(`${apiBaseUrl}/hit`, { method: "POST" });
-//        const result = await response.text();
-//        console.log("Hit Response:", result);
-//        document.getElementById("game-status").innerText = result;
-//    } catch (error) {
-//        console.error("Error in hit:", error);
-//    }
-//}
-//
-//async function stand() {
-//    try {
-//        const response = await fetch(`${apiBaseUrl}/stand`, { method: "POST" });
-//        const result = await response.text();
-//        console.log("Stand Response:", result);
-//        document.getElementById("game-status").innerText = result;
-//    } catch (error) {
-//        console.error("Error in stand:", error);
-//    }
-//}
+async function getEvent() {
+    try {
+        const response = await fetch(`${apiBaseUrl}/drawEvent`, { method: "POST" });
+        result = await response.json();
+
+        //console.log("Event Card Drawn:", result);
+        document.getElementById("output").innerText += typeof result;
+        document.getElementById("output").innerText += JSON.stringify(result, null, 2);
+
+    } catch (error) {
+        console.error("Error in event card draw:", error);
+    }
+}

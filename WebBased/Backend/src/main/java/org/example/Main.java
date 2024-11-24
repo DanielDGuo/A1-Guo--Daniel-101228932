@@ -3,13 +3,13 @@ package org.example;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:8081")
-
 public class Main {
     public Player curPlayer;
     public Scanner inContent = new Scanner(System.in);
@@ -170,24 +170,24 @@ public class Main {
 
             Card curEventCard = game.drawEventCard();
 
-            switch (curEventCard.id) {
+            switch (curEventCard.getId()) {
                 case "Plague" -> game.plagueEffect();
                 case "Queen's Favour" -> game.queenEffect();
                 case "Prosperity" -> game.prosperityEffect();
                 default -> game.questEffect(curEventCard);
             }
             //end of Beginning Phase. Move on to Questing if needed
-            if (curEventCard.type.equals("Quest")) {
+            if (curEventCard.getType().equals("Quest")) {
                 Player sponsor = game.seekSponsor(game.inContent);
                 if (sponsor == null) {
                     continue;
                 }
                 //Enter Quest Build
                 game.beginQuestBuilding(sponsor, game.inContent);
-                ArrayList<ArrayList<Card>> stages = game.beginStageBuilding(sponsor, curEventCard.value, game.inContent);
+                ArrayList<ArrayList<Card>> stages = game.beginStageBuilding(sponsor, curEventCard.getValue(), game.inContent);
                 game.endStageBuilding(sponsor, stages, game.inContent);
                 //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
-                for (int i = 0; i < curEventCard.value; i++) {
+                for (int i = 0; i < curEventCard.getValue(); i++) {
                     //Find participants for the current stage
                     ArrayList<Player> stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
                     game.participantsDrawCard(stageParticipants, game.inContent);
@@ -199,101 +199,13 @@ public class Main {
                     }
                 }
                 //After Quest Attack, distribute shields to the winners
-                game.giveWinnersShields(curEventCard.value);
+                game.giveWinnersShields(curEventCard.getValue());
                 //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
                 game.discardQuestStages(stages, sponsor, game.inContent);
             }
             game.endTurn(game.inContent);
         }
         game.printWinners();
-    }
-
-    public class Card implements Comparable<Card> {
-        //valid ID include but aren't limited to: F5, F10, D, H, S, Q2, Q3, Plague, Queen's favour
-        String id;
-        //Types include Foe, Weapon, Quest, and Event
-        String type;
-        //values are the number associated with the card; such as a 5 power foe, or a 30 power excalibur
-        int value;
-
-        //constructor
-        public Card(String id, String type, int value) {
-            this.id = id;
-            this.type = type;
-            this.value = value;
-        }
-
-        //copy constructor
-        public Card(Card c) {
-            this.id = c.id;
-            this.type = c.type;
-            this.value = c.value;
-        }
-
-        @Override
-        public String toString() {
-            return id;
-        }
-
-        @Override
-        public int compareTo(Card c) {
-            //check if this is a foe and if that is a weapon; foes are displayed first
-            if (this.type.equals("Foe") && c.type.equals("Weapon")) {
-                return -1;
-            } else if ((this.type.equals("Foe") && c.type.equals("Foe")) || (this.type.equals("Weapon") && c.type.equals("Weapon"))) {
-                //special case for horses and swords
-                if (this.id.equals("H10") && c.id.equals("S10")) {
-                    return 1;
-                } else if (this.id.equals("S10") && c.id.equals("H10")) {
-                    return -1;
-                }
-                //compare values if they're both foe or weapons
-                return this.value - c.value;
-            } else if (this.type.equals("Quest") && c.type.equals("Quest")) {
-                return this.value - c.value;
-            } else if (this.type.equals("Event") && c.type.equals("Event")) {
-                return this.id.compareTo(c.id);
-            } else if (((this.type.equals("Event") && c.type.equals("Quest"))) || (this.type.equals("Quest") && c.type.equals("Event"))) {
-                return this.type.compareTo(c.type);
-            }
-            //otherwise return a 1
-            return 1;
-        }
-    }
-
-    public class Player {
-        int id;
-        int shields;
-        ArrayList<Card> hand;
-        boolean eligible;
-
-        public Player(int id) {
-            this.id = id;
-            hand = new ArrayList<>();
-        }
-
-        public void addShields(int i) {
-            shields += i;
-        }
-
-        public void addCard(Card c) {
-            hand.add(c);
-            Collections.sort(hand);
-        }
-
-        public void printHand() {
-            StringBuilder outString = new StringBuilder("P" + id + " Hand: ");
-            Collections.sort(hand);
-            for (Card c : hand) {
-                outString.append(c).append(", ");
-            }
-            System.out.print(outString.substring(0, outString.length() - 2));
-        }
-
-        @Override
-        public String toString() {
-            return "P" + id;
-        }
     }
 
     public void initializePlayerHands() {
@@ -314,7 +226,7 @@ public class Main {
 
     public boolean findWinners() {
         for (Player p : PlayerList) {
-            if (p.shields >= 7) {
+            if (p.getShields() >= 7) {
                 return true;
             }
         }
@@ -324,7 +236,7 @@ public class Main {
     public void printWinners() {
         StringBuilder outString = new StringBuilder("Player(s) ");
         for (Player p : PlayerList) {
-            if (p.shields >= 7) {
+            if (p.getShields() >= 7) {
                 outString.append(p).append(", ");
             }
         }
@@ -342,10 +254,10 @@ public class Main {
             //p.addCard(AdDeck.removeFirst());
             p.addCard(AdDeck.remove(0));
         }
-        Collections.sort(p.hand);
-        if (p.hand.size() > 12) {
-            System.out.print("\n\n\n\n\n\n\n\n\n\n" + p + " is over the max hand size by " + (p.hand.size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
-            this.discardAdCard(p, (p.hand.size() - 12), inContent);
+        Collections.sort(p.getHand());
+        if (p.getHand().size() > 12) {
+            System.out.print("\n\n\n\n\n\n\n\n\n\n" + p + " is over the max hand size by " + (p.getHand().size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
+            this.discardAdCard(p, (p.getHand().size() - 12), inContent);
         }
     }
 
@@ -373,7 +285,7 @@ public class Main {
                 System.out.print("Please specify an index.\n");
                 continue;
             }
-            AdDiscard.add(p.hand.remove((Integer.parseInt(input)) - 1));
+            AdDiscard.add(p.getHand().remove((Integer.parseInt(input)) - 1));
             num--;
         }
         System.out.print("Discarding Complete. This is your new hand:\n");
@@ -381,6 +293,7 @@ public class Main {
         System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
+    @PostMapping("/drawEvent")
     public Card drawEventCard() {
         if (EvDeck.isEmpty()) {
             System.out.print("Event Deck empty. Shuffling discard pile back in.\n");
@@ -397,13 +310,13 @@ public class Main {
     }
 
     public void plagueEffect() {
-        System.out.print("Plague Drawn. Current player's shields decreased from " + curPlayer.shields);
+        System.out.print("Plague Drawn. Current player's shields decreased from " + curPlayer.getShields());
         curPlayer.addShields(-2);
         //if it's less than 0, set it to 0
-        if (curPlayer.shields < 0) {
-            curPlayer.addShields(-curPlayer.shields);
+        if (curPlayer.getShields() < 0) {
+            curPlayer.addShields(-curPlayer.getShields());
         }
-        System.out.print(" to " + curPlayer.shields + "\n");
+        System.out.print(" to " + curPlayer.getShields() + "\n");
     }
 
     public void queenEffect() {
@@ -419,7 +332,7 @@ public class Main {
     }
 
     public void questEffect(Card c) {
-        System.out.print("Beginning the effects of a Quest card with " + c.value + " stages.\n");
+        System.out.print("Beginning the effects of a Quest card with " + c.getValue() + " stages.\n");
     }
 
     public void endTurn(Scanner inContent) {
@@ -438,7 +351,7 @@ public class Main {
 
     public Player seekSponsor(Scanner inContent) {
         System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        int curPlayerIndex = curPlayer.id - 1;
+        int curPlayerIndex = curPlayer.getId() - 1;
         for (int i = 0; i < 4; i++) {
             System.out.print(PlayerList.get((curPlayerIndex + i) % 4) + ", would you like to sponsor this quest? (Y/N)\n");
             String input = inContent.nextLine();
@@ -492,7 +405,7 @@ public class Main {
                 System.out.print("\n");
                 input = inContent.nextLine();
                 //valid input is an empty line to go to next stage, or a valid index
-                if (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.hand.size()))) {
+                if (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.getHand().size()))) {
                     System.out.print("Invalid input. Please provide a valid index or press enter.\n");
                     continue;
                 }
@@ -506,23 +419,23 @@ public class Main {
                     //stages must be in ascending order
                     int curStageValue = 0;
                     for (Card c : curStage) {
-                        curStageValue += c.value;
+                        curStageValue += c.getValue();
                     }
                     int priorStageValue = 0;
                     if (!stages.isEmpty()) {
                         for (Card c : stages.get(stages.size() - 1)) {
-                            priorStageValue += c.value;
+                            priorStageValue += c.getValue();
                         }
                     }
                     if (priorStageValue >= curStageValue) {
                         System.out.print("Current stage must have value greater than the prior stage.\n");
                         input = "temp";
                     }
-                } else if (sponsor.hand.get(Integer.parseInt(input) - 1).type.equals("Foe")) {
+                } else if (sponsor.getHand().get(Integer.parseInt(input) - 1).getType().equals("Foe")) {
                     //check if there's already a foe or not
                     boolean hadFoe = false;
                     for (Card card : curStage) {
-                        if (card.type.equals("Foe")) {
+                        if (card.getType().equals("Foe")) {
                             System.out.print("Invalid input. Cannot put two foes in one stage.\n");
                             hadFoe = true;
                             break;
@@ -530,13 +443,13 @@ public class Main {
                     }
                     if (!hadFoe) {
                         //add the card at index and continue. Remove from sponsor hand.
-                        curStage.add(sponsor.hand.remove(Integer.parseInt(input) - 1));
+                        curStage.add(sponsor.getHand().remove(Integer.parseInt(input) - 1));
                     }
-                } else if (sponsor.hand.get(Integer.parseInt(input) - 1).type.equals("Weapon")) {
+                } else if (sponsor.getHand().get(Integer.parseInt(input) - 1).getType().equals("Weapon")) {
                     //check if there's already a foe or not
                     boolean hadDupe = false;
                     for (Card card : curStage) {
-                        if (card.toString().equals(sponsor.hand.get(Integer.parseInt(input) - 1).toString())) {
+                        if (card.toString().equals(sponsor.getHand().get(Integer.parseInt(input) - 1).toString())) {
                             System.out.print("Invalid input. Duplicate weapon.\n");
                             hadDupe = true;
                             break;
@@ -544,7 +457,7 @@ public class Main {
                     }
                     if (!hadDupe) {
                         //add the card at index and continue. Remove from sponsor hand.
-                        curStage.add(sponsor.hand.remove(Integer.parseInt(input) - 1));
+                        curStage.add(sponsor.getHand().remove(Integer.parseInt(input) - 1));
                     }
                 }
             }
@@ -577,14 +490,14 @@ public class Main {
         //this is to overwrite any prior changes to the eligibility
         if (firstStage) {
             for (Player p : PlayerList) {
-                p.eligible = true;
+                p.setEligible(true);
             }
-            sponsor.eligible = false;
+            sponsor.setEligible(false);
         }
         ArrayList<Player> stageParticipants = new ArrayList<>();
         //loop and ask each player for participation
         for (Player p : PlayerList) {
-            if (p.eligible) {
+            if (p.isEligible()) {
                 System.out.print(p + ", would you like to participate in this stage? (Y/N)\n");
                 String input = inContent.nextLine();
                 while (!(input.equals("Y") || input.equals("N"))) {
@@ -598,7 +511,7 @@ public class Main {
                 if (input.equals("Y")) {
                     stageParticipants.add(p);
                 } else {
-                    p.eligible = false;
+                    p.setEligible(false);
                 }
             }
         }
@@ -633,14 +546,14 @@ public class Main {
                 System.out.print("\n");
                 input = inContent.nextLine();
                 //valid input is an empty line to go to end the attack creation, or a valid index
-                if (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= p.hand.size()))) {
+                if (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= p.getHand().size()))) {
                     System.out.print("Invalid input. Please provide a valid index or press enter.\n");
                     continue;
                 }
                 if (!input.isEmpty()) {
                     //non-empty input; get the card and check if its valid
                     //check if it's a weapon
-                    if (!p.hand.get(Integer.parseInt(input) - 1).type.equals("Weapon")) {
+                    if (!p.getHand().get(Integer.parseInt(input) - 1).getType().equals("Weapon")) {
                         //must be a foe.
                         System.out.print("Invalid input. Cannot add foes to attack team.\n");
                         continue;
@@ -648,7 +561,7 @@ public class Main {
                     //check if it's a dupe
                     boolean hasDupe = false;
                     for (Card c : curAttack) {
-                        if (c.toString().equals(p.hand.get(Integer.parseInt(input) - 1).toString())) {
+                        if (c.toString().equals(p.getHand().get(Integer.parseInt(input) - 1).toString())) {
                             hasDupe = true;
                         }
                     }
@@ -656,7 +569,7 @@ public class Main {
                         System.out.print("Invalid input. Duplicate weapon.\n");
                         continue;
                     }
-                    curAttack.add(p.hand.remove(Integer.parseInt(input) - 1));
+                    curAttack.add(p.getHand().remove(Integer.parseInt(input) - 1));
                 }
             }
             attackTeams.add(curAttack);
@@ -691,25 +604,25 @@ public class Main {
         //value of stage
         int stageValue = 0;
         for (Card c : curStage) {
-            stageValue += c.value;
+            stageValue += c.getValue();
         }
         //find and check hands against stage
         for (int i = 0; i < attackTeams.size(); i++) {
             int handValue = 0;
             for (Card c : attackTeams.get(i)) {
-                handValue += c.value;
+                handValue += c.getValue();
             }
             if (handValue >= stageValue) {
                 outcome.add(true);
             } else {
                 outcome.add(false);
-                participants.get(i).eligible = false;
+                participants.get(i).setEligible(false);
             }
         }
         //find who won
         StringBuilder winners = new StringBuilder();
         for (Player p : participants) {
-            if (p.eligible) {
+            if (p.isEligible()) {
                 winners.append(p).append(", ");
             }
         }
@@ -738,7 +651,7 @@ public class Main {
     public void giveWinnersShields(int numStages) {
         ArrayList<Player> winners = new ArrayList<>();
         for (Player p : PlayerList) {
-            if (p.eligible) {
+            if (p.isEligible()) {
                 winners.add(p);
                 p.addShields(numStages);
             }
@@ -760,11 +673,12 @@ public class Main {
     }
 
     @GetMapping("/startGame")
-    public String startGame(){
+    public String startGame() {
         Main game = new Main();
         game.initializeAdventureDeck();
         game.initializeEventDeck();
         game.initializePlayerHands();
+        game.curPlayer = game.PlayerList.get(3);
         return "game started";
     }
 }
