@@ -212,6 +212,7 @@ public class Main {
 
     public void initializePlayerHands() {
         for (Player p : PlayerList) {
+            p.setHand(new ArrayList<>());
             drawAdCard(p, 12, inContent);
         }
     }
@@ -293,28 +294,6 @@ public class Main {
         System.out.print("Discarding Complete. This is your new hand:\n");
         p.printHand();
         System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    }
-
-    @PostMapping("/drawEvent")
-    public ResponseEntity<Card> drawEventCard() {
-        try {
-            if (EvDeck.isEmpty()) {
-                System.out.print("Event Deck empty. Shuffling discard pile back in.\n");
-                EvDeck.addAll(EvDiscard);
-                EvDiscard.clear();
-                Collections.shuffle(EvDeck);
-            }
-            //Card curEvent = EvDeck.removeFirst();
-            Card curEvent = EvDeck.remove(0);
-            //immediately discard it; no reason to have it in the deck anymore, and no other zone it can be in
-            EvDiscard.add(curEvent);
-            System.out.print("\nThe current event is: " + curEvent + "\n");
-            return ResponseEntity.ok(curEvent);
-        } catch (Exception e) {
-            // Log the error for debugging
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     public void plagueEffect() {
@@ -682,11 +661,25 @@ public class Main {
 
     @GetMapping("/startGame")
     public String startGame() {
-        Main game = new Main();
-        game.initializeAdventureDeck();
-        game.initializeEventDeck();
-        game.initializePlayerHands();
-        game.curPlayer = game.PlayerList.get(3);
+        initializeAdventureDeck();
+        initializeEventDeck();
+        initializePlayerHands();
+        curPlayer = PlayerList.get(3);
         return "game started";
+    }
+
+    @PostMapping("/drawEvent")
+    public Card drawEventCard() {
+        if (EvDeck.isEmpty()) {
+            System.out.print("Event Deck empty. Shuffling discard pile back in.\n");
+            EvDeck.addAll(EvDiscard);
+            EvDiscard.clear();
+            Collections.shuffle(EvDeck);
+        }
+        Card curEvent = EvDeck.remove(0);
+        //immediately discard it; no reason to have it in the deck anymore, and no other zone it can be in
+        EvDiscard.add(curEvent);
+        System.out.print("\nThe current event is: " + curEvent + "\n");
+        return curEvent;
     }
 }

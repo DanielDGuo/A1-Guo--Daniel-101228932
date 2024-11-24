@@ -7,7 +7,14 @@ async function startGame() {
         console.log("Start Game Response:", result);
         document.getElementById("output").innerText += "Game Started\n";
 
-        const eventResult = await getEvent();
+        //converts returned JSON string into an actual object
+        var nextEventCard = await getEvent();
+        var eventCardObj = JSON.parse(nextEventCard);
+
+        console.log("Drawn Event Card: ", nextEventCard);
+        document.getElementById("output").innerText += "Drawn event card: " + eventCardObj.id;
+
+
     } catch (error) {
         console.error("Error in startGame:", error);
     }
@@ -16,11 +23,8 @@ async function startGame() {
 async function getEvent() {
     try {
         const response = await fetch(`${apiBaseUrl}/drawEvent`, { method: "POST" });
-        result = await response;
-
-        //console.log("Event Card Drawn:", result);
-        document.getElementById("output").innerText += JSON.stringify(result);
-
+        const result = await response.text();
+        return result;
     } catch (error) {
         console.error("Error in event card draw:", error);
     }

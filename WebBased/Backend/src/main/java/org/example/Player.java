@@ -55,6 +55,10 @@ public class Player {
         return hand;
     }
 
+    public void setHand(ArrayList<Card> hand) {
+        this.hand = hand;
+    }
+
     public void setEligible(boolean eligible) {
         this.eligible = eligible;
     }
