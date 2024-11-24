@@ -1,6 +1,8 @@
 package org.example;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -153,60 +155,60 @@ public class Main {
             )
     );
 
-    public static void main(String[] args) {
-        Main game = new Main();
-        game.initializeAdventureDeck();
-        game.initializeEventDeck();
-        game.initializePlayerHands();
-
-        game.curPlayer = game.PlayerList.get(3);
-        while (!game.findWinners()) {
-            //Start of Beginning Phase
-            //get the next player
-            game.curPlayer = game.PlayerList.get((game.PlayerList.indexOf(game.curPlayer) + 1) % 4);
-
-            System.out.print("Player " + game.curPlayer + ", this is your hand:\n");
-            game.curPlayer.printHand();
-
-            Card curEventCard = game.drawEventCard();
-
-            switch (curEventCard.getId()) {
-                case "Plague" -> game.plagueEffect();
-                case "Queen's Favour" -> game.queenEffect();
-                case "Prosperity" -> game.prosperityEffect();
-                default -> game.questEffect(curEventCard);
-            }
-            //end of Beginning Phase. Move on to Questing if needed
-            if (curEventCard.getType().equals("Quest")) {
-                Player sponsor = game.seekSponsor(game.inContent);
-                if (sponsor == null) {
-                    continue;
-                }
-                //Enter Quest Build
-                game.beginQuestBuilding(sponsor, game.inContent);
-                ArrayList<ArrayList<Card>> stages = game.beginStageBuilding(sponsor, curEventCard.getValue(), game.inContent);
-                game.endStageBuilding(sponsor, stages, game.inContent);
-                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
-                for (int i = 0; i < curEventCard.getValue(); i++) {
-                    //Find participants for the current stage
-                    ArrayList<Player> stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
-                    game.participantsDrawCard(stageParticipants, game.inContent);
-                    ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
-                    ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
-                    game.discardAttackTeams(stageAttackTeams);
-                    if (!game.findStageSurvivors(stageOutcome)) {
-                        break;
-                    }
-                }
-                //After Quest Attack, distribute shields to the winners
-                game.giveWinnersShields(curEventCard.getValue());
-                //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
-                game.discardQuestStages(stages, sponsor, game.inContent);
-            }
-            game.endTurn(game.inContent);
-        }
-        game.printWinners();
-    }
+//    public static void main(String[] args) {
+//        Main game = new Main();
+//        game.initializeAdventureDeck();
+//        game.initializeEventDeck();
+//        game.initializePlayerHands();
+//
+//        game.curPlayer = game.PlayerList.get(3);
+//        while (!game.findWinners()) {
+//            //Start of Beginning Phase
+//            //get the next player
+//            game.curPlayer = game.PlayerList.get((game.PlayerList.indexOf(game.curPlayer) + 1) % 4);
+//
+//            System.out.print("Player " + game.curPlayer + ", this is your hand:\n");
+//            game.curPlayer.printHand();
+//
+//            Card curEventCard = game.drawEventCard();
+//
+//            switch (curEventCard.getId()) {
+//                case "Plague" -> game.plagueEffect();
+//                case "Queen's Favour" -> game.queenEffect();
+//                case "Prosperity" -> game.prosperityEffect();
+//                default -> game.questEffect(curEventCard);
+//            }
+//            //end of Beginning Phase. Move on to Questing if needed
+//            if (curEventCard.getType().equals("Quest")) {
+//                Player sponsor = game.seekSponsor(game.inContent);
+//                if (sponsor == null) {
+//                    continue;
+//                }
+//                //Enter Quest Build
+//                game.beginQuestBuilding(sponsor, game.inContent);
+//                ArrayList<ArrayList<Card>> stages = game.beginStageBuilding(sponsor, curEventCard.getValue(), game.inContent);
+//                game.endStageBuilding(sponsor, stages, game.inContent);
+//                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
+//                for (int i = 0; i < curEventCard.getValue(); i++) {
+//                    //Find participants for the current stage
+//                    ArrayList<Player> stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
+//                    game.participantsDrawCard(stageParticipants, game.inContent);
+//                    ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
+//                    ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
+//                    game.discardAttackTeams(stageAttackTeams);
+//                    if (!game.findStageSurvivors(stageOutcome)) {
+//                        break;
+//                    }
+//                }
+//                //After Quest Attack, distribute shields to the winners
+//                game.giveWinnersShields(curEventCard.getValue());
+//                //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
+//                game.discardQuestStages(stages, sponsor, game.inContent);
+//            }
+//            game.endTurn(game.inContent);
+//        }
+//        game.printWinners();
+//    }
 
     public void initializePlayerHands() {
         for (Player p : PlayerList) {
@@ -294,19 +296,25 @@ public class Main {
     }
 
     @PostMapping("/drawEvent")
-    public Card drawEventCard() {
-        if (EvDeck.isEmpty()) {
-            System.out.print("Event Deck empty. Shuffling discard pile back in.\n");
-            EvDeck.addAll(EvDiscard);
-            EvDiscard.clear();
-            Collections.shuffle(EvDeck);
+    public ResponseEntity<Card> drawEventCard() {
+        try {
+            if (EvDeck.isEmpty()) {
+                System.out.print("Event Deck empty. Shuffling discard pile back in.\n");
+                EvDeck.addAll(EvDiscard);
+                EvDiscard.clear();
+                Collections.shuffle(EvDeck);
+            }
+            //Card curEvent = EvDeck.removeFirst();
+            Card curEvent = EvDeck.remove(0);
+            //immediately discard it; no reason to have it in the deck anymore, and no other zone it can be in
+            EvDiscard.add(curEvent);
+            System.out.print("\nThe current event is: " + curEvent + "\n");
+            return ResponseEntity.ok(curEvent);
+        } catch (Exception e) {
+            // Log the error for debugging
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        //Card curEvent = EvDeck.removeFirst();
-        Card curEvent = EvDeck.remove(0);
-        //immediately discard it; no reason to have it in the deck anymore, and no other zone it can be in
-        EvDiscard.add(curEvent);
-        System.out.print("\nThe current event is: " + curEvent + "\n");
-        return curEvent;
     }
 
     public void plagueEffect() {

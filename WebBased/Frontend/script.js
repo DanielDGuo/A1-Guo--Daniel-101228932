@@ -16,11 +16,10 @@ async function startGame() {
 async function getEvent() {
     try {
         const response = await fetch(`${apiBaseUrl}/drawEvent`, { method: "POST" });
-        result = await response.json();
+        result = await response;
 
         //console.log("Event Card Drawn:", result);
-        document.getElementById("output").innerText += typeof result;
-        document.getElementById("output").innerText += JSON.stringify(result, null, 2);
+        document.getElementById("output").innerText += JSON.stringify(result);
 
     } catch (error) {
         console.error("Error in event card draw:", error);

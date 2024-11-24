@@ -1,11 +1,16 @@
 package org.example;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Card implements Comparable<Card> {
     //valid ID include but aren't limited to: F5, F10, D, H, S, Q2, Q3, Plague, Queen's favour
+    @JsonProperty("id")
     private String id;
     //Types include Foe, Weapon, Quest, and Event
+    @JsonProperty("type")
     private String type;
     //values are the number associated with the card; such as a 5 power foe, or a 30 power excalibur
+    @JsonProperty("value")
     private int value;
 
     //constructor

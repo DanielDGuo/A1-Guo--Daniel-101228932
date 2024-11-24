@@ -1,12 +1,18 @@
 package org.example;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Player {
+    @JsonProperty("id")
     private int id;
+    @JsonProperty("shields")
     private int shields;
+    @JsonProperty("hand")
     private ArrayList<Card> hand;
+    @JsonProperty("eligible")
     private boolean eligible;
 
     public Player(int id) {
