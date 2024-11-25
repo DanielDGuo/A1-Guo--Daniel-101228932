@@ -153,9 +153,6 @@ public class Main {
             )
     );
 
-//    public static void main(String[] args) {
-//        while () {//
-//            if (curEventCard.getType().equals("Quest")) {
 //                Player sponsor = game.seekSponsor(game.inContent);
 //                if (sponsor == null) {
 //                    continue;
@@ -180,38 +177,9 @@ public class Main {
 //                game.giveWinnersShields(curEventCard.getValue());
 //                //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
 //                game.discardQuestStages(stages, sponsor, game.inContent);
-//            }
-//            game.endTurn(game.inContent);
-//        }
-//        game.printWinners();
-//    }
-
-    public void printWinners() {
-        StringBuilder outString = new StringBuilder("Player(s) ");
-        for (Player p : PlayerList) {
-            if (p.getShields() >= 7) {
-                outString.append(p).append(", ");
-            }
-        }
-        System.out.print(outString.substring(0, outString.length() - 2) + " Won.");
-    }
 
     public void questEffect(Card c) {
         System.out.print("Beginning the effects of a Quest card with " + c.getValue() + " stages.\n");
-    }
-
-    public void endTurn(Scanner inContent) {
-        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + curPlayer + "'s turn has ended. Please give controls to " + (PlayerList.get((PlayerList.indexOf(curPlayer) + 1) % 4)) + ", and press enter.\n");
-
-        String input = inContent.nextLine();
-        while (!input.isEmpty()) {
-            System.out.print("Invalid input.\n");
-            try {
-                input = inContent.nextLine();
-            } catch (java.util.NoSuchElementException e) {
-                input = "";
-            }
-        }
     }
 
     public Player seekSponsor(Scanner inContent) {
@@ -580,10 +548,23 @@ public class Main {
         return outString.toString();
     }
 
+    //helper function for parseInt
+    public boolean isValidInt(String s){
+        try {
+            Integer.parseInt(s);
+            return true; // Parsing succeeded
+        } catch (NumberFormatException e) {
+            return false; // Parsing failed
+        }
+    }
+
     @PostMapping("/inputProcessing")
     public String processInput(@RequestBody String input) {
         String outString = "";
         switch (gamePhase) {
+            case "End Turn":
+                gamePhase = "New Turn";
+                return "";
             case "P1 Discard Start":
                 gamePhase = "P1 Discard";
                 return "\nAre you P1?\n";
@@ -612,7 +593,7 @@ public class Main {
 
             case "P1 Discarding":
                 //valid index
-                if (!input.equals("empty_string") && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(0).getHand().size()){
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(0).getHand().size()){
                     AdDiscard.add(PlayerList.get(0).getHand().remove((Integer.parseInt(input)) - 1));
                     //continue
                     if(PlayerList.get(0).getHand().size() > 12){
@@ -629,7 +610,7 @@ public class Main {
                 }
             case "P2 Discarding":
                 //valid index
-                if (!input.equals("empty_string") && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(1).getHand().size()){
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(1).getHand().size()){
                     AdDiscard.add(PlayerList.get(1).getHand().remove((Integer.parseInt(input)) - 1));
                     //continue
                     if(PlayerList.get(1).getHand().size() > 12){
@@ -646,7 +627,7 @@ public class Main {
                 }
             case "P3 Discarding":
                 //valid index
-                if (!input.equals("empty_string") && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(2).getHand().size()){
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(2).getHand().size()){
                     AdDiscard.add(PlayerList.get(2).getHand().remove((Integer.parseInt(input)) - 1));
                     //continue
                     if(PlayerList.get(2).getHand().size() > 12){
@@ -663,7 +644,7 @@ public class Main {
                 }
             case "P4 Discarding":
                 //valid index
-                if (!input.equals("empty_string") && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(3).getHand().size()){
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(3).getHand().size()){
                     AdDiscard.add(PlayerList.get(3).getHand().remove((Integer.parseInt(input)) - 1));
                     //continue
                     if(PlayerList.get(3).getHand().size() > 12){
@@ -689,7 +670,7 @@ public class Main {
         initializeEventDeck();
         initializePlayerHands();
         curPlayer = PlayerList.get(3);
-        gamePhase = "";
+        gamePhase = "New Game";
     }
 
     @GetMapping("/findWinners")
@@ -706,6 +687,23 @@ public class Main {
     public String nextPlayer() {
         curPlayer = PlayerList.get((PlayerList.indexOf(curPlayer) + 1) % 4);
         return "Player " + curPlayer + ", this is your hand:\n" + curPlayer.printHand();
+    }
+
+    @PostMapping("/endTurn")
+    public String endTurn() {
+        gamePhase = "End Turn";
+        return "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + curPlayer + "'s turn has ended. Please give controls to " + (PlayerList.get((PlayerList.indexOf(curPlayer) + 1) % 4)) + ", and press enter.\n";
+    }
+
+    @GetMapping("/printWinners")
+    public String printWinners() {
+        StringBuilder outString = new StringBuilder("Player(s) ");
+        for (Player p : PlayerList) {
+            if (p.getShields() >= 7) {
+                outString.append(p).append(", ");
+            }
+        }
+        return outString.substring(0, outString.length() - 2) + " Won.";
     }
 
     @PostMapping("/drawEvent")

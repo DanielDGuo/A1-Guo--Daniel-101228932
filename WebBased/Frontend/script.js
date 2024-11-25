@@ -1,13 +1,26 @@
 const apiBaseUrl = "http://localhost:8080";
 
+const textInput = document.getElementById('textInput');
+const submitButton = document.getElementById('submitButton');
+
+//event listener to help with manual information entry
+document.addEventListener('keydown', function(event){
+    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
+        textInput.focus();
+    }
+    else if (event.key === 'Enter') {
+        submitButton.click();
+    }
+});
+
 async function submitInput() {
-    var userInput = document.getElementById('textInput').value;
+    var userInput = textInput.value;
     if(userInput == ""){
         userInput = "empty_string";
     }
     console.log("Submitted input: ", userInput);
     console.log("With type: ", typeof userInput);
-    document.getElementById('textInput').value = '';
+    textInput.value = '';
 
     // Send input to backend
     const response = await fetch(`${apiBaseUrl}/inputProcessing`, {method: 'POST', headers: {'Content-Type': 'text/plain'}, body: userInput});
@@ -20,18 +33,14 @@ async function startGame() {
     try {
         //clear any janky javascript that I coded, i.e prosperity effect
         await fetch(`${apiBaseUrl}/startGame`);
-        await fetch(`${apiBaseUrl}/startGame`);
-        await fetch(`${apiBaseUrl}/startGame`);
-        await fetch(`${apiBaseUrl}/startGame`);
-        await fetch(`${apiBaseUrl}/startGame`);
         console.log("Started Game");
         document.getElementById("output").innerText = "Game Started\n";
 
-        if(await findWinners() == 'false'){
+        while(await findWinners() == 'false'){
             await nextPlayerTurn();
-            var nextEventCard = await getEvent();
+            var eventCard = await getEvent();
 
-            switch (nextEventCard.id) {
+            switch (eventCard.id) {
                 case "Plague":
                     await plagueEffect();
                     break;
@@ -46,7 +55,11 @@ async function startGame() {
                     await prosperityEffect();
                     break;
             }
+            if (eventCard.type == "Quest"){
+                //quest logic here
+            }
         }
+        document.getElementById("output").innerText += await printWinners();
 
     } catch (error) {
         console.error("Error in startGame:", error);
@@ -93,12 +106,35 @@ async function findWinners(){
     }
 }
 
+async function printWinners(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/printWinners`);
+        const result = await response.text();
+        return result;
+    } catch (error) {
+        console.error("Error in printing winners:", error);
+    }
+}
+
 async function nextPlayerTurn(){
     try {
         const response = await fetch(`${apiBaseUrl}/nextPlayer`, { method: "POST" });
         const result = await response.text();
 
         console.log("Next Turn Output", result);
+        document.getElementById("output").innerText += result;
+        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+    } catch (error) {
+        console.error("Error in getting next turn", error);
+    }
+}
+
+async function endTurn(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/endTurn`, { method: "POST" });
+        const result = await response.text();
+
+        console.log("End Turn Output", result);
         document.getElementById("output").innerText += result;
         document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
     } catch (error) {
@@ -146,6 +182,10 @@ async function prosperityEffect(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+
+        if(await getGamePhase() == "New Game"){
+            return;
+        }
         response = await fetch(`${apiBaseUrl}/prosperityEffect2`, { method: "POST" });
         result = await response.text();
 
@@ -155,6 +195,10 @@ async function prosperityEffect(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+
+        if(await getGamePhase() == "New Game"){
+            return;
+        }
         response = await fetch(`${apiBaseUrl}/prosperityEffect3`, { method: "POST" });
         result = await response.text();
 
@@ -163,6 +207,10 @@ async function prosperityEffect(){
         document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
+        }
+
+        if(await getGamePhase() == "New Game"){
+            return;
         }
         response = await fetch(`${apiBaseUrl}/prosperityEffect4`, { method: "POST" });
         result = await response.text();
