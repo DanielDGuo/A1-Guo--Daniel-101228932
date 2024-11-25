@@ -29,13 +29,13 @@ public class Player {
         Collections.sort(hand);
     }
 
-    public void printHand() {
+    public String printHand() {
         StringBuilder outString = new StringBuilder("P" + id + " Hand: ");
         Collections.sort(hand);
         for (Card c : hand) {
             outString.append(c).append(", ");
         }
-        System.out.print(outString.substring(0, outString.length() - 2));
+        return outString.substring(0, outString.length() - 2);
     }
 
     @Override

@@ -1,20 +1,18 @@
 package org.example;
 
+import ch.qos.logback.core.joran.sanity.Pair;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:8081")
 public class Main {
+    public String gamePhase = "";
     public Player curPlayer;
-    public Scanner inContent = new Scanner(System.in);
     public ArrayList<Card> AdDeck = new ArrayList<>();
     public ArrayList<Card> EvDeck = new ArrayList<>();
     public ArrayList<Card> AdDiscard = new ArrayList<>();
@@ -156,29 +154,7 @@ public class Main {
     );
 
 //    public static void main(String[] args) {
-//        Main game = new Main();
-//        game.initializeAdventureDeck();
-//        game.initializeEventDeck();
-//        game.initializePlayerHands();
-//
-//        game.curPlayer = game.PlayerList.get(3);
-//        while (!game.findWinners()) {
-//            //Start of Beginning Phase
-//            //get the next player
-//            game.curPlayer = game.PlayerList.get((game.PlayerList.indexOf(game.curPlayer) + 1) % 4);
-//
-//            System.out.print("Player " + game.curPlayer + ", this is your hand:\n");
-//            game.curPlayer.printHand();
-//
-//            Card curEventCard = game.drawEventCard();
-//
-//            switch (curEventCard.getId()) {
-//                case "Plague" -> game.plagueEffect();
-//                case "Queen's Favour" -> game.queenEffect();
-//                case "Prosperity" -> game.prosperityEffect();
-//                default -> game.questEffect(curEventCard);
-//            }
-//            //end of Beginning Phase. Move on to Questing if needed
+//        while () {//
 //            if (curEventCard.getType().equals("Quest")) {
 //                Player sponsor = game.seekSponsor(game.inContent);
 //                if (sponsor == null) {
@@ -210,32 +186,6 @@ public class Main {
 //        game.printWinners();
 //    }
 
-    public void initializePlayerHands() {
-        for (Player p : PlayerList) {
-            p.setHand(new ArrayList<>());
-            drawAdCard(p, 12, inContent);
-        }
-    }
-
-    public void initializeAdventureDeck() {
-        AdDeck = new ArrayList<>(AdventureDeckList);
-        Collections.shuffle(AdDeck);
-    }
-
-    public void initializeEventDeck() {
-        EvDeck = new ArrayList<>(EventDeckList);
-        Collections.shuffle(EvDeck);
-    }
-
-    public boolean findWinners() {
-        for (Player p : PlayerList) {
-            if (p.getShields() >= 7) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void printWinners() {
         StringBuilder outString = new StringBuilder("Player(s) ");
         for (Player p : PlayerList) {
@@ -244,78 +194,6 @@ public class Main {
             }
         }
         System.out.print(outString.substring(0, outString.length() - 2) + " Won.");
-    }
-
-    public void drawAdCard(Player p, int num, Scanner inContent) {
-        for (int i = 0; i < num; i++) {
-            if (AdDeck.isEmpty()) {
-                System.out.print("Adventure Deck empty. Shuffling discard pile back in.\n");
-                AdDeck.addAll(AdDiscard);
-                AdDiscard.clear();
-                Collections.shuffle(AdDeck);
-            }
-            //p.addCard(AdDeck.removeFirst());
-            p.addCard(AdDeck.remove(0));
-        }
-        Collections.sort(p.getHand());
-        if (p.getHand().size() > 12) {
-            System.out.print("\n\n\n\n\n\n\n\n\n\n" + p + " is over the max hand size by " + (p.getHand().size() - 12) + ". Please give controls to " + p + ", and press enter.\n");
-            this.discardAdCard(p, (p.getHand().size() - 12), inContent);
-        }
-    }
-
-    public void discardAdCard(Player p, int num, Scanner inContent) {
-        System.out.print("\nAre you " + p + "?\n");
-        String input = inContent.nextLine();
-        while (!input.isEmpty()) {
-            System.out.print("Invalid input. Please press Enter.\n");
-            try {
-                input = inContent.nextLine();
-            } catch (java.util.NoSuchElementException e) {
-                input = "";
-            }
-        }
-        while (num > 0) {
-            System.out.print("You have to discard " + num + " more card(s)\n");
-            System.out.print(p + ", This is your hand:\n");
-            p.printHand();
-            System.out.print("\nPlease select a card to discard by index(1 - " + (num + 12) + ")\n");
-            input = inContent.nextLine();
-            if (!input.isEmpty() && !(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= num + 12)) {
-                System.out.print("Invalid index. Try again.\n");
-                continue;
-            } else if (input.isEmpty()) {
-                System.out.print("Please specify an index.\n");
-                continue;
-            }
-            AdDiscard.add(p.getHand().remove((Integer.parseInt(input)) - 1));
-            num--;
-        }
-        System.out.print("Discarding Complete. This is your new hand:\n");
-        p.printHand();
-        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    }
-
-    public void plagueEffect() {
-        System.out.print("Plague Drawn. Current player's shields decreased from " + curPlayer.getShields());
-        curPlayer.addShields(-2);
-        //if it's less than 0, set it to 0
-        if (curPlayer.getShields() < 0) {
-            curPlayer.addShields(-curPlayer.getShields());
-        }
-        System.out.print(" to " + curPlayer.getShields() + "\n");
-    }
-
-    public void queenEffect() {
-        System.out.print("Queen's Favour Drawn. Current player draws 2 cards.\n");
-        drawAdCard(curPlayer, 2, inContent);
-    }
-
-    public void prosperityEffect() {
-        System.out.print("Prosperity Drawn. Each player draws 2 cards.\n");
-        for (Player p : PlayerList) {
-            drawAdCard(p, 2, inContent);
-        }
     }
 
     public void questEffect(Card c) {
@@ -580,7 +458,7 @@ public class Main {
     public void participantsDrawCard(ArrayList<Player> participants, Scanner inContent) {
         System.out.print("Player(s) " + participants.toString().substring(1, participants.toString().length() - 1) + " will draw a card.\n");
         for (Player p : participants) {
-            drawAdCard(p, 1, inContent);
+            drawAdCard(p, 1);
         }
     }
 
@@ -656,22 +534,185 @@ public class Main {
             AdDiscard.addAll(s);
             numCardsUsed += s.size();
         }
-        drawAdCard(sponsor, numCardsUsed + stages.size(), inContent);
+        drawAdCard(sponsor, numCardsUsed + stages.size());
+    }
+
+    @GetMapping("/getGamePhase")
+    public String getGamePhase(){
+        return gamePhase;
+    }
+
+    public void initializePlayerHands() {
+        for (Player p : PlayerList) {
+            p.setHand(new ArrayList<>());
+            drawAdCard(p, 12);
+        }
+    }
+
+    public void initializeAdventureDeck() {
+        AdDeck = new ArrayList<>(AdventureDeckList);
+        Collections.shuffle(AdDeck);
+    }
+
+    public void initializeEventDeck() {
+        EvDeck = new ArrayList<>(EventDeckList);
+        Collections.shuffle(EvDeck);
+    }
+
+    public String drawAdCard(Player p, int num) {
+        StringBuilder outString = new StringBuilder();
+        for (int i = 0; i < num; i++) {
+            if (AdDeck.isEmpty()) {
+                outString.append("Adventure Deck empty. Shuffling discard pile back in.\n");
+                AdDeck.addAll(AdDiscard);
+                AdDiscard.clear();
+                Collections.shuffle(AdDeck);
+            }
+            //p.addCard(AdDeck.removeFirst());
+            p.addCard(AdDeck.remove(0));
+        }
+
+        if (p.getHand().size() > 12) {
+            outString.append("\n\n\n\n\n\n\n\n\n\n").append(p).append(" is over the max hand size by ").append(p.getHand().size() - 12).append(". Please give controls to ").append(p).append(", and press submit.\n");
+            gamePhase = p + " Discard Start";
+        }
+        Collections.sort(p.getHand());
+        return outString.toString();
+    }
+
+    @PostMapping("/inputProcessing")
+    public String processInput(@RequestBody String input) {
+        String outString = "";
+        switch (gamePhase) {
+            case "P1 Discard Start":
+                gamePhase = "P1 Discard";
+                return "\nAre you P1?\n";
+            case "P2 Discard Start":
+                gamePhase = "P2 Discard";
+                return "\nAre you P2?\n";
+            case "P3 Discard Start":
+                gamePhase = "P3 Discard";
+                return "\nAre you P3?\n";
+            case "P4 Discard Start":
+                gamePhase = "P4 Discard";
+                return "\nAre you P4?\n";
+
+            case "P1 Discard":
+                gamePhase = "P1 Discarding";
+                return "You have to discard to 12 cards.\nP1, This is your hand:\n" + PlayerList.get(0).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
+            case "P2 Discard":
+                gamePhase = "P2 Discarding";
+                return "You have to discard to 12 cards.\nP2, This is your hand:\n\"" + PlayerList.get(1).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
+            case "P3 Discard":
+                gamePhase = "P3 Discarding";
+                return "You have to discard to 12 cards.\nP3, This is your hand:\n\"" + PlayerList.get(2).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
+            case "P4 Discard":
+                gamePhase = "P4 Discarding";
+                return "You have to discard to 12 cards.\nP4, This is your hand:\n\"" + PlayerList.get(3).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
+
+            case "P1 Discarding":
+                //valid index
+                if (!input.equals("empty_string") && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(0).getHand().size()){
+                    AdDiscard.add(PlayerList.get(0).getHand().remove((Integer.parseInt(input)) - 1));
+                    //continue
+                    if(PlayerList.get(0).getHand().size() > 12){
+                        return "P1, Continue discarding. This is your hand:\n" + PlayerList.get(0).printHand() + "\n";
+                    }else{
+                        outString += "Discarding Complete. This is your new hand:\n";
+                        outString += PlayerList.get(0).printHand();
+                        outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                        gamePhase = "";
+                        return outString;
+                    }
+                }else{
+                    return "Invalid index. Try again.\n";
+                }
+            case "P2 Discarding":
+                //valid index
+                if (!input.equals("empty_string") && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(1).getHand().size()){
+                    AdDiscard.add(PlayerList.get(1).getHand().remove((Integer.parseInt(input)) - 1));
+                    //continue
+                    if(PlayerList.get(1).getHand().size() > 12){
+                        return "P2, Continue discarding. This is your hand:\n" + PlayerList.get(1).printHand() + "\n";
+                    }else{
+                        outString += "Discarding Complete. This is your new hand:\n";
+                        outString += PlayerList.get(1).printHand();
+                        outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                        gamePhase = "";
+                        return outString;
+                    }
+                }else{
+                    return "Invalid index. Try again.\n";
+                }
+            case "P3 Discarding":
+                //valid index
+                if (!input.equals("empty_string") && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(2).getHand().size()){
+                    AdDiscard.add(PlayerList.get(2).getHand().remove((Integer.parseInt(input)) - 1));
+                    //continue
+                    if(PlayerList.get(2).getHand().size() > 12){
+                        return "P3, Continue discarding. This is your hand:\n" + PlayerList.get(2).printHand() + "\n";
+                    }else{
+                        outString += "Discarding Complete. This is your new hand:\n";
+                        outString += PlayerList.get(2).printHand();
+                        outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                        gamePhase = "";
+                        return outString;
+                    }
+                }else{
+                    return "Invalid index. Try again.\n";
+                }
+            case "P4 Discarding":
+                //valid index
+                if (!input.equals("empty_string") && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(3).getHand().size()){
+                    AdDiscard.add(PlayerList.get(3).getHand().remove((Integer.parseInt(input)) - 1));
+                    //continue
+                    if(PlayerList.get(3).getHand().size() > 12){
+                        return "P4, Continue discarding. This is your hand:\n" + PlayerList.get(3).printHand() + "\n";
+                    }else{
+                        outString += "Discarding Complete. This is your new hand:\n";
+                        outString += PlayerList.get(3).printHand();
+                        outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                        gamePhase = "";
+                        return outString;
+                    }
+                }else{
+                    return "Invalid index. Try again.\n";
+                }
+            default:
+                return "";
+        }
     }
 
     @GetMapping("/startGame")
-    public String startGame() {
+    public void startGame() {
         initializeAdventureDeck();
         initializeEventDeck();
         initializePlayerHands();
         curPlayer = PlayerList.get(3);
-        return "game started";
+        gamePhase = "";
+    }
+
+    @GetMapping("/findWinners")
+    public boolean findWinners() {
+        for (Player p : PlayerList) {
+            if (p.getShields() >= 7) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @PostMapping("/nextPlayer")
+    public String nextPlayer() {
+        curPlayer = PlayerList.get((PlayerList.indexOf(curPlayer) + 1) % 4);
+        return "Player " + curPlayer + ", this is your hand:\n" + curPlayer.printHand();
     }
 
     @PostMapping("/drawEvent")
-    public Card drawEventCard() {
+    public Map<String, Card> drawEventCard() {
+        String outString = "";
         if (EvDeck.isEmpty()) {
-            System.out.print("Event Deck empty. Shuffling discard pile back in.\n");
+            outString += "Event Deck empty. Shuffling discard pile back in.\n";
             EvDeck.addAll(EvDiscard);
             EvDiscard.clear();
             Collections.shuffle(EvDeck);
@@ -679,7 +720,46 @@ public class Main {
         Card curEvent = EvDeck.remove(0);
         //immediately discard it; no reason to have it in the deck anymore, and no other zone it can be in
         EvDiscard.add(curEvent);
-        System.out.print("\nThe current event is: " + curEvent + "\n");
-        return curEvent;
+        outString += "\nThe current event is: " + curEvent + "\n";
+        Map<String, Card> outMap = new HashMap<>();
+        outMap.put(outString, curEvent);
+        return outMap;
+    }
+
+    @PostMapping("/plagueEffect")
+    public String plagueEffect() {
+        String outString = "Plague Drawn. Current player's shields decreased from " + curPlayer.getShields();
+        curPlayer.addShields(-2);
+        //if it's less than 0, set it to 0
+        if (curPlayer.getShields() < 0) {
+            curPlayer.addShields(-curPlayer.getShields());
+        }
+        outString += " to " + curPlayer.getShields() + "\n";
+        return outString;
+    }
+
+    @PostMapping("/queenEffect")
+    public String queenEffect() {
+        return drawAdCard(curPlayer, 2);
+    }
+
+    @PostMapping("/prosperityEffect1")
+    public String prosperityEffectP1() {
+        return drawAdCard(PlayerList.get(0), 2);
+    }
+
+    @PostMapping("/prosperityEffect2")
+    public String prosperityEffectP2() {
+        return drawAdCard(PlayerList.get(1), 2);
+    }
+
+    @PostMapping("/prosperityEffect3")
+    public String prosperityEffectP3() {
+        return drawAdCard(PlayerList.get(2), 2);
+    }
+
+    @PostMapping("/prosperityEffect4")
+    public String prosperityEffectP4() {
+        return drawAdCard(PlayerList.get(3), 2);
     }
 }
