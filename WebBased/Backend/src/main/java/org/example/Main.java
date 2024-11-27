@@ -176,7 +176,6 @@ public class Main {
         System.out.print("Beginning the effects of a Quest card with " + c.getValue() + " stages.\n");
     }
 
-
     public ArrayList<ArrayList<Card>> beginStageBuilding(Player sponsor, int numStages, Scanner inContent) {
         ArrayList<ArrayList<Card>> stages = new ArrayList<>();
         System.out.print("You must build " + numStages + " stages.\n");
@@ -670,7 +669,6 @@ public class Main {
             case "Quest Build Begin":
                 gamePhase = "Stage Building";
                 return "";
-
             default:
                 return "";
         }
