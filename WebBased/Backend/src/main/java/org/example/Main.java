@@ -176,21 +176,6 @@ public class Main {
         System.out.print("Beginning the effects of a Quest card with " + c.getValue() + " stages.\n");
     }
 
-    public void beginQuestBuilding(Player sponsor, Scanner inContent) {
-        System.out.print(sponsor + ", you are the sponsor. Please confirm you are in control.\n");
-        String input = inContent.nextLine();
-        while (!input.isEmpty()) {
-            System.out.print("Invalid input.\n");
-            try {
-                input = inContent.nextLine();
-            } catch (java.util.NoSuchElementException e) {
-                input = "";
-            }
-        }
-        System.out.print(sponsor + ", this is your hand:\n");
-        sponsor.printHand();
-        System.out.print("\n");
-    }
 
     public ArrayList<ArrayList<Card>> beginStageBuilding(Player sponsor, int numStages, Scanner inContent) {
         ArrayList<ArrayList<Card>> stages = new ArrayList<>();
@@ -483,7 +468,7 @@ public class Main {
 
     @GetMapping("/getSponsor")
     public String getSponsor() {
-        if(sponsor == null){
+        if (sponsor == null) {
             return "no sponsor";
         }
         return sponsor.toString();
@@ -561,13 +546,13 @@ public class Main {
                 return "You have to discard to 12 cards.\nP1, This is your hand:\n" + PlayerList.get(0).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
             case "P2 Discard":
                 gamePhase = "P2 Discarding";
-                return "You have to discard to 12 cards.\nP2, This is your hand:\n\"" + PlayerList.get(1).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
+                return "You have to discard to 12 cards.\nP2, This is your hand:\n" + PlayerList.get(1).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
             case "P3 Discard":
                 gamePhase = "P3 Discarding";
-                return "You have to discard to 12 cards.\nP3, This is your hand:\n\"" + PlayerList.get(2).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
+                return "You have to discard to 12 cards.\nP3, This is your hand:\n" + PlayerList.get(2).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
             case "P4 Discard":
                 gamePhase = "P4 Discarding";
-                return "You have to discard to 12 cards.\nP4, This is your hand:\n\"" + PlayerList.get(3).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
+                return "You have to discard to 12 cards.\nP4, This is your hand:\n" + PlayerList.get(3).printHand() + "\nPlease select a card to discard by index, starting at 1\n";
 
             case "P1 Discarding":
                 //valid index
@@ -682,6 +667,10 @@ public class Main {
                 } else {
                     return "Invalid input. Must be 'Y' or 'N'.\n";
                 }
+            case "Quest Build Begin":
+                gamePhase = "Stage Building";
+                return "";
+
             default:
                 return "";
         }
@@ -709,6 +698,7 @@ public class Main {
 
     @PostMapping("/nextPlayer")
     public String nextPlayer() {
+        sponsor = null;
         curPlayer = PlayerList.get((PlayerList.indexOf(curPlayer) + 1) % 4);
         return "Player " + curPlayer + ", this is your hand:\n" + curPlayer.printHand();
     }
@@ -808,5 +798,11 @@ public class Main {
     public String seekSponsor4() {
         gamePhase = "Seek Sponsor 4";
         return (PlayerList.get((curPlayer.getId() + 2) % 4) + ", would you like to sponsor this quest? (Y/N)\n");
+    }
+
+    @PostMapping("/startQuestBuild")
+    public String beginQuestBuilding() {
+        gamePhase = "Quest Build Begin";
+        return sponsor + ", you are the sponsor. Please confirm you are in control.\n";
     }
 }

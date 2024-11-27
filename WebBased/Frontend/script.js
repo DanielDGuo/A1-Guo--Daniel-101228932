@@ -64,9 +64,14 @@ async function startGame() {
                 await seekSponsor();
                 if (await getSponsor() == "no sponsor"){
                     console.log("No Sponsor Found")
+                    await endTurn();
                     continue;
+                }else{
+                    console.log("Staring Quest Building")
+                    await startQuestBuild();
                 }
             }
+            await endTurn();
         }
         if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
             OUTPUT_DIV.innerText += await printWinners();
@@ -154,16 +159,34 @@ async function nextPlayerTurn(){
     }
 }
 
+async function startQuestBuild(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/startQuestBuild`, { method: "POST" });
+        const result = await response.text();
+
+        while(await getGamePhase() != "Stage Building"){
+        }
+
+        console.log("Build Phase Begin Output: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+    } catch (error) {
+        console.error("Error in starting quest build", error);
+    }
+}
+
 async function endTurn(){
     try {
         const response = await fetch(`${apiBaseUrl}/endTurn`, { method: "POST" });
         const result = await response.text();
 
-        console.log("End Turn Output", result);
+        console.log("Ended Turn");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        while(await getGamePhase() != "New Turn"){
+        }
     } catch (error) {
-        console.error("Error in getting next turn", error);
+        console.error("Error in ending turn", error);
     }
 }
 
@@ -253,7 +276,7 @@ async function seekSponsor(){
             phase = await getGamePhase();
         }
         if (await getGamePhase() == "Sponsor Search End"){
-            console.log(await getSponsor());
+            console.log("Sponsor found: ", await getSponsor());
             return;
         }
         response = await fetch(`${apiBaseUrl}/seekSponsor2`, { method: "POST" });
@@ -267,7 +290,7 @@ async function seekSponsor(){
             phase = await getGamePhase();
         }
         if (await getGamePhase() == "Sponsor Search End"){
-            console.log(await getSponsor());
+            console.log("Sponsor found: ", await getSponsor());
             return;
         }
         response = await fetch(`${apiBaseUrl}/seekSponsor3`, { method: "POST" });
@@ -281,7 +304,7 @@ async function seekSponsor(){
             phase = await getGamePhase();
         }
         if (await getGamePhase() == "Sponsor Search End"){
-            console.log(await getSponsor());
+            console.log("Sponsor found: ", await getSponsor());
             return;
         }
         response = await fetch(`${apiBaseUrl}/seekSponsor4`, { method: "POST" });
@@ -294,7 +317,7 @@ async function seekSponsor(){
         while(phase != "Sponsor Search End"){
             phase = await getGamePhase();
         }
-            console.log(await getSponsor());
+            console.log("Sponsor found: ", await getSponsor());
     } catch (error) {
         console.error("Error in seeking sponsor", error);
     }
