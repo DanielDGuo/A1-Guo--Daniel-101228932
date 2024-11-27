@@ -49,6 +49,11 @@ button:active {
     transform: scale(0.95);
 }
 
+button:disabled {
+    background-color: #5e5e5e;
+    transform: scale(0.70);
+}
+
 #output {
     background-color: #1e1e1e;
     color: #d4d4d4;

@@ -1,40 +1,45 @@
 const apiBaseUrl = "http://localhost:8080";
 
-const textInput = document.getElementById('textInput');
-const submitButton = document.getElementById('submitButton');
+const TEXT_INPUT = document.getElementById('textInput');
+const SUBMIT_BUTTON = document.getElementById('submitButton');
+const START_GAME_BUTTON = document.getElementById('startGameButton');
+const OUTPUT_DIV = document.getElementById("output");
 
 //event listener to help with manual information entry
 document.addEventListener('keydown', function(event){
     if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
-        textInput.focus();
+        TEXT_INPUT.focus();
     }
     else if (event.key === 'Enter') {
-        submitButton.click();
+        SUBMIT_BUTTON.click();
     }
 });
 
 async function submitInput() {
-    var userInput = textInput.value;
+    var userInput = TEXT_INPUT.value;
     if(userInput == ""){
         userInput = "empty_string";
     }
     console.log("Submitted input: ", userInput);
     console.log("With type: ", typeof userInput);
-    textInput.value = '';
+    TEXT_INPUT.value = '';
 
     // Send input to backend
     const response = await fetch(`${apiBaseUrl}/inputProcessing`, {method: 'POST', headers: {'Content-Type': 'text/plain'}, body: userInput});
     const output = await response.text();
-    document.getElementById("output").innerText += output;
-    document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+    console.log("Received output: ", output);
+    console.log("With type: ", typeof output);
+    OUTPUT_DIV.innerText += output;
+    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
 }
 
 async function startGame() {
     try {
-        //clear any janky javascript that I coded, i.e prosperity effect
+        //disable the button to start a new game
+        START_GAME_BUTTON.disabled = true;
         await fetch(`${apiBaseUrl}/startGame`);
         console.log("Started Game");
-        document.getElementById("output").innerText = "Game Started\n";
+        OUTPUT_DIV.innerText = "Game Started\n";
 
         while(await findWinners() == 'false'){
             await nextPlayerTurn();
@@ -45,22 +50,29 @@ async function startGame() {
                     await plagueEffect();
                     break;
                 case "Queen's Favour":
-                    document.getElementById("output").innerText += "Queen's Favour Drawn. Current player draws 2 cards.\n";
-                    document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+                    OUTPUT_DIV.innerText += "Queen's Favour Drawn. Current player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
                     await queenEffect();
                     break;
                 case "Prosperity":
-                    document.getElementById("output").innerText += "Prosperity Drawn. Each player draws 2 cards.\n";
-                    document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+                    OUTPUT_DIV.innerText += "Prosperity Drawn. Each player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
                     await prosperityEffect();
                     break;
             }
             if (eventCard.type == "Quest"){
-                //quest logic here
+                await seekSponsor();
+                if (await getSponsor() == "no sponsor"){
+                    console.log("No Sponsor Found")
+                    continue;
+                }
             }
         }
-        document.getElementById("output").innerText += await printWinners();
-
+        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
+            OUTPUT_DIV.innerText += await printWinners();
+        }
+        //re-enable the button to start a new game
+        START_GAME_BUTTON.disabled = false;
     } catch (error) {
         console.error("Error in startGame:", error);
     }
@@ -76,8 +88,8 @@ async function getEvent() {
         const [key, value] = Object.entries(eventCardObj)[0];
 
         console.log("Drawn Event Card: ", result);
-        document.getElementById("output").innerText += key;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += key;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         return value;
     } catch (error) {
         console.error("Error in event card draw:", error);
@@ -92,7 +104,19 @@ async function getGamePhase(){
         console.log("Current Game Phase: ", result);
         return result;
     } catch (error) {
-        console.error("Error in event card draw:", error);
+        console.error("Error in getting phase:", error);
+    }
+}
+
+async function getSponsor(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/getSponsor`);
+        const result = await response.text();
+
+        console.log("Current Sponsor: ", result);
+        return result;
+    } catch (error) {
+        console.error("Error in getting sponsor", error);
     }
 }
 
@@ -100,6 +124,7 @@ async function findWinners(){
     try {
         const response = await fetch(`${apiBaseUrl}/findWinners`);
         const result = await response.text();
+        console.log("winners checked: ", result);
         return result;
     } catch (error) {
         console.error("Error in finding winners:", error);
@@ -122,8 +147,8 @@ async function nextPlayerTurn(){
         const result = await response.text();
 
         console.log("Next Turn Output", result);
-        document.getElementById("output").innerText += result;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
     } catch (error) {
         console.error("Error in getting next turn", error);
     }
@@ -135,8 +160,8 @@ async function endTurn(){
         const result = await response.text();
 
         console.log("End Turn Output", result);
-        document.getElementById("output").innerText += result;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
     } catch (error) {
         console.error("Error in getting next turn", error);
     }
@@ -148,8 +173,8 @@ async function plagueEffect(){
         const result = await response.text();
 
         console.log("Plague Effect", result);
-        document.getElementById("output").innerText += result;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
     } catch (error) {
         console.error("Error in getting plague effect", error);
     }
@@ -161,8 +186,8 @@ async function queenEffect(){
         const result = await response.text();
 
         console.log("Queen Effect");
-        document.getElementById("output").innerText += result;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -177,52 +202,101 @@ async function prosperityEffect(){
         var result = await response.text();
 
         console.log("Prosperity Effect1");
-        document.getElementById("output").innerText += result;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
-        }
-
-        if(await getGamePhase() == "New Game"){
-            return;
         }
         response = await fetch(`${apiBaseUrl}/prosperityEffect2`, { method: "POST" });
         result = await response.text();
 
         console.log("Prosperity Effect2");
-        document.getElementById("output").innerText += result;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
-        }
-
-        if(await getGamePhase() == "New Game"){
-            return;
         }
         response = await fetch(`${apiBaseUrl}/prosperityEffect3`, { method: "POST" });
         result = await response.text();
 
         console.log("Prosperity Effect3");
-        document.getElementById("output").innerText += result;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
-        }
-
-        if(await getGamePhase() == "New Game"){
-            return;
         }
         response = await fetch(`${apiBaseUrl}/prosperityEffect4`, { method: "POST" });
         result = await response.text();
 
         console.log("Prosperity Effect4");
-        document.getElementById("output").innerText += result;
-        document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
     } catch (error) {
         console.error("Error in prosperity", error);
+    }
+}
+
+async function seekSponsor(){
+    try {
+        var response = await fetch(`${apiBaseUrl}/seekSponsor1`, { method: "POST" });
+        var result = await response.text();
+
+        console.log("Seek Sponsor Question 1: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        var phase = await getGamePhase();
+        while(phase != "Seek Sponsor 2" && phase != "Sponsor Search End"){
+            phase = await getGamePhase();
+        }
+        if (await getGamePhase() == "Sponsor Search End"){
+            console.log(await getSponsor());
+            return;
+        }
+        response = await fetch(`${apiBaseUrl}/seekSponsor2`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Seek Sponsor Question 2: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(phase != "Seek Sponsor 3" && phase != "Sponsor Search End"){
+            phase = await getGamePhase();
+        }
+        if (await getGamePhase() == "Sponsor Search End"){
+            console.log(await getSponsor());
+            return;
+        }
+        response = await fetch(`${apiBaseUrl}/seekSponsor3`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Seek Sponsor Question 3: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(phase != "Seek Sponsor 4" && phase != "Sponsor Search End"){
+            phase = await getGamePhase();
+        }
+        if (await getGamePhase() == "Sponsor Search End"){
+            console.log(await getSponsor());
+            return;
+        }
+        response = await fetch(`${apiBaseUrl}/seekSponsor4`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Seek Sponsor Question 4: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(phase != "Sponsor Search End"){
+            phase = await getGamePhase();
+        }
+            console.log(await getSponsor());
+    } catch (error) {
+        console.error("Error in seeking sponsor", error);
     }
 }
 

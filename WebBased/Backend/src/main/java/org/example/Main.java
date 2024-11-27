@@ -25,6 +25,7 @@ public class Main {
                     new Player(4)
             )
     );
+    Player sponsor = null;
     //list of all 100 cards included in the deck
     public final ArrayList<Card> AdventureDeckList = new ArrayList<>(
             Arrays.asList(
@@ -152,13 +153,6 @@ public class Main {
                     new Card("Prosperity", "Event", 0)
             )
     );
-
-//                Player sponsor = game.seekSponsor(game.inContent);
-//                if (sponsor == null) {
-//                    continue;
-//                }
-//                //Enter Quest Build
-//                game.beginQuestBuilding(sponsor, game.inContent);
 //                ArrayList<ArrayList<Card>> stages = game.beginStageBuilding(sponsor, curEventCard.getValue(), game.inContent);
 //                game.endStageBuilding(sponsor, stages, game.inContent);
 //                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
@@ -180,29 +174,6 @@ public class Main {
 
     public void questEffect(Card c) {
         System.out.print("Beginning the effects of a Quest card with " + c.getValue() + " stages.\n");
-    }
-
-    public Player seekSponsor(Scanner inContent) {
-        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        int curPlayerIndex = curPlayer.getId() - 1;
-        for (int i = 0; i < 4; i++) {
-            System.out.print(PlayerList.get((curPlayerIndex + i) % 4) + ", would you like to sponsor this quest? (Y/N)\n");
-            String input = inContent.nextLine();
-            while (!(input.equals("Y") || input.equals("N"))) {
-                System.out.print("Invalid input.\n");
-                try {
-                    input = inContent.nextLine();
-                } catch (java.util.NoSuchElementException e) {
-                    input = "";
-                }
-            }
-            if (input.equals("Y")) {
-                System.out.print(PlayerList.get((curPlayerIndex + i) % 4) + " has accepted to sponsor this quest.\n");
-                return PlayerList.get((curPlayerIndex + i) % 4);
-            }
-        }
-        System.out.print("Everybody turned down the sponsor opportunity.\n");
-        return null;
     }
 
     public void beginQuestBuilding(Player sponsor, Scanner inContent) {
@@ -506,8 +477,16 @@ public class Main {
     }
 
     @GetMapping("/getGamePhase")
-    public String getGamePhase(){
+    public String getGamePhase() {
         return gamePhase;
+    }
+
+    @GetMapping("/getSponsor")
+    public String getSponsor() {
+        if(sponsor == null){
+            return "no sponsor";
+        }
+        return sponsor.toString();
     }
 
     public void initializePlayerHands() {
@@ -536,7 +515,6 @@ public class Main {
                 AdDiscard.clear();
                 Collections.shuffle(AdDeck);
             }
-            //p.addCard(AdDeck.removeFirst());
             p.addCard(AdDeck.remove(0));
         }
 
@@ -549,7 +527,7 @@ public class Main {
     }
 
     //helper function for parseInt
-    public boolean isValidInt(String s){
+    public boolean isValidInt(String s) {
         try {
             Integer.parseInt(s);
             return true; // Parsing succeeded
@@ -593,71 +571,116 @@ public class Main {
 
             case "P1 Discarding":
                 //valid index
-                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(0).getHand().size()){
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(0).getHand().size()) {
                     AdDiscard.add(PlayerList.get(0).getHand().remove((Integer.parseInt(input)) - 1));
                     //continue
-                    if(PlayerList.get(0).getHand().size() > 12){
+                    if (PlayerList.get(0).getHand().size() > 12) {
                         return "P1, Continue discarding. This is your hand:\n" + PlayerList.get(0).printHand() + "\n";
-                    }else{
+                    } else {
                         outString += "Discarding Complete. This is your new hand:\n";
                         outString += PlayerList.get(0).printHand();
                         outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
                         gamePhase = "";
                         return outString;
                     }
-                }else{
+                } else {
                     return "Invalid index. Try again.\n";
                 }
             case "P2 Discarding":
                 //valid index
-                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(1).getHand().size()){
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(1).getHand().size()) {
                     AdDiscard.add(PlayerList.get(1).getHand().remove((Integer.parseInt(input)) - 1));
                     //continue
-                    if(PlayerList.get(1).getHand().size() > 12){
+                    if (PlayerList.get(1).getHand().size() > 12) {
                         return "P2, Continue discarding. This is your hand:\n" + PlayerList.get(1).printHand() + "\n";
-                    }else{
+                    } else {
                         outString += "Discarding Complete. This is your new hand:\n";
                         outString += PlayerList.get(1).printHand();
                         outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
                         gamePhase = "";
                         return outString;
                     }
-                }else{
+                } else {
                     return "Invalid index. Try again.\n";
                 }
             case "P3 Discarding":
                 //valid index
-                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(2).getHand().size()){
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(2).getHand().size()) {
                     AdDiscard.add(PlayerList.get(2).getHand().remove((Integer.parseInt(input)) - 1));
                     //continue
-                    if(PlayerList.get(2).getHand().size() > 12){
+                    if (PlayerList.get(2).getHand().size() > 12) {
                         return "P3, Continue discarding. This is your hand:\n" + PlayerList.get(2).printHand() + "\n";
-                    }else{
+                    } else {
                         outString += "Discarding Complete. This is your new hand:\n";
                         outString += PlayerList.get(2).printHand();
                         outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
                         gamePhase = "";
                         return outString;
                     }
-                }else{
+                } else {
                     return "Invalid index. Try again.\n";
                 }
             case "P4 Discarding":
                 //valid index
-                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(3).getHand().size()){
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= PlayerList.get(3).getHand().size()) {
                     AdDiscard.add(PlayerList.get(3).getHand().remove((Integer.parseInt(input)) - 1));
                     //continue
-                    if(PlayerList.get(3).getHand().size() > 12){
+                    if (PlayerList.get(3).getHand().size() > 12) {
                         return "P4, Continue discarding. This is your hand:\n" + PlayerList.get(3).printHand() + "\n";
-                    }else{
+                    } else {
                         outString += "Discarding Complete. This is your new hand:\n";
                         outString += PlayerList.get(3).printHand();
                         outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
                         gamePhase = "";
                         return outString;
                     }
-                }else{
+                } else {
                     return "Invalid index. Try again.\n";
+                }
+
+            case "Seek Sponsor 1":
+                if (input.equals("Y")) {
+                    gamePhase = "Sponsor Search End";
+                    sponsor = curPlayer;
+                    return sponsor + " has accepted to sponsor this quest.\n";
+                } else if (input.equals("N")) {
+                    gamePhase = "Seek Sponsor 2";
+                    return "";
+                } else {
+                    return "Invalid input. Must be 'Y' or 'N'.\n";
+                }
+            case "Seek Sponsor 2":
+                if (input.equals("Y")) {
+                    gamePhase = "Sponsor Search End";
+                    sponsor = PlayerList.get((curPlayer.getId()) % 4);
+                    return sponsor + " has accepted to sponsor this quest.\n";
+                } else if (input.equals("N")) {
+                    gamePhase = "Seek Sponsor 3";
+                    return "";
+                } else {
+                    return "Invalid input. Must be 'Y' or 'N'.\n";
+                }
+            case "Seek Sponsor 3":
+                if (input.equals("Y")) {
+                    gamePhase = "Sponsor Search End";
+                    sponsor = PlayerList.get((curPlayer.getId() + 1) % 4);
+                    return sponsor + " has accepted to sponsor this quest.\n";
+                } else if (input.equals("N")) {
+                    gamePhase = "Seek Sponsor 4";
+                    return "";
+                } else {
+                    return "Invalid input. Must be 'Y' or 'N'.\n";
+                }
+            case "Seek Sponsor 4":
+                if (input.equals("Y")) {
+                    gamePhase = "Sponsor Search End";
+                    sponsor = PlayerList.get((curPlayer.getId() + 2) % 4);
+                    return sponsor + " has accepted to sponsor this quest.\n";
+                } else if (input.equals("N")) {
+                    gamePhase = "Sponsor Search End";
+                    return "Everybody turned down the sponsor opportunity.\n";
+                } else {
+                    return "Invalid input. Must be 'Y' or 'N'.\n";
                 }
             default:
                 return "";
@@ -669,6 +692,7 @@ public class Main {
         initializeAdventureDeck();
         initializeEventDeck();
         initializePlayerHands();
+        sponsor = null;
         curPlayer = PlayerList.get(3);
         gamePhase = "New Game";
     }
@@ -697,7 +721,7 @@ public class Main {
 
     @GetMapping("/printWinners")
     public String printWinners() {
-        StringBuilder outString = new StringBuilder("Player(s) ");
+        StringBuilder outString = new StringBuilder("Players ");
         for (Player p : PlayerList) {
             if (p.getShields() >= 7) {
                 outString.append(p).append(", ");
@@ -759,5 +783,30 @@ public class Main {
     @PostMapping("/prosperityEffect4")
     public String prosperityEffectP4() {
         return drawAdCard(PlayerList.get(3), 2);
+    }
+
+    @PostMapping("/seekSponsor1")
+    public String seekSponsor1() {
+        sponsor = null;
+        gamePhase = "Seek Sponsor 1";
+        return (PlayerList.get((curPlayer.getId() - 1) % 4) + ", would you like to sponsor this quest? (Y/N)\n");
+    }
+
+    @PostMapping("/seekSponsor2")
+    public String seekSponsor2() {
+        gamePhase = "Seek Sponsor 2";
+        return (PlayerList.get(curPlayer.getId() % 4) + ", would you like to sponsor this quest? (Y/N)\n");
+    }
+
+    @PostMapping("/seekSponsor3")
+    public String seekSponsor3() {
+        gamePhase = "Seek Sponsor 3";
+        return (PlayerList.get((curPlayer.getId() + 1) % 4) + ", would you like to sponsor this quest? (Y/N)\n");
+    }
+
+    @PostMapping("/seekSponsor4")
+    public String seekSponsor4() {
+        gamePhase = "Seek Sponsor 4";
+        return (PlayerList.get((curPlayer.getId() + 2) % 4) + ", would you like to sponsor this quest? (Y/N)\n");
     }
 }
