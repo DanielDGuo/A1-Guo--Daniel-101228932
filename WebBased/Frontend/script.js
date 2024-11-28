@@ -69,6 +69,7 @@ async function startGame() {
                 }else{
                     console.log("Starting Quest Building")
                     await startQuestBuild();
+                    await QuestBuild();
                 }
             }
             await endTurn();
@@ -219,6 +220,38 @@ async function queenEffect(){
         }
     } catch (error) {
         console.error("Error in getting queen effect", error);
+    }
+}
+
+async function startQuestBuild(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/startQuestBuild`, { method: "POST" });
+        const result = await response.text();
+
+        console.log("starting quest build");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != "Building Quest Stages"){
+        }
+    } catch (error) {
+        console.error("Error in starting quest build: ", error);
+    }
+}
+
+async function QuestBuild(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/QuestBuild`, { method: "POST" });
+        const result = await response.text();
+
+        console.log("starting quest build");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != "Quest Build End"){
+        }
+    } catch (error) {
+        console.error("Error in building quest: ", error);
     }
 }
 

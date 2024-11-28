@@ -20,6 +20,8 @@ public class Main {
     public ArrayList<Card> AdDiscard = new ArrayList<>();
     public ArrayList<Card> EvDiscard = new ArrayList<>();
     public ArrayList<ArrayList<Card>> stages;
+    public ArrayList<Card> curStage;
+    public int curStageNumber;
     public final ArrayList<Player> PlayerList = new ArrayList<>(
             Arrays.asList(
                     new Player(1),
@@ -173,11 +175,6 @@ public class Main {
 //                game.giveWinnersShields(curEventCard.getValue());
 //                //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
 //                game.discardQuestStages(stages, sponsor, game.inContent);
-
-    public void questEffect(Card c) {
-        System.out.print("Beginning the effects of a Quest card with " + c.getValue() + " stages.\n");
-    }
-
 
     public void endStageBuilding(Player sponsor, ArrayList<ArrayList<Card>> stages, Scanner inContent) {
         System.out.print(sponsor + ", here are your stages:\n");
@@ -415,6 +412,35 @@ public class Main {
         Collections.shuffle(EvDeck);
     }
 
+    public int getValueOfStage(ArrayList<Card> stage) {
+        int output = 0;
+        for (Card c : stage) {
+            output += c.getValue();
+        }
+        return output;
+    }
+
+    public String printStage(ArrayList<Card> stage) {
+        return stage.toString().substring(1, stage.toString().length() - 1);
+    }
+
+    public String printAllStages() {
+        StringBuilder outString = new StringBuilder();
+        for (int i = 0; i < stages.size(); i++) {
+            outString.append("Stage ").append(i + 1).append(": ").append(printStage(stages.get(i))).append("\n");
+        }
+        return outString.toString();
+    }
+
+    public boolean hasFoe(ArrayList<Card> stage) {
+        for (Card c : stage) {
+            if (c.getType().equals("Foe")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String drawAdCard(Player p, int num) {
         StringBuilder outString = new StringBuilder();
         for (int i = 0; i < num; i++) {
@@ -428,7 +454,7 @@ public class Main {
         }
 
         if (p.getHand().size() > 12) {
-            outString.append("\n\n\n\n\n\n\n\n\n\n").append(p).append(" is over the max hand size by ").append(p.getHand().size() - 12).append(". Please give controls to ").append(p).append(", and press submit.\n");
+            outString.append("\n\n").append(p).append(" is over the max hand size by ").append(p.getHand().size() - 12).append(". Please give controls to ").append(p).append(", and press submit.\n");
             gamePhase = p + " Discard Start";
         }
         Collections.sort(p.getHand());
@@ -488,7 +514,7 @@ public class Main {
                     } else {
                         outString += "Discarding Complete. This is your new hand:\n";
                         outString += PlayerList.get(0).printHand();
-                        outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                        outString += "\n\n";
                         gamePhase = "";
                         return outString;
                     }
@@ -505,7 +531,7 @@ public class Main {
                     } else {
                         outString += "Discarding Complete. This is your new hand:\n";
                         outString += PlayerList.get(1).printHand();
-                        outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                        outString += "\n\n";
                         gamePhase = "";
                         return outString;
                     }
@@ -522,7 +548,7 @@ public class Main {
                     } else {
                         outString += "Discarding Complete. This is your new hand:\n";
                         outString += PlayerList.get(2).printHand();
-                        outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                        outString += "\n\n";
                         gamePhase = "";
                         return outString;
                     }
@@ -539,7 +565,7 @@ public class Main {
                     } else {
                         outString += "Discarding Complete. This is your new hand:\n";
                         outString += PlayerList.get(3).printHand();
-                        outString += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                        outString += "\n\n";
                         gamePhase = "";
                         return outString;
                     }
@@ -592,8 +618,58 @@ public class Main {
                     return "Invalid input. Must be 'Y' or 'N'.\n";
                 }
             case "Quest Build Begin":
-                gamePhase = "Stage Building";
+                gamePhase = "Building Quest Stages";
+                stages = new ArrayList<>();
+                for (int i = 0; i < curEvent.getValue(); i++) {
+                    stages.add(new ArrayList<>());
+                }
                 return "";
+            case "Building Quest Stages":
+                Collections.sort(stages.get(curStageNumber - 1));
+                curStage = stages.get(curStageNumber - 1);
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.getHand().size()) {//add a card to the stage
+                    int handIndex = Integer.parseInt(input) - 1;
+                    if (sponsor.getHand().get(handIndex).getType().equals("Foe")) {//selected card is a foe
+                        //check if there's already a foe or not
+                        for (Card card : curStage) {
+                            if (card.getType().equals("Foe")) {
+                                return "Invalid input. Cannot put two foes in one stage.\n";
+                            }
+                        }
+                        curStage.add(sponsor.getHand().remove(handIndex));
+                        return "Card Added.\nStage " + curStageNumber + ": " + printStage(stages.get(curStageNumber - 1)) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
+                    } else if (sponsor.getHand().get(handIndex).getType().equals("Weapon")) {
+                        //check for dupe weapon
+                        for (Card card : curStage) {
+                            if (card.toString().equals(sponsor.getHand().get(Integer.parseInt(input) - 1).toString())) {
+                                return "Invalid input. Duplicate weapon.\n";
+                            }
+                        }
+                        curStage.add(sponsor.getHand().remove(handIndex));
+                        return "Card Added.\nStage " + curStageNumber + ": " + printStage(stages.get(curStageNumber - 1)) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
+                    }
+                } else if (input.equals("empty_string")) {//proceed to the next stage if possible
+                    //invalids
+                    if (stages.get(curStageNumber - 1).isEmpty()) {
+                        return "Stage is empty. Please add Foe and Weapons.\n";
+                    } else if (curStageNumber != 1 && getValueOfStage(stages.get(curStageNumber - 1)) <= getValueOfStage(stages.get(curStageNumber - 2))) {
+                        return "Current stage must have value greater than the prior stage.\n";
+                    } else if (!hasFoe(stages.get(curStageNumber - 1))) {
+                        return "Current stage does not have a foe.\n";
+                    } else {
+                        //valid
+                        if (curStageNumber < curEvent.getValue()) {
+                            stages.set(curStageNumber - 1, curStage);
+                            curStageNumber++;
+                            return "Stage submitted. Moving to Stage " + curStageNumber + "\n\nStage " + curStageNumber + ": " + printStage(stages.get(curStageNumber - 1)) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
+                        } else {
+                            gamePhase = "Quest Build End";
+                            return "Quest building finished. Here are your stages: \n" + printAllStages();
+                        }
+                    }
+                } else {//input is not an index nor empty; invalid
+                    return "Input must be a valid index or empty.\n";
+                }
             default:
                 return "";
         }
@@ -629,7 +705,7 @@ public class Main {
     @PostMapping("/endTurn")
     public String endTurn() {
         gamePhase = "End Turn";
-        return "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + curPlayer + "'s turn has ended. Please give controls to " + (PlayerList.get((PlayerList.indexOf(curPlayer) + 1) % 4)) + ", and press enter.\n";
+        return "\n\n" + curPlayer + "'s turn has ended. Please give controls to " + (PlayerList.get((PlayerList.indexOf(curPlayer) + 1) % 4)) + ", and press enter.\n";
     }
 
     @GetMapping("/printWinners")
@@ -729,80 +805,10 @@ public class Main {
         return sponsor + ", you are the sponsor. Please confirm you are in control.\n";
     }
 
-    public ArrayList<ArrayList<Card>> beginStageBuilding() {
-        System.out.print("You must build " + numStages + " stages.\n");
-        //start building each stage
-        for (int i = 0; i < numStages; i++) {
-            ArrayList<Card> curStage = new ArrayList<>();
-            String input = "temp";
-            while (!input.isEmpty()) {
-                Collections.sort(curStage);
-                //print the relevant information
-                String curStageToString = curStage.toString().substring(1, curStage.toString().length() - 1);
-                System.out.print("Stage " + (i + 1) + ": " + curStageToString + "\n");
-                System.out.print("Please select an index of a card you wish to add to the stage, or press enter to finish.\n");
-                sponsor.printHand();
-                System.out.print("\n");
-                input = inContent.nextLine();
-                //valid input is an empty line to go to next stage, or a valid index
-                if (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= sponsor.getHand().size()))) {
-                    System.out.print("Invalid input. Please provide a valid index or press enter.\n");
-                    continue;
-                }
-                if (input.isEmpty()) {
-                    //stages cannot be empty.
-                    if (curStage.isEmpty()) {
-                        System.out.print("Stage cannot be empty. Please insert at least one foe.\n");
-                        input = "temp";
-                        continue;
-                    }
-                    //stages must be in ascending order
-                    int curStageValue = 0;
-                    for (Card c : curStage) {
-                        curStageValue += c.getValue();
-                    }
-                    int priorStageValue = 0;
-                    if (!stages.isEmpty()) {
-                        for (Card c : stages.get(stages.size() - 1)) {
-                            priorStageValue += c.getValue();
-                        }
-                    }
-                    if (priorStageValue >= curStageValue) {
-                        System.out.print("Current stage must have value greater than the prior stage.\n");
-                        input = "temp";
-                    }
-                } else if (sponsor.getHand().get(Integer.parseInt(input) - 1).getType().equals("Foe")) {
-                    //check if there's already a foe or not
-                    boolean hadFoe = false;
-                    for (Card card : curStage) {
-                        if (card.getType().equals("Foe")) {
-                            System.out.print("Invalid input. Cannot put two foes in one stage.\n");
-                            hadFoe = true;
-                            break;
-                        }
-                    }
-                    if (!hadFoe) {
-                        //add the card at index and continue. Remove from sponsor hand.
-                        curStage.add(sponsor.getHand().remove(Integer.parseInt(input) - 1));
-                    }
-                } else if (sponsor.getHand().get(Integer.parseInt(input) - 1).getType().equals("Weapon")) {
-                    //check if there's already a foe or not
-                    boolean hadDupe = false;
-                    for (Card card : curStage) {
-                        if (card.toString().equals(sponsor.getHand().get(Integer.parseInt(input) - 1).toString())) {
-                            System.out.print("Invalid input. Duplicate weapon.\n");
-                            hadDupe = true;
-                            break;
-                        }
-                    }
-                    if (!hadDupe) {
-                        //add the card at index and continue. Remove from sponsor hand.
-                        curStage.add(sponsor.getHand().remove(Integer.parseInt(input) - 1));
-                    }
-                }
-            }
-            stages.add(curStage);
-        }
-        return stages;
+    @PostMapping("/QuestBuild")
+    public String beginStageBuilding() {
+        gamePhase = "Building Quest Stages";
+        curStageNumber = 1;
+        return "You must build " + curEvent.getValue() + " stages.\nStage 1: \nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
     }
 }
