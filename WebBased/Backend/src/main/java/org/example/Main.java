@@ -160,7 +160,6 @@ public class Main {
     );
 //                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
 //                for (int i = 0; i < curEventCard.getValue(); i++) {
-//                    game.participantsDrawCard(stageParticipants, game.inContent);
 //                    ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
 //                    ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
 //                    game.discardAttackTeams(stageAttackTeams);
@@ -243,13 +242,6 @@ public class Main {
             System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         }
         return attackTeams;
-    }
-
-    public void participantsDrawCard(ArrayList<Player> participants, Scanner inContent) {
-        System.out.print("Player(s) " + participants.toString().substring(1, participants.toString().length() - 1) + " will draw a card.\n");
-        for (Player p : participants) {
-            drawAdCard(p, 1);
-        }
     }
 
     public ArrayList<Boolean> resolveAttacks(ArrayList<Card> curStage, ArrayList<ArrayList<Card>> attackTeams, ArrayList<Player> participants) {
@@ -668,10 +660,10 @@ public class Main {
                 }
             case "Seek Participant 4":
                 if (input.equals("Y")) {
-                    gamePhase = "Seek Participant 4 End";
+                    gamePhase = "";
                     return "P4 has accepted to participate this quest.\n";
                 } else if (input.equals("N")) {
-                    gamePhase = "Seek Participant 4 End";
+                    gamePhase = "";
                     PlayerList.get(3).setEligible(false);
                     return "P4 has declined to participate in this quest.\n";
                 } else {
@@ -858,5 +850,37 @@ public class Main {
         }
         gamePhase = "Seek Participant 4 End";
         return "P4 will participate in this stage.\n";
+    }
+
+    @PostMapping("/ParticipantDrawCard1")
+    public String participantsDrawCard1() {
+        if(PlayerList.get(0).isEligible()){
+            return drawAdCard(PlayerList.get(0), 1);
+        }
+        return "";
+    }
+
+    @PostMapping("/ParticipantDrawCard2")
+    public String participantsDrawCard2() {
+        if(PlayerList.get(1).isEligible()){
+            return drawAdCard(PlayerList.get(1), 1);
+        }
+        return "";
+    }
+
+    @PostMapping("/ParticipantDrawCard3")
+    public String participantsDrawCard3() {
+        if(PlayerList.get(2).isEligible()){
+            return drawAdCard(PlayerList.get(2), 1);
+        }
+        return "";
+    }
+
+    @PostMapping("/ParticipantDrawCard4")
+    public String participantsDrawCard4() {
+        if(PlayerList.get(3).isEligible()){
+            return drawAdCard(PlayerList.get(3), 1);
+        }
+        return "";
     }
 }

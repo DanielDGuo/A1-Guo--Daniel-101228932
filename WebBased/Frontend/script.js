@@ -422,10 +422,57 @@ async function seekParticipants(){
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         phase = await getGamePhase();
-        while(phase != "Seek Participant 4 End"){
+        while(phase != ""){
             phase = await getGamePhase();
         }
     } catch (error) {
         console.error("Error in seeking participants", error);
+    }
+}
+
+
+async function participantsDraw(){
+    try {
+        var response = await fetch(`${apiBaseUrl}/ParticipantDrawCard1`, { method: "POST" });
+        var result = await response.text();
+
+        console.log("Participant Draw 1");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != ""){
+        }
+
+        response = await fetch(`${apiBaseUrl}/ParticipantDrawCard2`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Participant Draw 2");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != ""){
+        }
+
+        response = await fetch(`${apiBaseUrl}/ParticipantDrawCard3`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Participant Draw 3");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != ""){
+        }
+
+        response = await fetch(`${apiBaseUrl}/ParticipantDrawCard4`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Participant Draw 4");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != ""){
+        }
+    } catch (error) {
+        console.error("Error in prosperity", error);
     }
 }
