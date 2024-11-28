@@ -70,6 +70,12 @@ async function startGame() {
                     console.log("Starting Quest Building")
                     await startQuestBuild();
                     await QuestBuild();
+                    while(await getGamePhase() != "Quest Attack End"){
+                        await seekParticipants();
+                        if(await getHasEligible() == "false"){
+                            break;
+                        }
+                    }
                 }
             }
             await endTurn();
@@ -123,6 +129,18 @@ async function getSponsor(){
         return result;
     } catch (error) {
         console.error("Error in getting sponsor", error);
+    }
+}
+
+async function getHasEligible(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/HasEligibleString`);
+        const result = await response.text();
+
+        console.log("Eligible participants exist: ", result);
+        return result;
+    } catch (error) {
+        console.error("Error in getting if there is an eligible player", error);
     }
 }
 
@@ -359,3 +377,55 @@ async function seekSponsor(){
     }
 }
 
+
+async function seekParticipants(){
+    try {
+        var response = await fetch(`${apiBaseUrl}/SeekParticipant1`, { method: "POST" });
+        var result = await response.text();
+
+        console.log("Seek Participant Question 1: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        var phase = await getGamePhase();
+        while(phase != "Seek Participant 1 End"){
+            phase = await getGamePhase();
+        }
+
+        response = await fetch(`${apiBaseUrl}/SeekParticipant2`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Seek Participant Question 2: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        phase = await getGamePhase();
+        while(phase != "Seek Participant 2 End"){
+            phase = await getGamePhase();
+        }
+        response = await fetch(`${apiBaseUrl}/SeekParticipant3`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Seek Participant Question 3: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        phase = await getGamePhase();
+        while(phase != "Seek Participant 3 End"){
+            phase = await getGamePhase();
+        }
+        response = await fetch(`${apiBaseUrl}/SeekParticipant4`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Seek Participant Question 4: ", result);
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        phase = await getGamePhase();
+        while(phase != "Seek Participant 4 End"){
+            phase = await getGamePhase();
+        }
+    } catch (error) {
+        console.error("Error in seeking participants", error);
+    }
+}

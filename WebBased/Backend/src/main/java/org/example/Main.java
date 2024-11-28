@@ -22,6 +22,7 @@ public class Main {
     public ArrayList<ArrayList<Card>> stages;
     public ArrayList<Card> curStage;
     public int curStageNumber;
+    public int curAttackStageNumber;
     public final ArrayList<Player> PlayerList = new ArrayList<>(
             Arrays.asList(
                     new Player(1),
@@ -157,12 +158,8 @@ public class Main {
                     new Card("Prosperity", "Event", 0)
             )
     );
-//                 = game.beginStageBuilding(sponsor, curEventCard.getValue(), game.inContent);
-//                game.endStageBuilding(sponsor, stages, game.inContent);
 //                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
 //                for (int i = 0; i < curEventCard.getValue(); i++) {
-//                    //Find participants for the current stage
-//                    ArrayList<Player> stageParticipants = game.seekParticipants(sponsor, i == 0, game.inContent);
 //                    game.participantsDrawCard(stageParticipants, game.inContent);
 //                    ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
 //                    ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
@@ -176,58 +173,6 @@ public class Main {
 //                //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
 //                game.discardQuestStages(stages, sponsor, game.inContent);
 
-    public void endStageBuilding(Player sponsor, ArrayList<ArrayList<Card>> stages, Scanner inContent) {
-        System.out.print(sponsor + ", here are your stages:\n");
-        for (int i = 0; i < stages.size(); i++) {
-            System.out.print("Stage " + (i + 1) + ": ");
-            System.out.print(stages.get(i).toString().substring(1, stages.get(i).toString().length() - 1) + "\n");
-        }
-        System.out.print("Press enter to confirm.\n");
-        String input = inContent.nextLine();
-        while (!input.isEmpty()) {
-            System.out.print("Invalid input.\n");
-            try {
-                input = inContent.nextLine();
-            } catch (java.util.NoSuchElementException e) {
-                input = "";
-            }
-        }
-        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    }
-
-    public ArrayList<Player> seekParticipants(Player sponsor, boolean firstStage, Scanner inContent) {
-        //set up the base eligibility of the quest if it's the first stage
-        //this is to overwrite any prior changes to the eligibility
-        if (firstStage) {
-            for (Player p : PlayerList) {
-                p.setEligible(true);
-            }
-            sponsor.setEligible(false);
-        }
-        ArrayList<Player> stageParticipants = new ArrayList<>();
-        //loop and ask each player for participation
-        for (Player p : PlayerList) {
-            if (p.isEligible()) {
-                System.out.print(p + ", would you like to participate in this stage? (Y/N)\n");
-                String input = inContent.nextLine();
-                while (!(input.equals("Y") || input.equals("N"))) {
-                    System.out.print("Invalid input.\n");
-                    try {
-                        input = inContent.nextLine();
-                    } catch (java.util.NoSuchElementException e) {
-                        input = "";
-                    }
-                }
-                if (input.equals("Y")) {
-                    stageParticipants.add(p);
-                } else {
-                    p.setEligible(false);
-                }
-            }
-        }
-        System.out.print(stageParticipants.toString().substring(1, stageParticipants.toString().length() - 1) + " will participate in this stage.\n");
-        return stageParticipants;
-    }
 
     public ArrayList<ArrayList<Card>> createAttackTeams(ArrayList<Player> stageParticipants, Scanner inContent) {
         ArrayList<ArrayList<Card>> attackTeams = new ArrayList<>();
@@ -439,6 +384,18 @@ public class Main {
             }
         }
         return false;
+    }
+
+    public boolean hasEligible() {
+        return PlayerList.get(0).isEligible() || PlayerList.get(1).isEligible() || PlayerList.get(2).isEligible() || PlayerList.get(3).isEligible();
+    }
+
+    @GetMapping("/HasEligibleString")
+    public String hasEligibleString() {
+        if (hasEligible()) {
+            return "true";
+        }
+        return "false";
     }
 
     public String drawAdCard(Player p, int num) {
@@ -664,11 +621,61 @@ public class Main {
                             return "Stage submitted. Moving to Stage " + curStageNumber + "\n\nStage " + curStageNumber + ": " + printStage(stages.get(curStageNumber - 1)) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
                         } else {
                             gamePhase = "Quest Build End";
-                            return "Quest building finished. Here are your stages: \n" + printAllStages();
+                            //setup eligibility for the next phase
+                            for (Player p : PlayerList) {
+                                p.setEligible(true);
+                            }
+                            sponsor.setEligible(false);
+                            return "Quest building finished. Here are your stages: \n" + printAllStages() + "\n\n";
                         }
                     }
                 } else {//input is not an index nor empty; invalid
                     return "Input must be a valid index or empty.\n";
+                }
+
+            case "Seek Participant 1":
+                if (input.equals("Y")) {
+                    gamePhase = "Seek Participant 1 End";
+                    return "P1 has accepted to participate this quest.\n";
+                } else if (input.equals("N")) {
+                    gamePhase = "Seek Participant 1 End";
+                    PlayerList.get(0).setEligible(false);
+                    return "P1 has declined to participate in this quest.\n";
+                } else {
+                    return "Invalid input. Must be 'Y' or 'N'.\n";
+                }
+            case "Seek Participant 2":
+                if (input.equals("Y")) {
+                    gamePhase = "Seek Participant 2 End";
+                    return "P2 has accepted to participate this quest.\n";
+                } else if (input.equals("N")) {
+                    gamePhase = "Seek Participant 2 End";
+                    PlayerList.get(1).setEligible(false);
+                    return "P2 has declined to participate in this quest.\n";
+                } else {
+                    return "Invalid input. Must be 'Y' or 'N'.\n";
+                }
+            case "Seek Participant 3":
+                if (input.equals("Y")) {
+                    gamePhase = "Seek Participant 3 End";
+                    return "P3 has accepted to participate this quest.\n";
+                } else if (input.equals("N")) {
+                    gamePhase = "Seek Participant 3 End";
+                    PlayerList.get(2).setEligible(false);
+                    return "P3 has declined to participate in this quest.\n";
+                } else {
+                    return "Invalid input. Must be 'Y' or 'N'.\n";
+                }
+            case "Seek Participant 4":
+                if (input.equals("Y")) {
+                    gamePhase = "Seek Participant 4 End";
+                    return "P4 has accepted to participate this quest.\n";
+                } else if (input.equals("N")) {
+                    gamePhase = "Seek Participant 4 End";
+                    PlayerList.get(3).setEligible(false);
+                    return "P4 has declined to participate in this quest.\n";
+                } else {
+                    return "Invalid input. Must be 'Y' or 'N'.\n";
                 }
             default:
                 return "";
@@ -809,6 +816,47 @@ public class Main {
     public String beginStageBuilding() {
         gamePhase = "Building Quest Stages";
         curStageNumber = 1;
+        curAttackStageNumber = 1;
         return "You must build " + curEvent.getValue() + " stages.\nStage 1: \nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
+    }
+
+    @PostMapping("/SeekParticipant1")
+    public String seekParticipant1() {
+        gamePhase = "Seek Participant 1";
+        if (PlayerList.get(0).isEligible()) {
+            return "P1, would you like to participate in this stage? (Y/N)\n";
+        }
+        gamePhase = "Seek Participant 1 End";
+        return "";
+    }
+
+    @PostMapping("/SeekParticipant2")
+    public String seekParticipant2() {
+        gamePhase = "Seek Participant 2";
+        if (PlayerList.get(1).isEligible()) {
+            return "P2, would you like to participate in this stage? (Y/N)\n";
+        }
+        gamePhase = "Seek Participant 2 End";
+        return "";
+    }
+
+    @PostMapping("/SeekParticipant3")
+    public String seekParticipant3() {
+        gamePhase = "Seek Participant 3";
+        if (PlayerList.get(2).isEligible()) {
+            return "P3, would you like to participate in this stage? (Y/N)\n";
+        }
+        gamePhase = "Seek Participant 3 End";
+        return "";
+    }
+
+    @PostMapping("/SeekParticipant4")
+    public String seekParticipant4() {
+        gamePhase = "Seek Participant 4";
+        if (PlayerList.get(3).isEligible()) {
+            return "P4, would you like to participate in this stage? (Y/N)\n";
+        }
+        gamePhase = "Seek Participant 4 End";
+        return "P4 will participate in this stage.\n";
     }
 }
