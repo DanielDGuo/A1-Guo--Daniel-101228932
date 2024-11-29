@@ -75,6 +75,9 @@ async function startGame() {
                         if(await getHasEligible() == "false"){
                             break;
                         }
+                        OUTPUT_DIV.innerText += "Each participant will draw a card. \n";
+                        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                        await participantsDraw();
                     }
                 }
             }
