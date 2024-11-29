@@ -23,6 +23,8 @@ public class Main {
     public ArrayList<Card> curStage;
     public int curStageNumber;
     public int curAttackStageNumber;
+    public ArrayList<ArrayList<Card>> curStageAttackTeams;
+    public ArrayList<Card> curAttackTeam;
     public final ArrayList<Player> PlayerList = new ArrayList<>(
             Arrays.asList(
                     new Player(1),
@@ -160,7 +162,6 @@ public class Main {
     );
 //                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
 //                for (int i = 0; i < curEventCard.getValue(); i++) {
-//                    ArrayList<ArrayList<Card>> stageAttackTeams = game.createAttackTeams(stageParticipants, game.inContent);
 //                    ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
 //                    game.discardAttackTeams(stageAttackTeams);
 //                    if (!game.findStageSurvivors(stageOutcome)) {
@@ -669,6 +670,139 @@ public class Main {
                 } else {
                     return "Invalid input. Must be 'Y' or 'N'.\n";
                 }
+            case "Building P1 Attacks Begin":
+                gamePhase = "Building P1 Attacks";
+                return "P1 you must build an attack team.\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + PlayerList.get(0).printHand() + "\n";
+            case "Building P1 Attacks":
+                Collections.sort(curStageAttackTeams.get(0));
+                curAttackTeam = curStageAttackTeams.get(0);
+                Player P1 = PlayerList.get(0);
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= P1.getHand().size()) {//add a card to the stage
+                    int handIndex = Integer.parseInt(input) - 1;
+                    if (P1.getHand().get(handIndex).getType().equals("Foe")) {//selected card is a foe
+                        return "Invalid input. Cannot put foes in an attack.\n";
+                    } else if (P1.getHand().get(handIndex).getType().equals("Weapon")) {
+                        //check for dupe weapon
+                        for (Card card : curAttackTeam) {
+                            if (card.toString().equals(P1.getHand().get(Integer.parseInt(input) - 1).toString())) {
+                                return "Invalid input. Duplicate weapon.\n";
+                            }
+                        }
+                        curAttackTeam.add(P1.getHand().remove(handIndex));
+                        return "Card Added.\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + P1.printHand() + "\n";
+                    }
+                } else if (input.equals("empty_string")) {
+                    //invalids
+                    if (curAttackTeam.isEmpty()) {
+                        return "Attack is empty. Please add Weapons.\n";
+                    } else {
+                        //valid
+                        gamePhase = "Building P1 Attacks End";
+                        return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
+                    }
+                } else {//input is not an index nor empty; invalid
+                    return "Input must be a valid index or empty.\n";
+                }
+            case "Building P2 Attacks Begin":
+                gamePhase = "Building P2 Attacks";
+                return "P2 you must build an attack team.\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + PlayerList.get(1).printHand() + "\n";
+            case "Building P2 Attacks":
+                Collections.sort(curStageAttackTeams.get(1));
+                curAttackTeam = curStageAttackTeams.get(1);
+                Player P2 = PlayerList.get(1);
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= P2.getHand().size()) {//add a card to the stage
+                    int handIndex = Integer.parseInt(input) - 1;
+                    if (P2.getHand().get(handIndex).getType().equals("Foe")) {//selected card is a foe
+                        return "Invalid input. Cannot put foes in an attack.\n";
+                    } else if (P2.getHand().get(handIndex).getType().equals("Weapon")) {
+                        //check for dupe weapon
+                        for (Card card : curAttackTeam) {
+                            if (card.toString().equals(P2.getHand().get(Integer.parseInt(input) - 1).toString())) {
+                                return "Invalid input. Duplicate weapon.\n";
+                            }
+                        }
+                        curAttackTeam.add(P2.getHand().remove(handIndex));
+                        return "Card Added.\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + P2.printHand() + "\n";
+                    }
+                } else if (input.equals("empty_string")) {
+                    //invalids
+                    if (curAttackTeam.isEmpty()) {
+                        return "Attack is empty. Please add Weapons.\n";
+                    } else {
+                        //valid
+                        gamePhase = "Building P2 Attacks End";
+                        return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
+                    }
+                } else {//input is not an index nor empty; invalid
+                    return "Input must be a valid index or empty.\n";
+                }
+            case "Building P3 Attacks Begin":
+                gamePhase = "Building P3 Attacks";
+                return "P3 you must build an attack team.\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + PlayerList.get(2).printHand() + "\n";
+            case "Building P3 Attacks":
+                Collections.sort(curStageAttackTeams.get(2));
+                curAttackTeam = curStageAttackTeams.get(2);
+                Player P3 = PlayerList.get(2);
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= P3.getHand().size()) {//add a card to the stage
+                    int handIndex = Integer.parseInt(input) - 1;
+                    if (P3.getHand().get(handIndex).getType().equals("Foe")) {//selected card is a foe
+                        return "Invalid input. Cannot put foes in an attack.\n";
+                    } else if (P3.getHand().get(handIndex).getType().equals("Weapon")) {
+                        //check for dupe weapon
+                        for (Card card : curAttackTeam) {
+                            if (card.toString().equals(P3.getHand().get(Integer.parseInt(input) - 1).toString())) {
+                                return "Invalid input. Duplicate weapon.\n";
+                            }
+                        }
+                        curAttackTeam.add(P3.getHand().remove(handIndex));
+                        return "Card Added.\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + P3.printHand() + "\n";
+                    }
+                } else if (input.equals("empty_string")) {
+                    //invalids
+                    if (curAttackTeam.isEmpty()) {
+                        return "Attack is empty. Please add Weapons.\n";
+                    } else {
+                        //valid
+                        gamePhase = "Building P3 Attacks End";
+                        return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
+                    }
+                } else {//input is not an index nor empty; invalid
+                    return "Input must be a valid index or empty.\n";
+                }
+            case "Building P4 Attacks Begin":
+                gamePhase = "Building P4 Attacks";
+                return "P4 you must build an attack team.\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + PlayerList.get(3).printHand() + "\n";
+            case "Building P4 Attacks":
+                Collections.sort(curStageAttackTeams.get(3));
+                curAttackTeam = curStageAttackTeams.get(3);
+                Player P4 = PlayerList.get(2);
+                if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= P4.getHand().size()) {//add a card to the stage
+                    int handIndex = Integer.parseInt(input) - 1;
+                    if (P4.getHand().get(handIndex).getType().equals("Foe")) {//selected card is a foe
+                        return "Invalid input. Cannot put foes in an attack.\n";
+                    } else if (P4.getHand().get(handIndex).getType().equals("Weapon")) {
+                        //check for dupe weapon
+                        for (Card card : curAttackTeam) {
+                            if (card.toString().equals(P4.getHand().get(Integer.parseInt(input) - 1).toString())) {
+                                return "Invalid input. Duplicate weapon.\n";
+                            }
+                        }
+                        curAttackTeam.add(P4.getHand().remove(handIndex));
+                        return "Card Added.\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + P4.printHand() + "\n";
+                    }
+                } else if (input.equals("empty_string")) {
+                    //invalids
+                    if (curAttackTeam.isEmpty()) {
+                        return "Attack is empty. Please add Weapons.\n";
+                    } else {
+                        //valid
+                        gamePhase = "Building P4 Attacks End";
+                        return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
+                    }
+                } else {//input is not an index nor empty; invalid
+                    return "Input must be a valid index or empty.\n";
+                }
+
             default:
                 return "";
         }
@@ -808,7 +942,6 @@ public class Main {
     public String beginStageBuilding() {
         gamePhase = "Building Quest Stages";
         curStageNumber = 1;
-        curAttackStageNumber = 1;
         return "You must build " + curEvent.getValue() + " stages.\nStage 1: \nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
     }
 
@@ -854,7 +987,7 @@ public class Main {
 
     @PostMapping("/ParticipantDrawCard1")
     public String participantsDrawCard1() {
-        if(PlayerList.get(0).isEligible()){
+        if (PlayerList.get(0).isEligible()) {
             return drawAdCard(PlayerList.get(0), 1);
         }
         return "";
@@ -862,7 +995,7 @@ public class Main {
 
     @PostMapping("/ParticipantDrawCard2")
     public String participantsDrawCard2() {
-        if(PlayerList.get(1).isEligible()){
+        if (PlayerList.get(1).isEligible()) {
             return drawAdCard(PlayerList.get(1), 1);
         }
         return "";
@@ -870,7 +1003,7 @@ public class Main {
 
     @PostMapping("/ParticipantDrawCard3")
     public String participantsDrawCard3() {
-        if(PlayerList.get(2).isEligible()){
+        if (PlayerList.get(2).isEligible()) {
             return drawAdCard(PlayerList.get(2), 1);
         }
         return "";
@@ -878,9 +1011,69 @@ public class Main {
 
     @PostMapping("/ParticipantDrawCard4")
     public String participantsDrawCard4() {
-        if(PlayerList.get(3).isEligible()){
+        if (PlayerList.get(3).isEligible()) {
             return drawAdCard(PlayerList.get(3), 1);
         }
+        return "";
+    }
+
+    @PostMapping("/startQuestAttack")
+    public String questAttackBegin() {
+        gamePhase = "Quest Attack Begin";
+        curAttackStageNumber = 1;
+        return "Participants will now create attacks.\n";
+    }
+
+    @PostMapping("/resetCurStageAttackTeams")
+    public void resetCurStageAttackTeams() {
+        curStageAttackTeams = new ArrayList<>();
+        curStageAttackTeams.add(new ArrayList<>()); //P1
+        curStageAttackTeams.add(new ArrayList<>()); //P2
+        curStageAttackTeams.add(new ArrayList<>()); //P3
+        curStageAttackTeams.add(new ArrayList<>()); //P4
+    }
+
+    @PostMapping("/QuestAttack1")
+    public String beginAttackBuilding1() {
+        gamePhase = "Building P1 Attacks Begin";
+        if (PlayerList.get(0).isEligible()) {
+            curAttackTeam = new ArrayList<>();
+            return "P1, Please confirm you are in control.\n";
+        }
+        gamePhase = "Building P1 Attacks End";
+        return "";
+    }
+
+    @PostMapping("/QuestAttack2")
+    public String beginAttackBuilding2() {
+        gamePhase = "Building P1 Attacks Begin";
+        if (PlayerList.get(1).isEligible()) {
+            curAttackTeam = new ArrayList<>();
+            return "P2, Please confirm you are in control.\n";
+        }
+        gamePhase = "Building P2 Attacks End";
+        return "";
+    }
+
+    @PostMapping("/QuestAttack3")
+    public String beginAttackBuilding3() {
+        gamePhase = "Building P3 Attacks Begin";
+        if (PlayerList.get(2).isEligible()) {
+            curAttackTeam = new ArrayList<>();
+            return "P3, Please confirm you are in control.\n";
+        }
+        gamePhase = "Building P3 Attacks End";
+        return "";
+    }
+
+    @PostMapping("/QuestAttack4")
+    public String beginAttackBuilding4() {
+        gamePhase = "Building P4 Attacks Begin";
+        if (PlayerList.get(3).isEligible()) {
+            curAttackTeam = new ArrayList<>();
+            return "P4, Please confirm you are in control.\n";
+        }
+        gamePhase = "Building P4 Attacks End";
         return "";
     }
 }

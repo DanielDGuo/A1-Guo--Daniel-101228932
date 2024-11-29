@@ -78,6 +78,7 @@ async function startGame() {
                         OUTPUT_DIV.innerText += "Each participant will draw a card. \n";
                         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
                         await participantsDraw();
+                        await QuestAttack();
                     }
                 }
             }
@@ -477,5 +478,53 @@ async function participantsDraw(){
         }
     } catch (error) {
         console.error("Error in prosperity", error);
+    }
+}
+
+async function QuestAttack(){
+    try {
+        await fetch(`${apiBaseUrl}/resetCurStageAttackTeams`, { method: "POST" });
+
+        response = await fetch(`${apiBaseUrl}/QuestAttack1`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Quest Attack 1");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != "Building P1 Attacks End"){
+        }
+
+        response = await fetch(`${apiBaseUrl}/QuestAttack2`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Quest Attack 2");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != "Building P2 Attacks End"){
+        }
+
+        response = await fetch(`${apiBaseUrl}/QuestAttack3`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Quest Attack 3");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != "Building P3 Attacks End"){
+        }
+
+        response = await fetch(`${apiBaseUrl}/QuestAttack4`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Quest Attack 4");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != "Building P4 Attacks End"){
+        }
+    } catch (error) {
+        console.error("Error in quest attack building", error);
     }
 }
