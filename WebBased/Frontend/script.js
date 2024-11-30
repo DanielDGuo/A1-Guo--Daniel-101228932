@@ -184,22 +184,6 @@ async function nextPlayerTurn(){
     }
 }
 
-async function startQuestBuild(){
-    try {
-        const response = await fetch(`${apiBaseUrl}/startQuestBuild`, { method: "POST" });
-        const result = await response.text();
-
-        console.log("Build Phase Begin Output: ", result);
-        OUTPUT_DIV.innerText += result;
-        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
-
-        while(await getGamePhase() != "Stage Building"){
-        }
-    } catch (error) {
-        console.error("Error in starting quest build", error);
-    }
-}
-
 async function endTurn(){
     try {
         const response = await fetch(`${apiBaseUrl}/endTurn`, { method: "POST" });

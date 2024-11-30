@@ -173,7 +173,7 @@ public class Main {
         if (winners.isEmpty()) {
             return "The Quest was failed. No shields.\n";
         } else {
-            return "The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length() - 1) + ". They each get " + stages.size() + " shields.\n";
+            return "The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length() - 1) + ". They each get " + stages.size() + " shields.\nCurrent shield counts: \nP1: " + PlayerList.get(0).getShields() + "\nP2: "+ PlayerList.get(1).getShields() + "\nP3: "+ PlayerList.get(2).getShields() + "\nP4: "+ PlayerList.get(3).getShields() + "\n\nThe sponsor draws cards; press enter to continue.\n\n\n";
         }
     }
 
@@ -814,6 +814,7 @@ public class Main {
     @PostMapping("/QuestBuild")
     public String beginStageBuilding() {
         gamePhase = "Building Quest Stages";
+        curAttackStageNumber = 1;
         curStageNumber = 1;
         return "You must build " + curEvent.getValue() + " stages.\nStage 1: \nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
     }
@@ -902,7 +903,6 @@ public class Main {
         curStageAttackTeams.add(new ArrayList<>()); //P3
         curStageAttackTeams.add(new ArrayList<>()); //P4
         gamePhase = "Quest Attack Begin";
-        curAttackStageNumber = 1;
         return "Participants will now create attacks.\n";
     }
 
@@ -952,7 +952,7 @@ public class Main {
 
     @PostMapping("/ResolveAttacks")
     public String resolveAttacks() {
-        String outString = "The current stage was: " + curStage.toString().substring(1, curStage.toString().length() - 1) + ".\n";
+        String outString = "Stage " + curAttackStageNumber + " was: " + stages.get(curAttackStageNumber - 1).toString().substring(1, stages.get(curAttackStageNumber - 1).toString().length() - 1) + ".\n";
 
         //value of stage
         int stageValue = getValueOfStage(stages.get(curAttackStageNumber - 1));
@@ -972,15 +972,15 @@ public class Main {
                 winners.append(p).append(", ");
             }
         }
+        curAttackStageNumber += 1;
         if (!winners.isEmpty()) {
             winners = new StringBuilder(winners.substring(0, winners.length() - 2));
             winners.append(" are the winner(s) and are eligible to continue.\n\n");
-            curAttackStageNumber++;
-            if (curAttackStageNumber > stages.size()){
+            if (curAttackStageNumber > stages.size()) {
                 gamePhase = "Quest Attack End";
                 return outString + winners + "The quest is over. Cleanup phase.\n\n";
             }
-            return outString + winners;
+            return outString + winners + "Stage " + curAttackStageNumber + " Begins.\n\n";
         }
         gamePhase = "Quest Attack End";
         return "No one beat the stage. The quest is over.\n\n";
