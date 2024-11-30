@@ -4,6 +4,7 @@ const TEXT_INPUT = document.getElementById('textInput');
 const SUBMIT_BUTTON = document.getElementById('submitButton');
 const START_GAME_BUTTON = document.getElementById('startGameButton');
 const OUTPUT_DIV = document.getElementById("output");
+const GAME_INFO_DIV = document.getElementById("gameStatsOutput");
 
 //event listener to help with manual information entry
 document.addEventListener('keydown', function(event){
@@ -25,12 +26,17 @@ async function submitInput() {
     TEXT_INPUT.value = '';
 
     // Send input to backend
-    const response = await fetch(`${apiBaseUrl}/inputProcessing`, {method: 'POST', headers: {'Content-Type': 'text/plain'}, body: userInput});
-    const output = await response.text();
+    var response = await fetch(`${apiBaseUrl}/inputProcessing`, {method: 'POST', headers: {'Content-Type': 'text/plain'}, body: userInput});
+    var output = await response.text();
     console.log("Received output: ", output);
     console.log("With type: ", typeof output);
     OUTPUT_DIV.innerText += output;
     OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+
+    // Print player hands and shield count
+    response = await fetch(`${apiBaseUrl}/printGameInfo`);
+    output = await response.text();
+    GAME_INFO_DIV.innerText = output;
 }
 
 async function startGame() {
@@ -40,6 +46,11 @@ async function startGame() {
         await fetch(`${apiBaseUrl}/startGame`);
         console.log("Started Game");
         OUTPUT_DIV.innerText = "Game Started\n";
+
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
 
         while(await findWinners() == 'false'){
             await nextPlayerTurn();

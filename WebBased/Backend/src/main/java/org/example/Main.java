@@ -171,9 +171,9 @@ public class Main {
             }
         }
         if (winners.isEmpty()) {
-            return "The Quest was failed. No shields.\n";
+            return "The quest was failed. No shields.\n";
         } else {
-            return "The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length() - 1) + ". They each get " + stages.size() + " shields.\nCurrent shield counts: \nP1: " + PlayerList.get(0).getShields() + "\nP2: "+ PlayerList.get(1).getShields() + "\nP3: "+ PlayerList.get(2).getShields() + "\nP4: "+ PlayerList.get(3).getShields() + "\n\nThe sponsor draws cards; press enter to continue.\n\n\n";
+            return "The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length() - 1) + ". They each get " + stages.size() + " shields.\nCurrent shield counts: \nP1: " + PlayerList.get(0).getShields() + "\nP2: " + PlayerList.get(1).getShields() + "\nP3: " + PlayerList.get(2).getShields() + "\nP4: " + PlayerList.get(3).getShields() + "\n\nThe sponsor draws cards; press enter to continue.\n\n\n";
         }
     }
 
@@ -198,6 +198,19 @@ public class Main {
             return "no sponsor";
         }
         return sponsor.toString();
+    }
+
+    @GetMapping("/printGameInfo")
+    public String printGameInfo() {
+        StringBuilder outString = new StringBuilder();
+        outString.append("stats are updated every button click.\n\n");
+        for (Player p : PlayerList) {
+            outString.append(p.printHand()).append("\n");
+        }
+        for (Player p : PlayerList) {
+            outString.append(p).append(" Shields: ").append(p.getShields()).append("\n");
+        }
+        return outString.toString();
     }
 
     public void initializePlayerHands() {
