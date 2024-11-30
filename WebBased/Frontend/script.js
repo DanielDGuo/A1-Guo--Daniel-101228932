@@ -237,6 +237,11 @@ async function queenEffect(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+        
     } catch (error) {
         console.error("Error in getting queen effect", error);
     }
@@ -263,7 +268,7 @@ async function QuestBuild(){
         const response = await fetch(`${apiBaseUrl}/QuestBuild`, { method: "POST" });
         const result = await response.text();
 
-        console.log("starting quest build");
+        console.log("quest building");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
@@ -285,6 +290,11 @@ async function prosperityEffect(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
         response = await fetch(`${apiBaseUrl}/prosperityEffect2`, { method: "POST" });
         result = await response.text();
 
@@ -294,6 +304,11 @@ async function prosperityEffect(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
         response = await fetch(`${apiBaseUrl}/prosperityEffect3`, { method: "POST" });
         result = await response.text();
 
@@ -303,6 +318,11 @@ async function prosperityEffect(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
         response = await fetch(`${apiBaseUrl}/prosperityEffect4`, { method: "POST" });
         result = await response.text();
 
@@ -312,6 +332,11 @@ async function prosperityEffect(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
     } catch (error) {
         console.error("Error in prosperity", error);
     }
@@ -443,6 +468,11 @@ async function participantsDraw(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
 
         response = await fetch(`${apiBaseUrl}/ParticipantDrawCard2`, { method: "POST" });
         result = await response.text();
@@ -453,6 +483,11 @@ async function participantsDraw(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
 
         response = await fetch(`${apiBaseUrl}/ParticipantDrawCard3`, { method: "POST" });
         result = await response.text();
@@ -463,6 +498,11 @@ async function participantsDraw(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
 
         response = await fetch(`${apiBaseUrl}/ParticipantDrawCard4`, { method: "POST" });
         result = await response.text();
@@ -473,6 +513,11 @@ async function participantsDraw(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
     } catch (error) {
         console.error("Error in prosperity", error);
     }
@@ -557,6 +602,11 @@ async function attackCleanup(){
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
     } catch (error) {
         console.error("Error in cleanup phase: ", error);
     }
