@@ -78,8 +78,10 @@ async function startGame() {
                         OUTPUT_DIV.innerText += "Each participant will draw a card. \n";
                         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
                         await participantsDraw();
-                        await QuestAttack();
+                        await questAttack();
+                        await resolveAttacks();
                     }
+                    await attackCleanup();
                 }
             }
             await endTurn();
@@ -481,7 +483,7 @@ async function participantsDraw(){
     }
 }
 
-async function QuestAttack(){
+async function questAttack(){
     try {
         await fetch(`${apiBaseUrl}/resetCurStageAttackTeams`, { method: "POST" });
 
@@ -527,4 +529,40 @@ async function QuestAttack(){
     } catch (error) {
         console.error("Error in quest attack building", error);
     }
+
+async function resolveAttacks(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/ResolveAttacks`, { method: "POST" });
+        const result = await response.text();
+
+        console.log("Quest attack resolution");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+    } catch (error) {
+        console.error("Error in resolving attacks: ", error);
+    }
 }
+
+async function attackCleanup(){
+    try {
+        const response = await fetch(`${apiBaseUrl}/shieldDistribution`, { method: "POST" });
+        const result = await response.text();
+
+        console.log("Quest attack shields");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+
+        response = await fetch(`${apiBaseUrl}/discardStages`, { method: "POST" });
+        result = await response.text();
+
+        console.log("Quest stage discard");
+        OUTPUT_DIV.innerText += result;
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        //a possible game phase change has occurred tha requires user input. Wait until it's done
+        while(await getGamePhase() != ""){
+        }
+    } catch (error) {
+        console.error("Error in cleanup phase: ", error);
+    }
+}
+

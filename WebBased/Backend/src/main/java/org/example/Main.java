@@ -160,158 +160,25 @@ public class Main {
                     new Card("Prosperity", "Event", 0)
             )
     );
-//                //Enter Quest Attack. Loop through stages and attacks N times, where N is the quest value
-//                for (int i = 0; i < curEventCard.getValue(); i++) {
-//                    ArrayList<Boolean> stageOutcome = game.resolveAttacks(stages.get(i), stageAttackTeams, stageParticipants);
-//                    game.discardAttackTeams(stageAttackTeams);
-//                    if (!game.findStageSurvivors(stageOutcome)) {
-//                        break;
-//                    }
-//                }
-//                //After Quest Attack, distribute shields to the winners
-//                game.giveWinnersShields(curEventCard.getValue());
-//                //After Quest attack, Quest enemy cards are discarded. Sponsor draws that many cards + Quest value
-//                game.discardQuestStages(stages, sponsor, game.inContent);
 
-
-    public ArrayList<ArrayList<Card>> createAttackTeams(ArrayList<Player> stageParticipants, Scanner inContent) {
-        ArrayList<ArrayList<Card>> attackTeams = new ArrayList<>();
-        for (Player p : stageParticipants) {
-            System.out.print("Please confirm you are " + p + "\n");
-            String input = inContent.nextLine();
-            while (!input.isEmpty()) {
-                System.out.print("Invalid input.\n");
-                try {
-                    input = inContent.nextLine();
-                } catch (java.util.NoSuchElementException e) {
-                    input = "";
-                }
-            }
-
-            ArrayList<Card> curAttack = new ArrayList<>();
-            String curAttackToString = "";
-            input = "temp";
-            while (!input.isEmpty()) {
-                Collections.sort(curAttack);
-                //print the relevant information
-                curAttackToString = curAttack.toString().substring(1, curAttack.toString().length() - 1);
-                System.out.print("Current Attack Team: " + curAttackToString + "\n");
-                System.out.print("Please select an index of a card you wish to add to the attack, or press enter to finish.\n");
-                p.printHand();
-                System.out.print("\n");
-                input = inContent.nextLine();
-                //valid input is an empty line to go to end the attack creation, or a valid index
-                if (!(input.isEmpty() || (1 <= Integer.parseInt(input) && Integer.parseInt(input) <= p.getHand().size()))) {
-                    System.out.print("Invalid input. Please provide a valid index or press enter.\n");
-                    continue;
-                }
-                if (!input.isEmpty()) {
-                    //non-empty input; get the card and check if its valid
-                    //check if it's a weapon
-                    if (!p.getHand().get(Integer.parseInt(input) - 1).getType().equals("Weapon")) {
-                        //must be a foe.
-                        System.out.print("Invalid input. Cannot add foes to attack team.\n");
-                        continue;
-                    }
-                    //check if it's a dupe
-                    boolean hasDupe = false;
-                    for (Card c : curAttack) {
-                        if (c.toString().equals(p.getHand().get(Integer.parseInt(input) - 1).toString())) {
-                            hasDupe = true;
-                        }
-                    }
-                    if (hasDupe) {
-                        System.out.print("Invalid input. Duplicate weapon.\n");
-                        continue;
-                    }
-                    curAttack.add(p.getHand().remove(Integer.parseInt(input) - 1));
-                }
-            }
-            attackTeams.add(curAttack);
-            System.out.print(p + ", Here is your attack team:\n");
-            System.out.print("Current Attack Team: " + curAttackToString + "\n");
-            System.out.print("Press enter to confirm.\n");
-            input = inContent.nextLine();
-            while (!input.isEmpty()) {
-                System.out.print("Invalid input.\n");
-                try {
-                    input = inContent.nextLine();
-                } catch (java.util.NoSuchElementException e) {
-                    input = "";
-                }
-            }
-            System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        }
-        return attackTeams;
-    }
-
-    public ArrayList<Boolean> resolveAttacks(ArrayList<Card> curStage, ArrayList<ArrayList<Card>> attackTeams, ArrayList<Player> participants) {
-        System.out.print("The current stage was: " + curStage.toString().substring(1, curStage.toString().length() - 1) + ".\n");
-
-        ArrayList<Boolean> outcome = new ArrayList<>();
-        //value of stage
-        int stageValue = 0;
-        for (Card c : curStage) {
-            stageValue += c.getValue();
-        }
-        //find and check hands against stage
-        for (int i = 0; i < attackTeams.size(); i++) {
-            int handValue = 0;
-            for (Card c : attackTeams.get(i)) {
-                handValue += c.getValue();
-            }
-            if (handValue >= stageValue) {
-                outcome.add(true);
-            } else {
-                outcome.add(false);
-                participants.get(i).setEligible(false);
-            }
-        }
-        //find who won
-        StringBuilder winners = new StringBuilder();
-        for (Player p : participants) {
-            if (p.isEligible()) {
-                winners.append(p).append(", ");
-            }
-        }
-        if (!winners.isEmpty()) {
-            winners = new StringBuilder(winners.substring(0, winners.length() - 2));
-            winners.append(" are the winner(s) and are eligible to continue.\n");
-            System.out.print(winners);
-        }
-        return outcome;
-    }
-
-    public boolean findStageSurvivors(ArrayList<Boolean> outcome) {
-        if (!outcome.contains(true)) {
-            System.out.print("No one passed the stage. Aborting quest.\n");
-            return false;
-        }
-        return true;
-    }
-
-    public void discardAttackTeams(ArrayList<ArrayList<Card>> attackTeams) {
-        for (ArrayList<Card> team : attackTeams) {
-            AdDiscard.addAll(team);
-        }
-    }
-
-    public void giveWinnersShields(int numStages) {
+    @PostMapping("/shieldDistribution")
+    public String giveWinnersShields() {
         ArrayList<Player> winners = new ArrayList<>();
         for (Player p : PlayerList) {
             if (p.isEligible()) {
                 winners.add(p);
-                p.addShields(numStages);
+                p.addShields(stages.size());
             }
         }
         if (winners.isEmpty()) {
-            System.out.print("The Quest was failed. No shields.\n");
+            return "The Quest was failed. No shields.\n";
         } else {
-            System.out.print("The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length() - 1) + ". They each get " + numStages + " shields.\n");
+            return "The quest was completed by player(s) " + winners.toString().substring(1, winners.toString().length() - 1) + ". They each get " + stages.size() + " shields.\n";
         }
     }
 
-    public void discardQuestStages(ArrayList<ArrayList<Card>> stages, Player sponsor, Scanner inContent) {
+    @PostMapping("/discardStages")
+    public void discardQuestStages() {
         int numCardsUsed = 0;
         for (ArrayList<Card> s : stages) {
             AdDiscard.addAll(s);
@@ -381,6 +248,12 @@ public class Main {
 
     public boolean hasEligible() {
         return PlayerList.get(0).isEligible() || PlayerList.get(1).isEligible() || PlayerList.get(2).isEligible() || PlayerList.get(3).isEligible();
+    }
+
+    public void discardAttackTeams(ArrayList<ArrayList<Card>> attackTeams) {
+        for (ArrayList<Card> team : attackTeams) {
+            AdDiscard.addAll(team);
+        }
     }
 
     @GetMapping("/HasEligibleString")
@@ -1075,5 +948,41 @@ public class Main {
         }
         gamePhase = "Building P4 Attacks End";
         return "";
+    }
+
+    @PostMapping("/ResolveAttacks")
+    public String resolveAttacks(ArrayList<Card> curStage, ArrayList<ArrayList<Card>> attackTeams, ArrayList<Player> participants) {
+        String outString = "The current stage was: " + curStage.toString().substring(1, curStage.toString().length() - 1) + ".\n";
+
+        //value of stage
+        int stageValue = getValueOfStage(stages.get(curAttackStageNumber - 1));
+        //find and check hands against stage
+        for (int i = 0; i < 4; i++) {
+            int attackValue = getValueOfStage(attackTeams.get(i));
+            if (attackValue < stageValue) {
+                PlayerList.get(i).setEligible(false);
+            }
+        }
+        //discard the attack teams after
+        discardAttackTeams(curStageAttackTeams);
+        //find who won
+        StringBuilder winners = new StringBuilder();
+        for (Player p : participants) {
+            if (p.isEligible()) {
+                winners.append(p).append(", ");
+            }
+        }
+        if (!winners.isEmpty()) {
+            winners = new StringBuilder(winners.substring(0, winners.length() - 2));
+            winners.append(" are the winner(s) and are eligible to continue.\n\n");
+            curAttackStageNumber++;
+            if (curAttackStageNumber > stages.size()){
+                gamePhase = "Quest Attack End";
+                return outString + winners + "The quest is over. Cleanup phase.\n\n";
+            }
+            return outString + winners;
+        }
+        gamePhase = "Quest Attack End";
+        return "No one beat the stage. The quest is over.\n\n";
     }
 }
