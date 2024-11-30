@@ -460,7 +460,7 @@ public class Main {
                             }
                         }
                         curStage.add(sponsor.getHand().remove(handIndex));
-                        return "Card Added.\nStage " + curStageNumber + ": " + printStage(stages.get(curStageNumber - 1)) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
+                        return "Card Added.\n\nStage " + curStageNumber + ": " + printStage(stages.get(curStageNumber - 1)) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
                     } else if (sponsor.getHand().get(handIndex).getType().equals("Weapon")) {
                         //check for dupe weapon
                         for (Card card : curStage) {
@@ -469,7 +469,7 @@ public class Main {
                             }
                         }
                         curStage.add(sponsor.getHand().remove(handIndex));
-                        return "Card Added.\nStage " + curStageNumber + ": " + printStage(stages.get(curStageNumber - 1)) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
+                        return "Card Added.\n\nStage " + curStageNumber + ": " + printStage(stages.get(curStageNumber - 1)) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + sponsor.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {//proceed to the next stage if possible
                     //invalids
@@ -534,10 +534,10 @@ public class Main {
                 }
             case "Seek Participant 4":
                 if (input.equals("Y")) {
-                    gamePhase = "";
+                    gamePhase = "Seek Participant 4 End";
                     return "P4 has accepted to participate this quest.\n";
                 } else if (input.equals("N")) {
-                    gamePhase = "";
+                    gamePhase = "Seek Participant 4 End";
                     PlayerList.get(3).setEligible(false);
                     return "P4 has declined to participate in this quest.\n";
                 } else {
@@ -545,7 +545,7 @@ public class Main {
                 }
             case "Building P1 Attacks Begin":
                 gamePhase = "Building P1 Attacks";
-                return "P1 you must build an attack team.\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + PlayerList.get(0).printHand() + "\n";
+                return "P1 you must build an attack team.\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + PlayerList.get(0).printHand() + "\n";
             case "Building P1 Attacks":
                 Collections.sort(curStageAttackTeams.get(0));
                 curAttackTeam = curStageAttackTeams.get(0);
@@ -562,7 +562,7 @@ public class Main {
                             }
                         }
                         curAttackTeam.add(P1.getHand().remove(handIndex));
-                        return "Card Added.\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + P1.printHand() + "\n";
+                        return "Card Added.\n\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + P1.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {
                     //invalids
@@ -578,7 +578,7 @@ public class Main {
                 }
             case "Building P2 Attacks Begin":
                 gamePhase = "Building P2 Attacks";
-                return "P2 you must build an attack team.\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + PlayerList.get(1).printHand() + "\n";
+                return "P2 you must build an attack team.\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + PlayerList.get(1).printHand() + "\n";
             case "Building P2 Attacks":
                 Collections.sort(curStageAttackTeams.get(1));
                 curAttackTeam = curStageAttackTeams.get(1);
@@ -595,7 +595,7 @@ public class Main {
                             }
                         }
                         curAttackTeam.add(P2.getHand().remove(handIndex));
-                        return "Card Added.\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + P2.printHand() + "\n";
+                        return "Card Added.\n\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + P2.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {
                     //invalids
@@ -611,7 +611,7 @@ public class Main {
                 }
             case "Building P3 Attacks Begin":
                 gamePhase = "Building P3 Attacks";
-                return "P3 you must build an attack team.\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + PlayerList.get(2).printHand() + "\n";
+                return "P3 you must build an attack team.\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + PlayerList.get(2).printHand() + "\n";
             case "Building P3 Attacks":
                 Collections.sort(curStageAttackTeams.get(2));
                 curAttackTeam = curStageAttackTeams.get(2);
@@ -628,7 +628,7 @@ public class Main {
                             }
                         }
                         curAttackTeam.add(P3.getHand().remove(handIndex));
-                        return "Card Added.\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + P3.printHand() + "\n";
+                        return "Card Added.\n\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + P3.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {
                     //invalids
@@ -644,11 +644,11 @@ public class Main {
                 }
             case "Building P4 Attacks Begin":
                 gamePhase = "Building P4 Attacks";
-                return "P4 you must build an attack team.\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + PlayerList.get(3).printHand() + "\n";
+                return "P4 you must build an attack team.\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + PlayerList.get(3).printHand() + "\n";
             case "Building P4 Attacks":
                 Collections.sort(curStageAttackTeams.get(3));
                 curAttackTeam = curStageAttackTeams.get(3);
-                Player P4 = PlayerList.get(2);
+                Player P4 = PlayerList.get(3);
                 if (isValidInt(input) && 1 <= Integer.parseInt(input) && Integer.parseInt(input) <= P4.getHand().size()) {//add a card to the stage
                     int handIndex = Integer.parseInt(input) - 1;
                     if (P4.getHand().get(handIndex).getType().equals("Foe")) {//selected card is a foe
@@ -661,7 +661,7 @@ public class Main {
                             }
                         }
                         curAttackTeam.add(P4.getHand().remove(handIndex));
-                        return "Card Added.\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to the stage, or press enter to finish.\n" + P4.printHand() + "\n";
+                        return "Card Added.\n\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + P4.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {
                     //invalids
@@ -855,11 +855,12 @@ public class Main {
             return "P4, would you like to participate in this stage? (Y/N)\n";
         }
         gamePhase = "Seek Participant 4 End";
-        return "P4 will participate in this stage.\n";
+        return "";
     }
 
     @PostMapping("/ParticipantDrawCard1")
     public String participantsDrawCard1() {
+        gamePhase = "";
         if (PlayerList.get(0).isEligible()) {
             return drawAdCard(PlayerList.get(0), 1);
         }
@@ -868,6 +869,7 @@ public class Main {
 
     @PostMapping("/ParticipantDrawCard2")
     public String participantsDrawCard2() {
+        gamePhase = "";
         if (PlayerList.get(1).isEligible()) {
             return drawAdCard(PlayerList.get(1), 1);
         }
@@ -876,6 +878,7 @@ public class Main {
 
     @PostMapping("/ParticipantDrawCard3")
     public String participantsDrawCard3() {
+        gamePhase = "";
         if (PlayerList.get(2).isEligible()) {
             return drawAdCard(PlayerList.get(2), 1);
         }
@@ -884,6 +887,7 @@ public class Main {
 
     @PostMapping("/ParticipantDrawCard4")
     public String participantsDrawCard4() {
+        gamePhase = "";
         if (PlayerList.get(3).isEligible()) {
             return drawAdCard(PlayerList.get(3), 1);
         }
@@ -892,18 +896,14 @@ public class Main {
 
     @PostMapping("/startQuestAttack")
     public String questAttackBegin() {
-        gamePhase = "Quest Attack Begin";
-        curAttackStageNumber = 1;
-        return "Participants will now create attacks.\n";
-    }
-
-    @PostMapping("/resetCurStageAttackTeams")
-    public void resetCurStageAttackTeams() {
         curStageAttackTeams = new ArrayList<>();
         curStageAttackTeams.add(new ArrayList<>()); //P1
         curStageAttackTeams.add(new ArrayList<>()); //P2
         curStageAttackTeams.add(new ArrayList<>()); //P3
         curStageAttackTeams.add(new ArrayList<>()); //P4
+        gamePhase = "Quest Attack Begin";
+        curAttackStageNumber = 1;
+        return "Participants will now create attacks.\n";
     }
 
     @PostMapping("/QuestAttack1")
@@ -919,7 +919,7 @@ public class Main {
 
     @PostMapping("/QuestAttack2")
     public String beginAttackBuilding2() {
-        gamePhase = "Building P1 Attacks Begin";
+        gamePhase = "Building P2 Attacks Begin";
         if (PlayerList.get(1).isEligible()) {
             curAttackTeam = new ArrayList<>();
             return "P2, Please confirm you are in control.\n";
@@ -951,14 +951,14 @@ public class Main {
     }
 
     @PostMapping("/ResolveAttacks")
-    public String resolveAttacks(ArrayList<Card> curStage, ArrayList<ArrayList<Card>> attackTeams, ArrayList<Player> participants) {
+    public String resolveAttacks() {
         String outString = "The current stage was: " + curStage.toString().substring(1, curStage.toString().length() - 1) + ".\n";
 
         //value of stage
         int stageValue = getValueOfStage(stages.get(curAttackStageNumber - 1));
         //find and check hands against stage
         for (int i = 0; i < 4; i++) {
-            int attackValue = getValueOfStage(attackTeams.get(i));
+            int attackValue = getValueOfStage(curStageAttackTeams.get(i));
             if (attackValue < stageValue) {
                 PlayerList.get(i).setEligible(false);
             }
@@ -967,7 +967,7 @@ public class Main {
         discardAttackTeams(curStageAttackTeams);
         //find who won
         StringBuilder winners = new StringBuilder();
-        for (Player p : participants) {
+        for (Player p : PlayerList) {
             if (p.isEligible()) {
                 winners.append(p).append(", ");
             }

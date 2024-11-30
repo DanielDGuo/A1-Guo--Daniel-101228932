@@ -428,7 +428,7 @@ async function seekParticipants(){
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         phase = await getGamePhase();
-        while(phase != ""){
+        while(phase != "Seek Participant 4 End"){
             phase = await getGamePhase();
         }
     } catch (error) {
@@ -485,10 +485,10 @@ async function participantsDraw(){
 
 async function questAttack(){
     try {
-        await fetch(`${apiBaseUrl}/resetCurStageAttackTeams`, { method: "POST" });
+        await fetch(`${apiBaseUrl}/startQuestAttack`, { method: "POST" });
 
-        response = await fetch(`${apiBaseUrl}/QuestAttack1`, { method: "POST" });
-        result = await response.text();
+        var response = await fetch(`${apiBaseUrl}/QuestAttack1`, { method: "POST" });
+        var result = await response.text();
 
         console.log("Quest Attack 1");
         OUTPUT_DIV.innerText += result;
@@ -529,11 +529,12 @@ async function questAttack(){
     } catch (error) {
         console.error("Error in quest attack building", error);
     }
+}
 
 async function resolveAttacks(){
     try {
-        const response = await fetch(`${apiBaseUrl}/ResolveAttacks`, { method: "POST" });
-        const result = await response.text();
+        var response = await fetch(`${apiBaseUrl}/ResolveAttacks`, { method: "POST" });
+        var result = await response.text();
 
         console.log("Quest attack resolution");
         OUTPUT_DIV.innerText += result;
@@ -545,8 +546,8 @@ async function resolveAttacks(){
 
 async function attackCleanup(){
     try {
-        const response = await fetch(`${apiBaseUrl}/shieldDistribution`, { method: "POST" });
-        const result = await response.text();
+        var response = await fetch(`${apiBaseUrl}/shieldDistribution`, { method: "POST" });
+        var result = await response.text();
 
         console.log("Quest attack shields");
         OUTPUT_DIV.innerText += result;
@@ -565,4 +566,3 @@ async function attackCleanup(){
         console.error("Error in cleanup phase: ", error);
     }
 }
-
