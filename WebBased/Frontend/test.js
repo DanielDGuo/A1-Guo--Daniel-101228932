@@ -8,45 +8,113 @@ async function runTestT1() {
     try {
         await driver.get('http://127.0.0.1:8081');
 
-        let startButton = await driver.findElement(driver.findElement(By.id('rigForT1')));
-        await startButton.click();
-//
-//        await driver.sleep(1000);
-//        console.log("Game started.");
-        await driver.sleep(100000);
+        let startButton = await driver.findElement(By.id('rigForT1'));
+        let input = await driver.findElement(By.id('textInput'));
+        let submitButton = await driver.findElement(By.id('submitButton'));
 
-//        let hitButton = await driver.findElement(By.xpath("//button[contains(text(), 'Hit')]"));
-//        for (let i = 0; i < 3; i++) {
-//            await hitButton.click();
-//            await driver.sleep(1000);
-//            let hitStatus = await driver.findElement(By.id('game-status')).getText();
-//            console.log(`After Hit ${i + 1}:`, hitStatus);
-//
-//            if (hitStatus.includes("Bust")) {
-//                console.log("Player busted!");
-//                break;
-//            }
-//        }
-//
-//        let standButton = await driver.findElement(By.xpath("//button[contains(text(), 'Stand')]"));
-//        await standButton.click();
-//
-//        await driver.wait(until.elementTextContains(driver.findElement(By.id('game-status')), 'Player'), 10000);
-//
-//        let finalStatus = await driver.findElement(By.id('game-status')).getText();
-//        console.log("Final Game Status:", finalStatus);
-//
-//        if (finalStatus.includes("Player wins") || finalStatus.includes("Dealer wins") || finalStatus.includes("It's a tie")) {
-//            console.log("Test passed: Final game result is displayed correctly.");
-//        } else {
-//            console.log("Test failed: Final game result is missing or incorrect.");
-//        }
+
+        await startButton.click();
+        await driver.sleep(1000);
+
+        await input.sendKeys("TEST TEST TEST");
+        await driver.sleep(1000);
+        await submitButton.click();
 
     } catch (error) {
         console.error("Test encountered an error:", error);
     } finally {
+        await driver.sleep(5000);
+        await driver.quit();
+    }
+}
+//for 2winner_game_2winner_quest
+async function runTestT2() {
+    let driver = await new Builder().forBrowser('chrome').build();
+
+    try {
+        await driver.get('http://127.0.0.1:8081');
+
+        let startButton = await driver.findElement(By.id('rigForT2'));
+        let input = await driver.findElement(By.id('textInput'));
+        let submitButton = await driver.findElement(By.id('submitButton'));
+
+
+        await startButton.click();
+        await driver.sleep(1000);
+
+        await input.sendKeys("TEST TEST TEST");
+        await driver.sleep(1000);
+        await submitButton.click();
+
+    } catch (error) {
+        console.error("Test encountered an error:", error);
+    } finally {
+        await driver.sleep(5000);
+        await driver.quit();
+    }
+}
+//for 1winner_game_with_events
+async function runTestT3() {
+    let driver = await new Builder().forBrowser('chrome').build();
+
+    try {
+        await driver.get('http://127.0.0.1:8081');
+
+        let startButton = await driver.findElement(By.id('rigForT3'));
+        let input = await driver.findElement(By.id('textInput'));
+        let submitButton = await driver.findElement(By.id('submitButton'));
+
+
+        await startButton.click();
+        await driver.sleep(1000);
+
+        await input.sendKeys("TEST TEST TEST");
+        await driver.sleep(1000);
+        await submitButton.click();
+
+    } catch (error) {
+        console.error("Test encountered an error:", error);
+    } finally {
+        await driver.sleep(5000);
+        await driver.quit();
+    }
+}
+//for 0_winner_quest
+async function runTestT4() {
+    let driver = await new Builder().forBrowser('chrome').build();
+
+    try {
+        await driver.get('http://127.0.0.1:8081');
+
+        let startButton = await driver.findElement(By.id('rigForT4'));
+        let input = await driver.findElement(By.id('textInput'));
+        let submitButton = await driver.findElement(By.id('submitButton'));
+
+
+        await startButton.click();
+        await driver.sleep(1000);
+
+        await input.sendKeys("TEST TEST TEST");
+        await driver.sleep(1000);
+        await submitButton.click();
+
+    } catch (error) {
+        console.error("Test encountered an error:", error);
+    } finally {
+        await driver.sleep(5000);
         await driver.quit();
     }
 }
 
-runTestT1();
+async function runAllTests() {
+    try{
+    await runTestT1();
+    await runTestT2();
+    await runTestT3();
+    await runTestT4();
+    } catch (error) {
+         console.error("Test encountered an error:", error);
+    }
+}
+
+runAllTests();
