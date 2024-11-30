@@ -6,6 +6,11 @@ const START_GAME_BUTTON = document.getElementById('startGameButton');
 const OUTPUT_DIV = document.getElementById("output");
 const GAME_INFO_DIV = document.getElementById("gameStatsOutput");
 
+const TEST_1_RIG_BUTTON = document.getElementById("rigForT1");
+const TEST_2_RIG_BUTTON = document.getElementById("rigForT2");
+const TEST_3_RIG_BUTTON = document.getElementById("rigForT3");
+const TEST_4_RIG_BUTTON = document.getElementById("rigForT4");
+
 //event listener to help with manual information entry
 document.addEventListener('keydown', function(event){
     if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
@@ -43,13 +48,17 @@ async function startGame() {
     try {
         //disable the button to start a new game
         START_GAME_BUTTON.disabled = true;
+        TEST_1_RIG_BUTTON.disabled = true;
+        TEST_2_RIG_BUTTON.disabled = true;
+        TEST_3_RIG_BUTTON.disabled = true;
+        TEST_4_RIG_BUTTON.disabled = true;
         await fetch(`${apiBaseUrl}/startGame`);
         console.log("Started Game");
         OUTPUT_DIV.innerText = "Game Started\n";
 
         // Print player hands and shield count
-        response = await fetch(`${apiBaseUrl}/printGameInfo`);
-        output = await response.text();
+        var response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        var output = await response.text();
         GAME_INFO_DIV.innerText = output;
 
         while(await findWinners() == 'false'){
@@ -102,8 +111,326 @@ async function startGame() {
         }
         //re-enable the button to start a new game
         START_GAME_BUTTON.disabled = false;
+        TEST_1_RIG_BUTTON.disabled = false;
+        TEST_2_RIG_BUTTON.disabled = false;
+        TEST_3_RIG_BUTTON.disabled = false;
+        TEST_4_RIG_BUTTON.disabled = false;
     } catch (error) {
+        OUTPUT_DIV.innerText += "An error has occurred, please refresh the page. \n";
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
         console.error("Error in startGame:", error);
+    }
+}
+
+async function startGameT1() {
+    try {
+        //disable the button to start a new game
+        START_GAME_BUTTON.disabled = true;
+        TEST_1_RIG_BUTTON.disabled = true;
+        TEST_2_RIG_BUTTON.disabled = true;
+        TEST_3_RIG_BUTTON.disabled = true;
+        TEST_4_RIG_BUTTON.disabled = true;
+        await fetch(`${apiBaseUrl}/startGameT1`);
+        console.log("Started Game");
+        OUTPUT_DIV.innerText = "Game Started\n";
+
+        // Print player hands and shield count
+        var response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        var output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
+        while(await findWinners() == 'false'){
+            await nextPlayerTurn();
+            var eventCard = await getEvent();
+
+            switch (eventCard.id) {
+                case "Plague":
+                    await plagueEffect();
+                    break;
+                case "Queen's Favour":
+                    OUTPUT_DIV.innerText += "Queen's Favour Drawn. Current player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                    await queenEffect();
+                    break;
+                case "Prosperity":
+                    OUTPUT_DIV.innerText += "Prosperity Drawn. Each player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                    await prosperityEffect();
+                    break;
+            }
+            if (eventCard.type == "Quest"){
+                await seekSponsor();
+                if (await getSponsor() == "no sponsor"){
+                    console.log("No Sponsor Found")
+                    await endTurn();
+                    continue;
+                }else{
+                    console.log("Starting Quest Building")
+                    await startQuestBuild();
+                    await QuestBuild();
+                    while(await getGamePhase() != "Quest Attack End"){
+                        await seekParticipants();
+                        if(await getHasEligible() == "false"){
+                            break;
+                        }
+                        OUTPUT_DIV.innerText += "Each participant will draw a card. \n";
+                        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                        await participantsDraw();
+                        await questAttack();
+                        await resolveAttacks();
+                    }
+                    await attackCleanup();
+                }
+            }
+            await endTurn();
+        }
+        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
+            OUTPUT_DIV.innerText += await printWinners();
+        }
+        //re-enable the button to start a new game
+        START_GAME_BUTTON.disabled = false;
+        TEST_1_RIG_BUTTON.disabled = false;
+        TEST_2_RIG_BUTTON.disabled = false;
+        TEST_3_RIG_BUTTON.disabled = false;
+        TEST_4_RIG_BUTTON.disabled = false;
+    } catch (error) {
+        OUTPUT_DIV.innerText += "An error has occurred, please refresh the page. \n";
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        console.error("Error in startGameT1:", error);
+    }
+}
+
+async function startGameT2() {
+    try {
+        //disable the button to start a new game
+        START_GAME_BUTTON.disabled = true;
+        TEST_1_RIG_BUTTON.disabled = true;
+        TEST_2_RIG_BUTTON.disabled = true;
+        TEST_3_RIG_BUTTON.disabled = true;
+        TEST_4_RIG_BUTTON.disabled = true;
+        await fetch(`${apiBaseUrl}/startGameT2`);
+        console.log("Started Game");
+        OUTPUT_DIV.innerText = "Game Started\n";
+
+        // Print player hands and shield count
+        var response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        var output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
+        while(await findWinners() == 'false'){
+            await nextPlayerTurn();
+            var eventCard = await getEvent();
+
+            switch (eventCard.id) {
+                case "Plague":
+                    await plagueEffect();
+                    break;
+                case "Queen's Favour":
+                    OUTPUT_DIV.innerText += "Queen's Favour Drawn. Current player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                    await queenEffect();
+                    break;
+                case "Prosperity":
+                    OUTPUT_DIV.innerText += "Prosperity Drawn. Each player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                    await prosperityEffect();
+                    break;
+            }
+            if (eventCard.type == "Quest"){
+                await seekSponsor();
+                if (await getSponsor() == "no sponsor"){
+                    console.log("No Sponsor Found")
+                    await endTurn();
+                    continue;
+                }else{
+                    console.log("Starting Quest Building")
+                    await startQuestBuild();
+                    await QuestBuild();
+                    while(await getGamePhase() != "Quest Attack End"){
+                        await seekParticipants();
+                        if(await getHasEligible() == "false"){
+                            break;
+                        }
+                        OUTPUT_DIV.innerText += "Each participant will draw a card. \n";
+                        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                        await participantsDraw();
+                        await questAttack();
+                        await resolveAttacks();
+                    }
+                    await attackCleanup();
+                }
+            }
+            await endTurn();
+        }
+        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
+            OUTPUT_DIV.innerText += await printWinners();
+        }
+        //re-enable the button to start a new game
+        START_GAME_BUTTON.disabled = false;
+        TEST_1_RIG_BUTTON.disabled = false;
+        TEST_2_RIG_BUTTON.disabled = false;
+        TEST_3_RIG_BUTTON.disabled = false;
+        TEST_4_RIG_BUTTON.disabled = false;
+    } catch (error) {
+        OUTPUT_DIV.innerText += "An error has occurred, please refresh the page. \n";
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        console.error("Error in startGameT2:", error);
+    }
+}
+
+async function startGameT3() {
+    try {
+        //disable the button to start a new game
+        START_GAME_BUTTON.disabled = true;
+        TEST_1_RIG_BUTTON.disabled = true;
+        TEST_2_RIG_BUTTON.disabled = true;
+        TEST_3_RIG_BUTTON.disabled = true;
+        TEST_4_RIG_BUTTON.disabled = true;
+        await fetch(`${apiBaseUrl}/startGameT3`);
+        console.log("Started Game");
+        OUTPUT_DIV.innerText = "Game Started\n";
+
+        // Print player hands and shield count
+        var response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        var output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
+        while(await findWinners() == 'false'){
+            await nextPlayerTurn();
+            var eventCard = await getEvent();
+
+            switch (eventCard.id) {
+                case "Plague":
+                    await plagueEffect();
+                    break;
+                case "Queen's Favour":
+                    OUTPUT_DIV.innerText += "Queen's Favour Drawn. Current player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                    await queenEffect();
+                    break;
+                case "Prosperity":
+                    OUTPUT_DIV.innerText += "Prosperity Drawn. Each player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                    await prosperityEffect();
+                    break;
+            }
+            if (eventCard.type == "Quest"){
+                await seekSponsor();
+                if (await getSponsor() == "no sponsor"){
+                    console.log("No Sponsor Found")
+                    await endTurn();
+                    continue;
+                }else{
+                    console.log("Starting Quest Building")
+                    await startQuestBuild();
+                    await QuestBuild();
+                    while(await getGamePhase() != "Quest Attack End"){
+                        await seekParticipants();
+                        if(await getHasEligible() == "false"){
+                            break;
+                        }
+                        OUTPUT_DIV.innerText += "Each participant will draw a card. \n";
+                        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                        await participantsDraw();
+                        await questAttack();
+                        await resolveAttacks();
+                    }
+                    await attackCleanup();
+                }
+            }
+            await endTurn();
+        }
+        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
+            OUTPUT_DIV.innerText += await printWinners();
+        }
+        //re-enable the button to start a new game
+        START_GAME_BUTTON.disabled = false;
+        TEST_1_RIG_BUTTON.disabled = false;
+        TEST_2_RIG_BUTTON.disabled = false;
+        TEST_3_RIG_BUTTON.disabled = false;
+        TEST_4_RIG_BUTTON.disabled = false;
+    } catch (error) {
+        OUTPUT_DIV.innerText += "An error has occurred, please refresh the page. \n";
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        console.error("Error in startGameT3:", error);
+    }
+}
+
+async function startGameT4() {
+    try {
+        //disable the button to start a new game
+        START_GAME_BUTTON.disabled = true;
+        TEST_1_RIG_BUTTON.disabled = true;
+        TEST_2_RIG_BUTTON.disabled = true;
+        TEST_3_RIG_BUTTON.disabled = true;
+        TEST_4_RIG_BUTTON.disabled = true;
+        await fetch(`${apiBaseUrl}/startGameT4`);
+        console.log("Started Game");
+        OUTPUT_DIV.innerText = "Game Started\n";
+
+        // Print player hands and shield count
+        var response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        var output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
+        while(await findWinners() == 'false'){
+            await nextPlayerTurn();
+            var eventCard = await getEvent();
+
+            switch (eventCard.id) {
+                case "Plague":
+                    await plagueEffect();
+                    break;
+                case "Queen's Favour":
+                    OUTPUT_DIV.innerText += "Queen's Favour Drawn. Current player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                    await queenEffect();
+                    break;
+                case "Prosperity":
+                    OUTPUT_DIV.innerText += "Prosperity Drawn. Each player draws 2 cards.\n";
+                    OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                    await prosperityEffect();
+                    break;
+            }
+            if (eventCard.type == "Quest"){
+                await seekSponsor();
+                if (await getSponsor() == "no sponsor"){
+                    console.log("No Sponsor Found")
+                    await endTurn();
+                    continue;
+                }else{
+                    console.log("Starting Quest Building")
+                    await startQuestBuild();
+                    await QuestBuild();
+                    while(await getGamePhase() != "Quest Attack End"){
+                        await seekParticipants();
+                        if(await getHasEligible() == "false"){
+                            break;
+                        }
+                        OUTPUT_DIV.innerText += "Each participant will draw a card. \n";
+                        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+                        await participantsDraw();
+                        await questAttack();
+                        await resolveAttacks();
+                    }
+                    await attackCleanup();
+                }
+            }
+            await endTurn();
+        }
+        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
+            OUTPUT_DIV.innerText += await printWinners();
+        }
+        //re-enable the button to start a new game
+        START_GAME_BUTTON.disabled = false;
+        TEST_1_RIG_BUTTON.disabled = false;
+        TEST_2_RIG_BUTTON.disabled = false;
+        TEST_3_RIG_BUTTON.disabled = false;
+        TEST_4_RIG_BUTTON.disabled = false;
+    } catch (error) {
+        OUTPUT_DIV.innerText += "An error has occurred, please refresh the page. \n";
+        OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        console.error("Error in startGameT4:", error);
     }
 }
 

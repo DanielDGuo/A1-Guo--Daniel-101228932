@@ -704,6 +704,46 @@ public class Main {
         gamePhase = "New Game";
     }
 
+    @GetMapping("/startGameT1")
+    public void startGameT1() {
+        initializeAdventureDeck();
+        initializeEventDeck();
+        initializePlayerHands();
+        sponsor = null;
+        curPlayer = PlayerList.get(3);
+        gamePhase = "New Game";
+    }
+
+    @GetMapping("/startGameT2")
+    public void startGameT2() {
+        initializeAdventureDeck();
+        initializeEventDeck();
+        initializePlayerHands();
+        sponsor = null;
+        curPlayer = PlayerList.get(3);
+        gamePhase = "New Game";
+    }
+
+    @GetMapping("/startGameT3")
+    public void startGameT3() {
+        initializeAdventureDeck();
+        initializeEventDeck();
+        initializePlayerHands();
+        sponsor = null;
+        curPlayer = PlayerList.get(3);
+        gamePhase = "New Game";
+    }
+
+    @GetMapping("/startGameT4")
+    public void startGameT4() {
+        initializeAdventureDeck();
+        initializeEventDeck();
+        initializePlayerHands();
+        sponsor = null;
+        curPlayer = PlayerList.get(3);
+        gamePhase = "New Game";
+    }
+
     @GetMapping("/findWinners")
     public boolean findWinners() {
         for (Player p : PlayerList) {
