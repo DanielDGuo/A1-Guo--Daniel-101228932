@@ -1,6 +1,7 @@
 package org.example;
 
 import ch.qos.logback.core.joran.sanity.Pair;
+import io.cucumber.java.bs.A;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -223,11 +224,47 @@ public class Main {
     public void initializeAdventureDeck() {
         AdDeck = new ArrayList<>(AdventureDeckList);
         Collections.shuffle(AdDeck);
+        AdDiscard = new ArrayList<>();
+    }
+
+    public void initializeAdventureDeckRig(String cards) {
+        ArrayList<Card> tempAdDeck = new ArrayList<>(AdventureDeckList);
+        AdDeck = new ArrayList<>();
+        AdDiscard = new ArrayList<>();
+        for(String sc : cards.split(" ")){
+            for(Card c : tempAdDeck){
+                if(c.toString().equals(sc)){
+                    AdDeck.add(c);
+                    tempAdDeck.remove(c);
+                    break;
+                }
+            }
+        }
+        Collections.shuffle(tempAdDeck);
+        AdDeck.addAll(tempAdDeck);
     }
 
     public void initializeEventDeck() {
         EvDeck = new ArrayList<>(EventDeckList);
         Collections.shuffle(EvDeck);
+        EvDiscard = new ArrayList<>();
+    }
+
+    public void initializeEventDeckRig(String cards) {
+        ArrayList<Card> tempEvDeck = new ArrayList<>(EventDeckList);
+        EvDeck = new ArrayList<>();
+        EvDiscard = new ArrayList<>();
+        for(String sc : cards.split(" ")){
+            for(Card c : tempEvDeck){
+                if(c.toString().equals(sc)){
+                    EvDeck.add(c);
+                    tempEvDeck.remove(c);
+                    break;
+                }
+            }
+        }
+        Collections.shuffle(tempEvDeck);
+        EvDeck.addAll(tempEvDeck);
     }
 
     public int getValueOfStage(ArrayList<Card> stage) {
@@ -706,8 +743,8 @@ public class Main {
 
     @GetMapping("/startGameT1")
     public void startGameT1() {
-        initializeAdventureDeck();
-        initializeEventDeck();
+        initializeAdventureDeckRig("F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 B15 L20 F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30 F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20 F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30 F30 S10 B15 F10 L20 L20 B15 S10 F30 L20");
+        initializeEventDeckRig("Q4");
         initializePlayerHands();
         sponsor = null;
         curPlayer = PlayerList.get(3);

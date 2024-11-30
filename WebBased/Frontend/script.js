@@ -131,7 +131,7 @@ async function startGameT1() {
         TEST_3_RIG_BUTTON.disabled = true;
         TEST_4_RIG_BUTTON.disabled = true;
         await fetch(`${apiBaseUrl}/startGameT1`);
-        console.log("Started Game");
+        console.log("Started Game with Rig T1");
         OUTPUT_DIV.innerText = "Game Started\n";
 
         // Print player hands and shield count
@@ -209,7 +209,7 @@ async function startGameT2() {
         TEST_3_RIG_BUTTON.disabled = true;
         TEST_4_RIG_BUTTON.disabled = true;
         await fetch(`${apiBaseUrl}/startGameT2`);
-        console.log("Started Game");
+        console.log("Started Game with Rig T2");
         OUTPUT_DIV.innerText = "Game Started\n";
 
         // Print player hands and shield count
@@ -287,7 +287,7 @@ async function startGameT3() {
         TEST_3_RIG_BUTTON.disabled = true;
         TEST_4_RIG_BUTTON.disabled = true;
         await fetch(`${apiBaseUrl}/startGameT3`);
-        console.log("Started Game");
+        console.log("Started Game with Rig T3");
         OUTPUT_DIV.innerText = "Game Started\n";
 
         // Print player hands and shield count
@@ -365,7 +365,7 @@ async function startGameT4() {
         TEST_3_RIG_BUTTON.disabled = true;
         TEST_4_RIG_BUTTON.disabled = true;
         await fetch(`${apiBaseUrl}/startGameT4`);
-        console.log("Started Game");
+        console.log("Started Game with Rig T4");
         OUTPUT_DIV.innerText = "Game Started\n";
 
         // Print player hands and shield count
