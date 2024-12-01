@@ -793,8 +793,13 @@ public class Main {
 
     @GetMapping("/startGameT4")
     public void startGameT4() {
-        initializeAdventureDeck();
-        initializeEventDeck();
+        initializeAdventureDeckRig("F50 F70 D5 D5 H10 H10 S10 S10 B15 B15 L20 L20" +
+                                   " F5 F5 F10 F15 F15 F20 F20 F25 F30 F30 F40 E30" +
+                                   " F5 F5 F10 F15 F15 F20 F20 F25 F25 F30 F40 L20" +
+                                   " F5 F5 F10 F15 F15 F20 F20 F25 F25 F30 F50 E30 " +
+                                   "F5 F15 F10 " +
+                                   "F5 F10 F15 D5 D5 D5 D5 H10 H10 H10 H10 S10 S10 S10");
+        initializeEventDeckRig("Q2");
         initializePlayerHands();
         initializePlayerShields();
         sponsor = null;

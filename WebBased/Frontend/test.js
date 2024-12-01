@@ -1471,10 +1471,170 @@ async function runTestT4() {
         await startButton.click();
         await driver.sleep(10);
 
-        await input.sendKeys("TEST TEST TEST");
+        //sponsor is P1
+        await input.sendKeys("Y");
         await driver.sleep(10);
         await submitButton.click();
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        //stage 1
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("2");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("3");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("4");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("5");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("6");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        //confirm stage
+        await submitButton.click();
+        await driver.sleep(10);
+        //stage 2
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        //confirm stage
+        await submitButton.click();
+        await driver.sleep(10);
 
+        //participants stage 1
+        await input.sendKeys("Y");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("Y");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("Y");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+
+
+        //participants all need to draw 1 and discard
+        //P2
+        await submitButton.click();
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        //P3
+        await submitButton.click();
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("4");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        //P4
+        await submitButton.click();
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("3");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+
+        //each player now makes attacks
+        //P2 attack
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("12");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        //confirm attack
+        await submitButton.click();
+        await driver.sleep(10);
+
+        //P3 attack
+        await submitButton.click();
+        await driver.sleep(10);
+        //confirm attack
+        await submitButton.click();
+        await driver.sleep(10);
+
+        //P4 attack
+        await submitButton.click();
+        await driver.sleep(10);
+        //confirm attack
+        await submitButton.click();
+        await driver.sleep(10);
+
+        //sponsor draw and discard
+        await submitButton.click();
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+        await input.sendKeys("1");
+        await driver.sleep(10);
+        await submitButton.click();
+        await driver.sleep(10);
+
+        //game has ended; assert
+        let statsText = await stats.getText();
+        console.assert(statsText.includes("P1 Shields: 0"), "Error in P1 Shield Count");
+        console.assert(statsText.includes("P2 Shields: 0"), "Error in P2 Shield Count");
+        console.assert(statsText.includes("P3 Shields: 0"), "Error in P3 Shield Count");
+        console.assert(statsText.includes("P4 Shields: 0"), "Error in P4 Shield Count");
+
+        console.assert(statsText.includes("P1 Hand: F15, D5, D5, D5, D5, S10, S10, S10, H10, H10, H10, H10"), "Error in P1 Hand Contents");
+        console.assert(statsText.includes("P2 Hand: F5, F5, F10, F15, F15, F20, F20, F25, F30, F30, F40"), "Error in P2 Hand Contents");
+        console.assert(statsText.includes("P3 Hand: F5, F5, F10, F15, F15, F20, F20, F25, F25, F30, F40, L20"), "Error in P3 Hand Contents");
+        console.assert(statsText.includes("P4 Hand: F5, F5, F10, F15, F15, F20, F20, F25, F25, F30, F50, E30"), "Error in P4 Hand Contents");
+
+        console.assert(statsText.includes("P1 Hand Size: 12"), "Error in P1 Hand Size");
+        console.assert(statsText.includes("P2 Hand Size: 11"), "Error in P2 Hand Size");
+        console.assert(statsText.includes("P3 Hand Size: 12"), "Error in P3 Hand Size");
+        console.assert(statsText.includes("P4 Hand Size: 12"), "Error in P4 Hand Size");
     } catch (error) {
         console.error("Test encountered an error:", error);
     } finally {
@@ -1485,10 +1645,10 @@ async function runTestT4() {
 
 async function runAllTests() {
     try{
-        //await runTestT1();
-        //await runTestT2();
+        await runTestT1();
+        await runTestT2();
         await runTestT3();
-        //await runTestT4();
+        await runTestT4();
     } catch (error) {
          console.error("Test encountered an error:", error);
     }
