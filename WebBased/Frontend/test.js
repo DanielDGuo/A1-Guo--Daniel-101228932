@@ -11,348 +11,364 @@ async function runTestT1() {
         let startButton = await driver.findElement(By.id('rigForT1'));
         let input = await driver.findElement(By.id('textInput'));
         let submitButton = await driver.findElement(By.id('submitButton'));
+        let stats = await driver.findElement(By.id('gameStatsOutput'));
 
         await startButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //sponsor is P2
         await input.sendKeys("N");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //stage 1
         await input.sendKeys("1");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("7");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm stage
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //stage 2
         await input.sendKeys("2");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("5");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm stage
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //stage 3
         await input.sendKeys("2");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("3");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("5");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm stage
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //stage 4
         await input.sendKeys("2");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("3");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm stage
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //participants stage 1
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //participants all need to draw 1 and discard
         //P1
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("1");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //P3
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("1");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //P4
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("1");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //each player now makes attacks
         //P1 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("5");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("5");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //P3 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("5");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("4");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //P4 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("4");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("6");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //participants stage 2
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //each player now makes attacks
         //P1 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("7");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("6");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //P3 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("9");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("4");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //P4 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("6");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("6");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //participants stage 3
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //each player now makes attacks
         //P3 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("9");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("7");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("5");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //P4 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("7");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("6");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("6");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //participants stage 4
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //each player now makes attacks
         //P3 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("7");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("6");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("6");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //P4 attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("4");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("4");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("4");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("5");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //confirm attack
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //sponsor draw and discard
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("1");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("1");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("1");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("1");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         //TODO: turn has ended; assert
+        let statsText = await stats.getText();
+        console.assert(statsText.includes("P1 Shields: 0"), "Error in P1 Shield Count");
+        console.assert(statsText.includes("P2 Shields: 0"), "Error in P2 Shield Count");
+        console.assert(statsText.includes("P3 Shields: 0"), "Error in P3 Shield Count");
+        console.assert(statsText.includes("P4 Shields: 4"), "Error in P4 Shield Count");
 
+        console.assert(statsText.includes("P1 Hand: F5, F10, F15, F15, F30, H10, B15, B15, L20"), "Error in P1 Hand Contents");
+        //console.assert(statsText.includes("P2 Hand: "), "Error in P2 Hand Contents");
+        //hand is random; only asset the number of cards
+        console.assert(statsText.includes("P3 Hand: F5, F5, F15, F30, S10"), "Error in P3 Hand Contents");
+        console.assert(statsText.includes("P4 Hand: F15, F15, F40, L20"), "Error in P4 Hand Contents");
+
+        console.assert(statsText.includes("P1 Hand Size: 9"), "Error in P1 Hand Size");
+        console.assert(statsText.includes("P2 Hand Size: 12"), "Error in P2 Hand Size");
+        console.assert(statsText.includes("P3 Hand Size: 5"), "Error in P3 Hand Size");
+        console.assert(statsText.includes("P4 Hand Size: 4"), "Error in P4 Hand Size");
     } catch (error) {
         console.error("Test encountered an error:", error);
     } finally {
@@ -373,10 +389,10 @@ async function runTestT2() {
 
 
         await startButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         await input.sendKeys("TEST TEST TEST");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
 
     } catch (error) {
@@ -399,10 +415,10 @@ async function runTestT3() {
 
 
         await startButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         await input.sendKeys("TEST TEST TEST");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
 
     } catch (error) {
@@ -425,17 +441,17 @@ async function runTestT4() {
 
 
         await startButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
         //sponsor is P2
         await input.sendKeys("N");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
         await input.sendKeys("Y");
-        await driver.sleep(100);
+        await driver.sleep(10);
         await submitButton.click();
-        await driver.sleep(100);
+        await driver.sleep(10);
 
     } catch (error) {
         console.error("Test encountered an error:", error);

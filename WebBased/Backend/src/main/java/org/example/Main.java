@@ -211,6 +211,9 @@ public class Main {
         for (Player p : PlayerList) {
             outString.append(p).append(" Shields: ").append(p.getShields()).append("\n");
         }
+        for (Player p : PlayerList) {
+            outString.append(p).append(" Hand Size: ").append(p.getHand().size()).append("\n");
+        }
         return outString.toString();
     }
 
