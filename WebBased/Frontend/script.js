@@ -80,6 +80,10 @@ async function startGame() {
                     await prosperityEffect();
                     break;
             }
+            // Print player hands and shield count
+            response = await fetch(`${apiBaseUrl}/printGameInfo`);
+            output = await response.text();
+            GAME_INFO_DIV.innerText = output;
             if (eventCard.type == "Quest"){
                 await seekSponsor();
                 if (await getSponsor() == "no sponsor"){
@@ -161,6 +165,10 @@ async function startGameT1() {
                     await prosperityEffect();
                     break;
             }
+            // Print player hands and shield count
+            response = await fetch(`${apiBaseUrl}/printGameInfo`);
+            output = await response.text();
+            GAME_INFO_DIV.innerText = output;
             if (eventCard.type == "Quest"){
                 await seekSponsor();
                 if (await getSponsor() == "no sponsor"){
@@ -242,6 +250,10 @@ async function startGameT2() {
                     await prosperityEffect();
                     break;
             }
+            // Print player hands and shield count
+            response = await fetch(`${apiBaseUrl}/printGameInfo`);
+            output = await response.text();
+            GAME_INFO_DIV.innerText = output;
             if (eventCard.type == "Quest"){
                 await seekSponsor();
                 if (await getSponsor() == "no sponsor"){
@@ -323,6 +335,10 @@ async function startGameT3() {
                     await prosperityEffect();
                     break;
             }
+            // Print player hands and shield count
+            response = await fetch(`${apiBaseUrl}/printGameInfo`);
+            output = await response.text();
+            GAME_INFO_DIV.innerText = output;
             if (eventCard.type == "Quest"){
                 await seekSponsor();
                 if (await getSponsor() == "no sponsor"){
@@ -404,6 +420,10 @@ async function startGameT4() {
                     await prosperityEffect();
                     break;
             }
+            // Print player hands and shield count
+            response = await fetch(`${apiBaseUrl}/printGameInfo`);
+            output = await response.text();
+            GAME_INFO_DIV.innerText = output;
             if (eventCard.type == "Quest"){
                 await seekSponsor();
                 if (await getSponsor() == "no sponsor"){
@@ -563,6 +583,10 @@ async function plagueEffect(){
         console.log("Plague Effect", result);
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
     } catch (error) {
         console.error("Error in getting plague effect", error);
     }
@@ -629,6 +653,10 @@ async function prosperityEffect(){
         console.log("Prosperity Effect1");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -643,6 +671,10 @@ async function prosperityEffect(){
         console.log("Prosperity Effect2");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -657,6 +689,10 @@ async function prosperityEffect(){
         console.log("Prosperity Effect3");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -671,6 +707,10 @@ async function prosperityEffect(){
         console.log("Prosperity Effect4");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -678,7 +718,6 @@ async function prosperityEffect(){
         response = await fetch(`${apiBaseUrl}/printGameInfo`);
         output = await response.text();
         GAME_INFO_DIV.innerText = output;
-
     } catch (error) {
         console.error("Error in prosperity", error);
     }
@@ -807,6 +846,10 @@ async function participantsDraw(){
         console.log("Participant Draw 1");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -822,6 +865,10 @@ async function participantsDraw(){
         console.log("Participant Draw 2");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -837,6 +884,10 @@ async function participantsDraw(){
         console.log("Participant Draw 3");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -852,6 +903,10 @@ async function participantsDraw(){
         console.log("Participant Draw 4");
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
         //a possible game phase change has occurred tha requires user input. Wait until it's done
         while(await getGamePhase() != ""){
         }
@@ -861,7 +916,7 @@ async function participantsDraw(){
         GAME_INFO_DIV.innerText = output;
 
     } catch (error) {
-        console.error("Error in prosperity", error);
+        console.error("Error in participant draw", error);
     }
 }
 

@@ -1,2 +1,4 @@
 run backend with 'mvn spring-boot:run'
 run frontend with 'npx http-server'
+
+for effects such as prosperity, each player draws 1 card then immediately discards, as opposed to each drawing 1 and all discarding 1 at once

@@ -264,7 +264,12 @@ public class Main {
         EvDiscard = new ArrayList<>();
         for (String sc : cards.split(" ")) {
             for (Card c : tempEvDeck) {
-                if (c.toString().equals(sc)) {
+                //queen's favour is two words; special case
+                if(sc.equals("Queen") && c.toString().equals("Queen's Favour")){
+                    EvDeck.add(c);
+                    tempEvDeck.remove(c);
+                    break;
+                }else if (c.toString().equals(sc)) {
                     EvDeck.add(c);
                     tempEvDeck.remove(c);
                     break;
@@ -763,8 +768,22 @@ public class Main {
 
     @GetMapping("/startGameT3")
     public void startGameT3() {
-        initializeAdventureDeck();
-        initializeEventDeck();
+        initializeAdventureDeckRig("F5 F5 F10 F10 F15 F15 F20 F20 D5 D5 D5 D5" +
+                                   " F25 F30 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30" +
+                                   " F25 F30 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30" +
+                                   " F25 F30 F70 H10 H10 S10 S10 S10 B15 B15 L20 L20 " +
+                                   "F5 F10 F20 " +
+                                   "F15 F5 F25 " +
+                                   "F5 F10 F20 " +
+                                   "F5 F10 F20 " +
+                                   "F5 F5 F10 F10 F15 F15 F15 F15 " +
+                                   "F25 F25 H10 S10 B15 F40 D5 D5 " +
+                                   "F30 F25 " +
+                                   "B15 H10 F50 " +
+                                   "S10 S10 " +
+                                   "F40 F50 " +
+                                   "H10 H10 H10 S10 S10 S10 S10 F35");
+        initializeEventDeckRig("Q4 Plague Prosperity Queen Q3");
         initializePlayerHands();
         initializePlayerShields();
         sponsor = null;
