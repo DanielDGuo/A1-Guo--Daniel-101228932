@@ -20,6 +20,10 @@ public class Player {
         hand = new ArrayList<>();
     }
 
+    public void setShields(int shields) {
+        this.shields = shields;
+    }
+
     public void addShields(int i) {
         shields += i;
     }

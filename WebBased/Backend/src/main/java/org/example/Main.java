@@ -221,6 +221,12 @@ public class Main {
         }
     }
 
+    public void initializePlayerShields() {
+        for (Player p : PlayerList) {
+            p.setShields(0);
+        }
+    }
+
     public void initializeAdventureDeck() {
         AdDeck = new ArrayList<>(AdventureDeckList);
         Collections.shuffle(AdDeck);
@@ -276,6 +282,7 @@ public class Main {
     }
 
     public String printStage(ArrayList<Card> stage) {
+        Collections.sort(stage);
         return stage.toString().substring(1, stage.toString().length() - 1);
     }
 
@@ -736,6 +743,7 @@ public class Main {
         initializeAdventureDeck();
         initializeEventDeck();
         initializePlayerHands();
+        initializePlayerShields();
         sponsor = null;
         curPlayer = PlayerList.get(3);
         gamePhase = "New Game";
@@ -746,6 +754,7 @@ public class Main {
         initializeAdventureDeckRig("F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 B15 L20 F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30 F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20 F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30 F30 S10 B15 F10 L20 L20 B15 S10 F30 L20");
         initializeEventDeckRig("Q4");
         initializePlayerHands();
+        initializePlayerShields();
         sponsor = null;
         curPlayer = PlayerList.get(3);
         gamePhase = "New Game";
@@ -756,6 +765,7 @@ public class Main {
         initializeAdventureDeck();
         initializeEventDeck();
         initializePlayerHands();
+        initializePlayerShields();
         sponsor = null;
         curPlayer = PlayerList.get(3);
         gamePhase = "New Game";
@@ -766,6 +776,7 @@ public class Main {
         initializeAdventureDeck();
         initializeEventDeck();
         initializePlayerHands();
+        initializePlayerShields();
         sponsor = null;
         curPlayer = PlayerList.get(3);
         gamePhase = "New Game";
@@ -776,6 +787,7 @@ public class Main {
         initializeAdventureDeck();
         initializeEventDeck();
         initializePlayerHands();
+        initializePlayerShields();
         sponsor = null;
         curPlayer = PlayerList.get(3);
         gamePhase = "New Game";

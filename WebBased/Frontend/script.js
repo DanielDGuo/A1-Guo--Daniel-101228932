@@ -920,6 +920,11 @@ async function attackCleanup(){
         OUTPUT_DIV.innerText += result;
         OUTPUT_DIV.scrollTop = OUTPUT_DIV.scrollHeight;
 
+        // Print player hands and shield count
+        response = await fetch(`${apiBaseUrl}/printGameInfo`);
+        output = await response.text();
+        GAME_INFO_DIV.innerText = output;
+
         response = await fetch(`${apiBaseUrl}/discardStages`, { method: "POST" });
         result = await response.text();
 
