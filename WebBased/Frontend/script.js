@@ -61,7 +61,7 @@ async function startGame() {
         var output = await response.text();
         GAME_INFO_DIV.innerText = output;
 
-        while(await findWinners() == 'false'){
+        while(true){
             await nextPlayerTurn();
             var eventCard = await getEvent();
 
@@ -104,10 +104,13 @@ async function startGame() {
                     await attackCleanup();
                 }
             }
-            await endTurn();
-        }
-        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
-            OUTPUT_DIV.innerText += await printWinners();
+            if(await findWinners() == 'false'){
+                await endTurn();
+            }else{
+                OUTPUT_DIV.innerText += await printWinners();
+                GAME_INFO_DIV.innerText += await printWinners();
+                break;
+            }
         }
         //re-enable the button to start a new game
         START_GAME_BUTTON.disabled = false;
@@ -139,7 +142,7 @@ async function startGameT1() {
         var output = await response.text();
         GAME_INFO_DIV.innerText = output;
 
-        while(await findWinners() == 'false'){
+        while(true){
             await nextPlayerTurn();
             var eventCard = await getEvent();
 
@@ -182,10 +185,13 @@ async function startGameT1() {
                     await attackCleanup();
                 }
             }
-            await endTurn();
-        }
-        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
-            OUTPUT_DIV.innerText += await printWinners();
+            if(await findWinners() == 'false'){
+                await endTurn();
+            }else{
+                OUTPUT_DIV.innerText += await printWinners();
+                GAME_INFO_DIV.innerText += await printWinners();
+                break;
+            }
         }
         //re-enable the button to start a new game
         START_GAME_BUTTON.disabled = false;
@@ -217,7 +223,7 @@ async function startGameT2() {
         var output = await response.text();
         GAME_INFO_DIV.innerText = output;
 
-        while(await findWinners() == 'false'){
+        while(true){
             await nextPlayerTurn();
             var eventCard = await getEvent();
 
@@ -260,10 +266,13 @@ async function startGameT2() {
                     await attackCleanup();
                 }
             }
-            await endTurn();
-        }
-        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
-            OUTPUT_DIV.innerText += await printWinners();
+            if(await findWinners() == 'false'){
+                await endTurn();
+            }else{
+                OUTPUT_DIV.innerText += await printWinners();
+                GAME_INFO_DIV.innerText += await printWinners();
+                break;
+            }
         }
         //re-enable the button to start a new game
         START_GAME_BUTTON.disabled = false;
@@ -295,7 +304,7 @@ async function startGameT3() {
         var output = await response.text();
         GAME_INFO_DIV.innerText = output;
 
-        while(await findWinners() == 'false'){
+        while(true){
             await nextPlayerTurn();
             var eventCard = await getEvent();
 
@@ -338,10 +347,13 @@ async function startGameT3() {
                     await attackCleanup();
                 }
             }
-            await endTurn();
-        }
-        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
-            OUTPUT_DIV.innerText += await printWinners();
+            if(await findWinners() == 'false'){
+                await endTurn();
+            }else{
+                OUTPUT_DIV.innerText += await printWinners();
+                GAME_INFO_DIV.innerText += await printWinners();
+                break;
+            }
         }
         //re-enable the button to start a new game
         START_GAME_BUTTON.disabled = false;
@@ -373,7 +385,7 @@ async function startGameT4() {
         var output = await response.text();
         GAME_INFO_DIV.innerText = output;
 
-        while(await findWinners() == 'false'){
+        while(true){
             await nextPlayerTurn();
             var eventCard = await getEvent();
 
@@ -416,10 +428,13 @@ async function startGameT4() {
                     await attackCleanup();
                 }
             }
-            await endTurn();
-        }
-        if (await findWinners() == 'true' && await getGamePhase() != "New Game"){
-            OUTPUT_DIV.innerText += await printWinners();
+            if(await findWinners() == 'false'){
+                await endTurn();
+            }else{
+                OUTPUT_DIV.innerText += await printWinners();
+                GAME_INFO_DIV.innerText += await printWinners();
+                break;
+            }
         }
         //re-enable the button to start a new game
         START_GAME_BUTTON.disabled = false;

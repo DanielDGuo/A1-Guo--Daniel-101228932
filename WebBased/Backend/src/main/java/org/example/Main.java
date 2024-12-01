@@ -204,7 +204,6 @@ public class Main {
     @GetMapping("/printGameInfo")
     public String printGameInfo() {
         StringBuilder outString = new StringBuilder();
-        outString.append("stats are updated every button click.\n\n");
         for (Player p : PlayerList) {
             outString.append(p.printHand()).append("\n");
         }
@@ -240,9 +239,9 @@ public class Main {
         ArrayList<Card> tempAdDeck = new ArrayList<>(AdventureDeckList);
         AdDeck = new ArrayList<>();
         AdDiscard = new ArrayList<>();
-        for(String sc : cards.split(" ")){
-            for(Card c : tempAdDeck){
-                if(c.toString().equals(sc)){
+        for (String sc : cards.split(" ")) {
+            for (Card c : tempAdDeck) {
+                if (c.toString().equals(sc)) {
                     AdDeck.add(c);
                     tempAdDeck.remove(c);
                     break;
@@ -263,9 +262,9 @@ public class Main {
         ArrayList<Card> tempEvDeck = new ArrayList<>(EventDeckList);
         EvDeck = new ArrayList<>();
         EvDiscard = new ArrayList<>();
-        for(String sc : cards.split(" ")){
-            for(Card c : tempEvDeck){
-                if(c.toString().equals(sc)){
+        for (String sc : cards.split(" ")) {
+            for (Card c : tempEvDeck) {
+                if (c.toString().equals(sc)) {
                     EvDeck.add(c);
                     tempEvDeck.remove(c);
                     break;
@@ -625,14 +624,8 @@ public class Main {
                         return "Card Added.\n\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + P1.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {
-                    //invalids
-                    if (curAttackTeam.isEmpty()) {
-                        return "Attack is empty. Please add Weapons.\n";
-                    } else {
-                        //valid
-                        gamePhase = "Building P1 Attacks End";
-                        return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
-                    }
+                    gamePhase = "Building P1 Attacks End";
+                    return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
                 } else {//input is not an index nor empty; invalid
                     return "Input must be a valid index or empty.\n";
                 }
@@ -658,14 +651,8 @@ public class Main {
                         return "Card Added.\n\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + P2.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {
-                    //invalids
-                    if (curAttackTeam.isEmpty()) {
-                        return "Attack is empty. Please add Weapons.\n";
-                    } else {
-                        //valid
-                        gamePhase = "Building P2 Attacks End";
-                        return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
-                    }
+                    gamePhase = "Building P2 Attacks End";
+                    return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
                 } else {//input is not an index nor empty; invalid
                     return "Input must be a valid index or empty.\n";
                 }
@@ -691,14 +678,8 @@ public class Main {
                         return "Card Added.\n\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + P3.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {
-                    //invalids
-                    if (curAttackTeam.isEmpty()) {
-                        return "Attack is empty. Please add Weapons.\n";
-                    } else {
-                        //valid
-                        gamePhase = "Building P3 Attacks End";
-                        return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
-                    }
+                    gamePhase = "Building P3 Attacks End";
+                    return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
                 } else {//input is not an index nor empty; invalid
                     return "Input must be a valid index or empty.\n";
                 }
@@ -724,14 +705,8 @@ public class Main {
                         return "Card Added.\n\nAttack: " + printStage(curAttackTeam) + "\nPlease select an index of a card you wish to add to your attack, or press enter to finish.\n" + P4.printHand() + "\n";
                     }
                 } else if (input.equals("empty_string")) {
-                    //invalids
-                    if (curAttackTeam.isEmpty()) {
-                        return "Attack is empty. Please add Weapons.\n";
-                    } else {
-                        //valid
-                        gamePhase = "Building P4 Attacks End";
-                        return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
-                    }
+                    gamePhase = "Building P4 Attacks End";
+                    return "Attack building finished. Here is your attack: \n" + printStage(curAttackTeam) + "\n\n";
                 } else {//input is not an index nor empty; invalid
                     return "Input must be a valid index or empty.\n";
                 }
@@ -765,8 +740,20 @@ public class Main {
 
     @GetMapping("/startGameT2")
     public void startGameT2() {
-        initializeAdventureDeck();
-        initializeEventDeck();
+        initializeAdventureDeckRig("F5 F5 F10 F10 F15 F15 D5 H10 H10 B15 B15 L20" +
+                                   " F40 F50 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30" +
+                                   " F5 F5 F5 F5 D5 D5 D5 H10 H10 H10 H10 H10" +
+                                   " F50 F70 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30 " +
+                                   "F5 F40 F10 " +
+                                   "F10 F30 " +
+                                   "F30 F15 " +
+                                   "F15 F20 " +
+                                   "F5 F10 F15 F15 F20 F20 F20 F20 F25 F25 F30 " +
+                                   "D5 D5 " +
+                                   "F15 F15 " +
+                                   "F25 F25 " +
+                                   "F20 F20 F25 F30 S10 B15 B15 L20");
+        initializeEventDeckRig("Q4 Q3");
         initializePlayerHands();
         initializePlayerShields();
         sponsor = null;
